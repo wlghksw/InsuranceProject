@@ -1,1 +1,1 @@
-print('master descriptions')
+print('최효원')
