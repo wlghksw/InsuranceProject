@@ -1,0 +1,150 @@
+2025-09-18 11:03:43.531198+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 11:16:48.845942+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 11:24:39.004199+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 11:34:45.223959+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 11:35:34.539397+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 11:35:34.544433+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE[*], ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL"; SQL statement:
+ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE, ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL [42000-232]
+2025-09-18 11:49:59.817295+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 11:49:59.820322+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE[*], ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL"; SQL statement:
+ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE, ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL [42000-232]
+2025-09-18 11:51:57.867591+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 11:51:57.871879+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
+2025-09-18 11:55:29.924059+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 11:55:29.931400+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
+2025-09-18 11:55:29.932905+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE[*], ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL"; SQL statement:
+ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE, ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL [42000-232]
+2025-09-18 11:56:31.228556+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 11:56:31.233558+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
+2025-09-18 11:56:31.234573+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE[*], ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL"; SQL statement:
+ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE, ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL [42000-232]
+2025-09-18 11:58:00.807455+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 11:58:00.813455+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE[*], ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL"; SQL statement:
+ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE, ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL [42000-232]
+2025-09-18 13:34:20.302962+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 13:34:20.309950+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE[*], ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL"; SQL statement:
+ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE, ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL [42000-232]
+2025-09-18 13:37:10.986211+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 13:37:10.990211+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE[*], ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL"; SQL statement:
+ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE, ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL [42000-232]
+2025-09-18 13:40:58.039668+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 13:40:58.056031+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE[*], ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL"; SQL statement:
+ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE, ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL [42000-232]
+2025-09-18 13:42:00.358356+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 13:42:00.365440+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE[*], ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL"; SQL statement:
+ALTER TABLE insurances ADD COLUMN policy_number VARCHAR(255) NOT NULL UNIQUE, ADD COLUMN coverage_period VARCHAR(255) NOT NULL, ADD COLUMN monthly_premium INT NOT NULL [42000-232]
+2025-09-18 14:02:58.306306+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 14:02:58.313278+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
+2025-09-18 14:06:03.443101+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 14:06:03.448084+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
+2025-09-18 14:11:11.779434+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 14:11:11.785434+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
+2025-09-18 14:12:17.215027+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 14:12:17.220025+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
+2025-09-18 14:17:36.624129+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 14:17:36.630127+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
+2025-09-18 14:22:20.015720+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 14:22:20.018736+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
+2025-09-18 14:34:42.947275+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 14:34:42.950280+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
+2025-09-18 14:40:38.417242+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 14:40:38.421242+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
+2025-09-18 14:45:29.618078+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 14:45:29.623090+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
+2025-09-18 14:47:18.997404+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 14:47:19.003405+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
+2025-09-18 14:52:57.656385+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), phone VARCHAR(255), birth_year INT, gender VARCHAR(255), profile_image VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 14:52:57.659369+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
+2025-09-18 15:01:51.118640+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" already exists; SQL statement:
+CREATE TABLE users ( id BIGINT AUTO_INCREMENT PRIMARY KEY, login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, real_name VARCHAR(255) NOT NULL, nickname VARCHAR(255), ssn VARCHAR(255) UNIQUE, is_active BOOLEAN DEFAULT TRUE, is_admin BOOLEAN DEFAULT FALSE, created_at DATETIME, updated_at DATETIME ) [42101-232]
+2025-09-18 15:01:51.124646+09:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INSURANCES" already exists; SQL statement:
+CREATE TABLE insurances ( id BIGINT AUTO_INCREMENT PRIMARY KEY, user_id BIGINT NOT NULL, insurance_name VARCHAR(255) NOT NULL, insurance_type VARCHAR(255), policy_number VARCHAR(255) NOT NULL UNIQUE, coverage_period VARCHAR(255) NOT NULL, monthly_premium INT NOT NULL, subscription_date DATETIME NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ) [42101-232]
