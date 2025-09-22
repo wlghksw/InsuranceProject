@@ -1,0 +1,53 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.5'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+description = 'Demo project for Spring Boot'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+
+
+
+	// Spring Boot의 웹 기능을 사용하기 위한 필수 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// 실시간 웹소켓 통신과 STOMP를 사용하기 위한 핵심 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	// 테스트를 위한 의존성 (보통 기본으로 포함되어 있음)
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// Mustache 템플릿 엔진 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-mustache'
+
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
