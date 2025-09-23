@@ -5,6 +5,7 @@
 ## 🎯 추천 규칙
 
 ### 1. 필수 조건 (Filter 단계)
+
 가입 가능성 보장을 위한 필수 필터링:
 
 - **나이 범위**: `min_age ≤ 사용자 나이 ≤ max_age`
@@ -15,30 +16,36 @@
 → 이 조건을 통과하지 못한 상품은 자동 제외
 
 ### 2. 효율성 지표 (Ranking 단계)
+
 남은 상품을 점수화하여 우선순위 부여:
 
 #### 보장금액 점수 (Coverage Score)
+
 - 일반암 진단비(`coverage_name`에 "일반암") 기준
 - `payment_amount`가 클수록 높은 점수
 
 #### 보험료 대비 효율성 (Value Score)
+
 - **공식**: `보장금액 ÷ 월 보험료`
 - 같은 보장이라면 보험료가 저렴할수록 유리
 
 #### 상품 안정성 (Stability Score)
+
 - 해약환급금(`surrender_value`)이 높을수록 점수 ↑
 - 갱신주기(`renewal_cycle`)가 길수록 점수 ↑ (갱신형 < 종신형/정기형)
 
 ### 3. 최종 추천 점수
+
 ```
-최종점수 = (Coverage Score × 0.5) 
-         + (Value Score × 0.3) 
+최종점수 = (Coverage Score × 0.5)
+         + (Value Score × 0.3)
          + (Stability Score × 0.2)
 ```
 
 ## 🚀 빠른 시작
 
 ### 설치 및 실행
+
 ```bash
 # 의존성 설치
 pip install -r requirements.txt
@@ -50,6 +57,7 @@ python run_server.py
 서버: `http://localhost:8001`
 
 ### API 사용
+
 ```http
 POST http://localhost:8001/recommend
 Content-Type: application/json

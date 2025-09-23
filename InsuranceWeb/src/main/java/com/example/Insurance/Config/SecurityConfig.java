@@ -29,6 +29,8 @@ public class SecurityConfig {
                         .requestMatchers("/", "/main", "/css/**", "/js/**", "/images/**","/service_intro","/notice","/user/find_id").permitAll()
                         // 로그인 및 회원가입 페이지에 대한 접근 허용
                         .requestMatchers("/user/login", "/user/register").permitAll()
+                        // 추천 API는 익명 접근 허용
+                        .requestMatchers("/cancer/recommend", "/cancer/recommend/api", "/cancer/profile-recommend", "/cancer/profile-recommend/api").permitAll()
                         // 내 보험찾기 URL은 로그인 후 접근 가능하도록 설정
                         .requestMatchers("/user/my_insurance/**").authenticated()
                         // 그 외 모든 요청은 인증 필요

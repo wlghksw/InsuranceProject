@@ -400,17 +400,28 @@
         
         const formData = new FormData(this);
         const data = {
-            minCoverage: formData.get('minCoverage') ? parseInt(formData.get('minCoverage')) : null,
-            maxPremium: formData.get('maxPremium') ? parseFloat(formData.get('maxPremium')) : null,
-            preferNonRenewal: formData.get('renewalType') === 'true',
-            requireSalesChannel: formData.get('salesChannel') || null,
+            min_coverage: formData.get('minCoverage') ? parseInt(formData.get('minCoverage')) : null,
+            max_premium_avg: formData.get('maxPremium') ? parseFloat(formData.get('maxPremium')) : null,
+            prefer_non_renewal: formData.get('renewalType') === 'true',
+            require_sales_channel: formData.get('salesChannel') || null,
             weights: [
                 parseInt(formData.get('coverageWeight')) / 100,
                 parseInt(formData.get('valueWeight')) / 100,
                 parseInt(formData.get('stabilityWeight')) / 100
             ],
-            topN: 10
+            top_n: 10
         };
+        
+        // 디버깅을 위한 로그
+        console.log('JavaScript에서 전달하는 데이터:', data);
+        console.log('renewalType 값:', formData.get('renewalType'));
+        console.log('preferNonRenewal 계산:', formData.get('renewalType') === 'true');
+        
+        // 디버깅을 위한 로그
+        console.log('JavaScript에서 전달하는 데이터:', data);
+        
+        // 디버깅을 위한 로그
+        console.log('JavaScript에서 전달하는 데이터:', data);
 
         // 로딩 표시
         document.getElementById('loading').style.display = 'block';

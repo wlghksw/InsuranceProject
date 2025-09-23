@@ -107,3 +107,30 @@ class DataLoader:
     def is_data_loaded(self) -> bool:
         """데이터가 로드되었는지 확인"""
         return self.base_df is not None and not self.base_df.empty
+    
+    @property
+    def products(self):
+        """상품 데이터를 딕셔너리 리스트로 반환"""
+        if self.base_df is None:
+            return []
+        
+        products = []
+        for _, row in self.base_df.iterrows():
+            product = {
+                'policy_id': row.get('policy_id'),
+                'insurance_company': row.get('insurance_company'),
+                'product_name': row.get('product_name'),
+                'coverage_amount': row.get('coverage_amount_num'),
+                'male_premium': row.get('male_premium'),
+                'female_premium': row.get('female_premium'),
+                'avg_premium': (row.get('male_premium', 0) + row.get('female_premium', 0)) / 2 if pd.notna(row.get('male_premium')) and pd.notna(row.get('female_premium')) else None,
+                'renewal_cycle': row.get('renewal_cycle'),
+                'surrender_value': str(row.get('surrender_value_num')) if pd.notna(row.get('surrender_value_num')) else "0",
+                'sales_channel': row.get('sales_channel'),
+                'coverage_score': 0.0,  # 기본값
+                'value_score': 0.0,     # 기본값
+                'stability_score': 0.0  # 기본값
+            }
+            products.append(product)
+        
+        return products

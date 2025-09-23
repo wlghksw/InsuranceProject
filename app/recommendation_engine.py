@@ -35,6 +35,8 @@ class RecommendationEngine:
         max_premium_avg: Optional[float] = None,
         prefer_non_renewal: bool = True,
         require_sales_channel: Optional[str] = None,
+        sex: Optional[str] = None,
+        monthly_budget: Optional[int] = None,
         weights: Tuple[float, float, float] = (0.5, 0.3, 0.2),
         top_n: int = 10
     ) -> list[ProductRecommendation]:
@@ -75,6 +77,32 @@ class RecommendationEngine:
                 df = df[df['sales_channel'].astype(str).str.contains('CM', na=False)]
             else:
                 df = df[df['sales_channel'].astype(str).str.contains(require_sales_channel, na=False)]
+        
+        # 성별 필터링
+        if sex:
+            if sex == 'M':
+                # 남성인데 남성 보험료가 0이면 제외 (여성 전용 상품)
+                df = df[df['male_premium'] > 0]
+            else:
+                # 여성인데 여성 보험료가 0이면 제외 (남성 전용 상품)
+                df = df[df['female_premium'] > 0]
+        
+        # 예산 필터링
+        if monthly_budget and sex:
+            if sex == 'M':
+                # 남성 보험료 기준으로 예산 필터링 (10% 여유분 허용)
+                df = df[(df['male_premium'].isna()) | (df['male_premium'] <= monthly_budget * 1.1)]
+            else:
+                # 여성 보험료 기준으로 예산 필터링 (10% 여유분 허용)
+                df = df[(df['female_premium'].isna()) | (df['female_premium'] <= monthly_budget * 1.1)]
+        
+        # 갱신형 선호도 필터링
+        if prefer_non_renewal:
+            # 비갱신형 선호 시 갱신형 상품 제외
+            df = df[df['renewal_cycle'] != '갱신형']
+        else:
+            # 갱신형 선호 시 비갱신형 상품 제외
+            df = df[df['renewal_cycle'] == '갱신형']
         
         if df.empty:
             return []

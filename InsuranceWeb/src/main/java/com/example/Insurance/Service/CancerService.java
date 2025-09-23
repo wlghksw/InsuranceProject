@@ -2,6 +2,7 @@ package com.example.Insurance.Service;
 
 import com.example.Insurance.DTO.CancerRecommendationRequest;
 import com.example.Insurance.DTO.CancerRecommendationResponse;
+import com.example.Insurance.DTO.UserProfileRecommendationRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +30,16 @@ public class CancerService {
 
     public CancerRecommendationResponse getRecommendations(CancerRecommendationRequest request) {
         try {
+            // 요청 데이터 로깅
+            System.out.println("=== Spring Boot에서 FastAPI로 전달하는 데이터 ===");
+            System.out.println("minCoverage: " + request.getMinCoverage());
+            System.out.println("maxPremium: " + request.getMaxPremium());
+            System.out.println("preferNonRenewal: " + request.getPreferNonRenewal());
+            System.out.println("requireSalesChannel: " + request.getRequireSalesChannel());
+            System.out.println("weights: " + request.getWeights());
+            System.out.println("topN: " + request.getTopN());
+            System.out.println("===============================================");
+            
             // FastAPI 서버로 요청 전송
             String url = cancerApiUrl + "/recommend";
             
@@ -129,5 +140,57 @@ public class CancerService {
         
         response.setRecommendations(recommendations);
         return response;
+    }
+
+
+    public Map<String, Object> getAnalyticsSummary() {
+        try {
+            // FastAPI 서버에서 분석 요약 조회
+            String url = cancerApiUrl + "/analytics/summary";
+            
+            ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
+            
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            } else {
+                throw new RuntimeException("분석 요약 API 요청 실패: " + response.getStatusCode());
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "분석 요약 API 호출 중 오류가 발생했습니다: " + e.getMessage());
+            return errorResponse;
+        }
+    }
+
+    public CancerRecommendationResponse getProfileRecommendations(UserProfileRecommendationRequest request) {
+        try {
+            // FastAPI 서버로 사용자 특성 기반 추천 요청 전송
+            String url = cancerApiUrl + "/recommend/user-profile";
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            
+            HttpEntity<UserProfileRecommendationRequest> entity = new HttpEntity<>(request, headers);
+            
+            ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
+            
+            if (response.getStatusCode().is2xxSuccessful()) {
+                Map<String, Object> responseBody = response.getBody();
+                return convertToResponse(responseBody);
+            } else {
+                throw new RuntimeException("사용자 특성 기반 추천 API 요청 실패: " + response.getStatusCode());
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            CancerRecommendationResponse errorResponse = new CancerRecommendationResponse();
+            errorResponse.setSuccess(false);
+            errorResponse.setMessage("사용자 특성 기반 추천 API 호출 중 오류가 발생했습니다: " + e.getMessage());
+            errorResponse.setTotalProducts(0);
+            errorResponse.setRecommendations(new ArrayList<>());
+            return errorResponse;
+        }
     }
 }
