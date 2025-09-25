@@ -8,7 +8,9 @@ from .models import (
     RecommendationResponse, 
     HealthCheckResponse,
     ProductRecommendation,
-    UserProfileRecommendationRequest
+    UserProfileRecommendationRequest,
+    SavingsRecommendationRequest,
+    SavingsRecommendationResponse
 )
 from .data_loader import DataLoader
 from .recommendation_engine import RecommendationEngine
@@ -310,6 +312,91 @@ async def debug_user_behavior():
     except Exception as e:
         logger.error(f"사용자 행동 디버깅 실패: {str(e)}")
         return {"error": f"사용자 행동 디버깅 실패: {str(e)}"}
+
+# 저축성보험 추천 엔드포인트
+@app.post("/savings/recommend", response_model=SavingsRecommendationResponse)
+async def get_savings_recommendations(request: SavingsRecommendationRequest):
+    """저축성보험 상품 추천"""
+    try:
+        logger.info(f"저축성보험 추천 요청 받음: {request.dict()}")
+        
+        if not recommendation_engine:
+            raise HTTPException(status_code=503, detail="추천 엔진이 초기화되지 않았습니다.")
+        
+        # 저축성보험 추천 로직 (기존 암보험 추천 로직을 활용)
+        recommendations = recommendation_engine.get_savings_recommendations(request)
+        
+        response = SavingsRecommendationResponse(
+            success=True,
+            message=f"저축성보험 추천 상품 {len(recommendations)}개를 반환했습니다.",
+            total_products=len(recommendations),
+            recommendations=recommendations,
+            request_params=request
+        )
+        
+        logger.info(f"저축성보험 추천 상품 {len(recommendations)}개 반환")
+        return response
+        
+    except Exception as e:
+        logger.error(f"저축성보험 추천 중 오류: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"저축성보험 추천 중 오류가 발생했습니다: {str(e)}")
+
+
+@app.post("/savings/profile-recommend", response_model=SavingsRecommendationResponse)
+async def get_savings_profile_recommendations(request: UserProfileRecommendationRequest):
+    """사용자 특성 기반 저축성보험 추천"""
+    try:
+        logger.info(f"사용자 특성 기반 저축성보험 추천 요청 받음: {request.dict()}")
+        
+        if not recommendation_engine:
+            raise HTTPException(status_code=503, detail="추천 엔진이 초기화되지 않았습니다.")
+        
+        # 사용자 특성 기반 저축성보험 추천 로직
+        recommendations = recommendation_engine.get_savings_profile_recommendations(request)
+        
+        response = SavingsRecommendationResponse(
+            success=True,
+            message=f"사용자 특성 기반 저축성보험 추천 상품 {len(recommendations)}개를 반환했습니다.",
+            total_products=len(recommendations),
+            recommendations=recommendations
+        )
+        
+        logger.info(f"사용자 특성 기반 저축성보험 추천 상품 {len(recommendations)}개 반환")
+        return response
+        
+    except Exception as e:
+        logger.error(f"사용자 특성 기반 저축성보험 추천 중 오류: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"사용자 특성 기반 저축성보험 추천 중 오류가 발생했습니다: {str(e)}")
+
+
+@app.get("/savings/analytics/summary")
+async def get_savings_analytics_summary():
+    """저축성보험 분석 요약 정보 조회"""
+    try:
+        if not recommendation_engine:
+            raise HTTPException(status_code=503, detail="추천 엔진이 초기화되지 않았습니다.")
+        
+        summary = recommendation_engine.get_savings_analytics_summary()
+        return summary
+        
+    except Exception as e:
+        logger.error(f"저축성보험 분석 요약 조회 중 오류: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"저축성보험 분석 요약 조회 중 오류가 발생했습니다: {str(e)}")
+
+
+@app.get("/savings/products")
+async def get_savings_products():
+    """저축성보험 상품 목록 조회"""
+    try:
+        if not recommendation_engine:
+            raise HTTPException(status_code=503, detail="추천 엔진이 초기화되지 않았습니다.")
+        
+        products = recommendation_engine.get_savings_products()
+        return products
+        
+    except Exception as e:
+        logger.error(f"저축성보험 상품 목록 조회 중 오류: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"저축성보험 상품 목록 조회 중 오류가 발생했습니다: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn
