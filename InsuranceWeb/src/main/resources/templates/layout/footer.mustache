@@ -1,0 +1,26 @@
+<footer class="footer mt-auto py-3 bg-light">
+    <div class="container text-center">
+        <span class="text-muted">&copy; 2025 Turtle Insurance. All Rights Reserved.</span>
+    </div>
+</footer>
+
+<button id="to-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<script>
+    // 페이지가 길어질 경우 맨 위로 가는 버튼을 보여주는 스크립트
+    document.addEventListener('DOMContentLoaded', function() {
+        const toTopBtn = document.getElementById('to-top-btn');
+        if (toTopBtn) {
+             window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    toTopBtn.style.display = 'flex';
+                } else {
+                    toTopBtn.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

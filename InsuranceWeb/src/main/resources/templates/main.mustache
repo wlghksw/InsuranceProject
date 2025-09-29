@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <title>거북이 보험 - 홈</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .custom-navbar { background-color: #fcf8f0; border-bottom: 1px solid #e0e0e0; padding: 1rem 1.5rem; position: fixed; width: 100%; top: 0; z-index: 1000; }
+        .custom-navbar .navbar-brand { font-family: 'Noto Sans KR', sans-serif; font-weight: 700; color: #17ec42; font-size: 1.5rem; }
+        .custom-navbar .navbar-brand i { margin-right: 0.5rem; }
+        .custom-navbar .nav-link { color: #333; font-weight: 500; }
+        .side-nav { position: fixed; top: 50%; right: 20px; transform: translateY(-50%); background-color: rgba(255, 255, 255, 0.9); border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 1rem; z-index: 1010; }
+        .side-nav ul { list-style: none; padding: 0; margin: 0; }
+        .side-nav li a { display: flex; align-items: center; padding: 0.75rem; color: #555; text-decoration: none; font-weight: 500; border-radius: 5px; transition: background-color 0.3s, color 0.3s; }
+        .side-nav li a i { width: 20px; margin-right: 10px; text-align: center; }
+        .side-nav li a.active, .side-nav li a:hover { background-color: #17a2b8; color: white; }
+        .section { padding: 100px 0; }
+        #to-top-btn { position: fixed; bottom: 20px; right: 20px; background-color: #17a2b8; color: white; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 1011; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        #to-top-btn.visible { display: flex; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/"><i class="fas fa-shield-alt"></i> 거북이 보험</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#">로그인</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">회원가입</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<nav class="side-nav">
+    <ul>
+        <li><a href="/"><i class="fas fa-home"></i> 홈</a></li>
+        <li><a href="/cancer/recommend"><i class="fas fa-ribbon"></i> 암보험 추천</a></li>
+        <li><a href="/accident/recommend"><i class="fas fa-user-shield"></i> 상해보험 추천</a></li>
+        <li><a href="#contact-section"><i class="fas fa-envelope"></i> 문의하기</a></li>
+    </ul>
+</nav>
+
+<div id="home-section" class="section text-center">
+    <h1>당신에게 꼭 맞는 보험을 찾아드립니다</h1>
+    <p>거북이처럼 든든하고 안전하게</p>
+</div>
+
+<div id="cancer-section" class="section bg-light">
+    <div class="container">
+        <h2>암보험 추천</h2>
+        <p>암보험 상품을 비교하고 추천받아보세요.</p>
+        <a href="/cancer/recommend" class="btn btn-primary">자세히 보기</a>
+    </div>
+</div>
+
+<div id="contact-section" class="section">
+    <div class="container">
+        <h2>문의하기</h2>
+        <p>궁금한 점이 있으시면 언제든지 문의해주세요.</p>
+    </div>
+</div>
+
+<button id="to-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.side-nav a');
+        const toTopBtn = document.getElementById('to-top-btn');
+
+        function updateActiveState() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - (window.innerHeight / 2)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+
+            if (window.scrollY > 300) {
+                toTopBtn.classList.add('visible');
+            } else {
+                toTopBtn.classList.remove('visible');
+            }
+        }
+
+        let throttleTimer = false;
+        window.addEventListener('scroll', () => {
+            if (throttleTimer) return;
+            throttleTimer = true;
+            setTimeout(() => {
+                updateActiveState();
+                throttleTimer = false;
+            }, 100);
+        });
+
+        updateActiveState();
+    });
+</script>
+</body>
+</html>
