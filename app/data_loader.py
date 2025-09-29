@@ -134,3 +134,41 @@ class DataLoader:
             products.append(product)
         
         return products
+    
+    def get_coverage_dataframe(self):
+        """보장 내용 데이터프레임 반환"""
+        return self.coverages
+    
+    def get_cancer_products_df(self):
+        """암보험 상품 데이터프레임 반환 (RecommendationEngine용)"""
+        if self.base_df is None or self.base_df.empty:
+            return None
+        
+        # RecommendationEngine에서 필요한 컬럼들로 구성
+        df = self.base_df.copy()
+        
+        # product_id 컬럼 추가 (policy_id 기반)
+        df['product_id'] = df['policy_id'].astype(str)
+        
+        # company 컬럼 추가 (insurance_company 기반)
+        df['company'] = df['insurance_company']
+        
+        # product_name 컬럼 추가
+        df['product_name'] = df['product_name']
+        
+        # coverage_amount 컬럼 (이미 존재)
+        # monthly_premium 컬럼 추가 (male_premium 기반으로 설정)
+        df['monthly_premium'] = df['male_premium'].astype(str) + '원'
+        
+        # renewal_type 컬럼 추가 (renewal_cycle 기반)
+        df['renewal_type'] = df['renewal_cycle']
+        
+        # sales_channel 컬럼 (이미 존재)
+        
+        # age 컬럼 추가 (임시로 40세로 설정 - 실제로는 사용자 나이에 따라 필터링)
+        df['age'] = 40
+        
+        # sex 컬럼 추가 (임시로 'M'으로 설정 - 실제로는 사용자 성별에 따라 필터링)
+        df['sex'] = 'M'
+        
+        return df

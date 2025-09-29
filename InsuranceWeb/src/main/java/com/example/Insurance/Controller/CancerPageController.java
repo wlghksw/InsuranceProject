@@ -1,9 +1,9 @@
 package com.example.Insurance.Controller;
 
-import com.example.Insurance.DTO.CancerRecommendationRequest;
+import com.example.Insurance.DTO.CancerFilterRequest;
 import com.example.Insurance.DTO.CancerRecommendationResponse;
 import com.example.Insurance.DTO.UserProfileRecommendationRequest;
-import com.example.Insurance.Service.CancerService;
+import com.example.Insurance.Service.CancerRecommendationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,28 +14,56 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/cancer")
-public class CancerController {
+public class CancerPageController {
 
     @Autowired
-    private CancerService cancerService;
+    private CancerRecommendationService cancerRecommendationService;
 
     @GetMapping("/recommend")
-    public String recommendPage(Model model) {
+    public String showRecommendPage(Model model) {
         return "cancer/cancer_recommend";
     }
 
 
     @GetMapping("/profile-recommend")
-    public String profileRecommendPage(Model model) {
+    public String showProfileRecommendPage(Model model) {
         return "cancer/cancer_profile_recommend";
     }
 
     @PostMapping("/recommend/api")
     @ResponseBody
-    public CancerRecommendationResponse getRecommendations(@RequestBody CancerRecommendationRequest request) {
+    public CancerRecommendationResponse findRecommendations(@RequestBody Map<String, Object> requestMap) {
         try {
             // Controller에서 받은 데이터 로깅
-            System.out.println("=== Controller에서 받은 데이터 ===");
+            System.out.println("=== Controller에서 받은 원본 데이터 ===");
+            System.out.println("전체 데이터: " + requestMap);
+            
+            // Map을 CancerFilterRequest로 변환
+            CancerFilterRequest request = new CancerFilterRequest();
+            request.setMinCoverage((Integer) requestMap.get("minCoverage"));
+            request.setMaxPremium(((Number) requestMap.get("maxPremium")).doubleValue());
+            
+            // renewalType을 boolean으로 변환
+            String renewalType = (String) requestMap.get("renewalType");
+            if ("renewal".equals(renewalType)) {
+                request.setPreferNonRenewal(false); // 갱신 있음 = 갱신형 선호
+            } else if ("non-renewal".equals(renewalType)) {
+                request.setPreferNonRenewal(true);  // 갱신 없음 = 비갱신형 선호
+            } else {
+                request.setPreferNonRenewal(true); // 기본값
+            }
+            
+            request.setRequireSalesChannel((String) requestMap.get("salesChannel"));
+            
+            // 가중치 변환 (개별 필드를 List로)
+            Double coverageWeight = ((Number) requestMap.get("coverageWeight")).doubleValue();
+            Double valueWeight = ((Number) requestMap.get("valueWeight")).doubleValue();
+            Double stabilityWeight = ((Number) requestMap.get("stabilityWeight")).doubleValue();
+            request.setWeights(List.of(coverageWeight, valueWeight, stabilityWeight));
+            
+            request.setTopN((Integer) requestMap.get("topN"));
+            
+            System.out.println("=== 변환된 데이터 ===");
             System.out.println("minCoverage: " + request.getMinCoverage());
             System.out.println("maxPremium: " + request.getMaxPremium());
             System.out.println("preferNonRenewal: " + request.getPreferNonRenewal());
@@ -44,7 +72,7 @@ public class CancerController {
             System.out.println("topN: " + request.getTopN());
             System.out.println("=================================");
             
-            return cancerService.getRecommendations(request);
+            return cancerRecommendationService.findRecommendations(request);
         } catch (Exception e) {
             e.printStackTrace();
             CancerRecommendationResponse errorResponse = new CancerRecommendationResponse();
@@ -59,9 +87,9 @@ public class CancerController {
 
     @PostMapping("/profile-recommend/api")
     @ResponseBody
-    public CancerRecommendationResponse getProfileRecommendations(@RequestBody UserProfileRecommendationRequest request) {
+    public CancerRecommendationResponse findProfileRecommendations(@RequestBody UserProfileRecommendationRequest request) {
         try {
-            return cancerService.getProfileRecommendations(request);
+            return cancerRecommendationService.findProfileRecommendations(request);
         } catch (Exception e) {
             e.printStackTrace();
             CancerRecommendationResponse errorResponse = new CancerRecommendationResponse();
@@ -77,7 +105,7 @@ public class CancerController {
     @ResponseBody
     public Map<String, Object> getAnalyticsSummary() {
         try {
-            return cancerService.getAnalyticsSummary();
+            return cancerRecommendationService.getAnalyticsSummary();
         } catch (Exception e) {
             e.printStackTrace();
             return Map.of("error", "분석 요약 조회 중 오류가 발생했습니다: " + e.getMessage());
@@ -85,9 +113,9 @@ public class CancerController {
     }
 
     @GetMapping("/products")
-    public String getAllProducts(Model model) {
+    public String showAllProducts(Model model) {
         try {
-            List<Map<String, Object>> products = cancerService.getAllProducts();
+            List<Map<String, Object>> products = cancerRecommendationService.findAllProducts();
             model.addAttribute("products", products);
             return "cancer/cancer_products";
         } catch (Exception e) {

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <title>관리자 대시보드 - 거북이 보험</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* [병합] 기존 메인 페이지 레이아웃 스타일 */
+        html, body {
+            margin: 0; padding: 0; scroll-behavior: smooth; font-family: 'Noto Sans KR', sans-serif;
+        }
+        .custom-navbar {
+            background-color: #fcf8f0; border-bottom: 1px solid #e0e0e0; padding: 1rem 1.5rem;
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+        }
+        .custom-navbar .navbar-brand {
+            font-weight: 700; color: #17ec42; font-size: 1.8rem;
+        }
+        .scroll-section {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            padding: 8rem 2rem 2rem 2rem; box-sizing: border-box;
+        }
+        #section1 { background: #dcfbca; }
+        #section2 { background: #a5fa8e; }
+        .side-nav {
+            position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+            z-index: 1000; list-style: none; margin: 0; padding: 0;
+            display: flex; flex-direction: column; gap: 15px;
+        }
+        .side-nav li a {
+            display: block; width: 12px; height: 12px; background-color: #ccc;
+            border-radius: 50%; transition: background-color 0.3s ease; text-indent: -9999px;
+        }
+        .side-nav li a.active { background-color: #17ec42; }
+
+        /* [병합] 기존 대시보드 테이블 및 버튼 스타일 */
+        .table-container { width: 100%; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; margin-bottom: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #e0e0e0; padding: 12px; text-align: center; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        tr:nth-child(even) { background-color: #fafafa; }
+        .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; color: white; font-size: 0.9em; margin: 2px; min-width: 80px; }
+        .btn-role-admin { background-color: #34495E; }
+        .btn-role-user { background-color: #f39c12; }
+        .btn-withdraw { background-color: #e74c3c; }
+        .btn-restore { background-color: #3498db; }
+        .btn-delete { background-color: #c0392b; }
+        .user-status { font-weight: bold; }
+        .status-active { color: #27AE60; }
+        .status-inactive { color: #C0392B; }
+    </style>
+</head>
+<body>
+
+<!-- 측면 내비게이션 -->
+<ul class="side-nav">
+    <li><a href="#section1">회원 관리</a></li>
+    <li><a href="#section2">추가 섹션</a></li>
+</ul>
+
+<!-- 상단 네비게이션 바 -->
+<nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/main">🐢거북이 보험 (관리자)</a>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <span class="nav-link text-dark">안녕하세요. <span class="fw-bold">{{loginAdminName}}</span>님</span>
+                </li>
+                <li class="nav-item ms-2">
+                    <form action="/logout" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-secondary">로그아웃</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <!-- 섹션 1: 회원 관리 대시보드 -->
+    <section id="section1" class="scroll-section">
+        <div class="table-container">
+            <h1>회원 관리 대시보드</h1>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>로그인 아이디</th>
+                    <th>이름</th>
+                    <th>가입일</th>
+                    <th>상태</th>
+                    <th>역할</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#users}}
+                    <tr>
+                        <td>{{id}}</td>
+                        <td>{{loginId}}</td>
+                        <td>{{realName}}</td>
+                        <td>{{createdAt}}</td>
+                        <td>
+                            {{#isActive}}<span class="user-status status-active">활성</span>{{/isActive}}
+                            {{^isActive}}<span class="user-status status-inactive">비활성</span>{{/isActive}}
+                        </td>
+                        <td>{{role}}</td>
+                        <td>
+                            {{#admin}}<button class="btn btn-role-user" onclick="updateRole('{{id}}', 'USER')">사용자로</button>{{/admin}}
+                            {{^admin}}<button class="btn btn-role-admin" onclick="updateRole('{{id}}', 'ADMIN')">관리자로</button>{{/admin}}
+                            {{#isActive}}<button class="btn btn-withdraw" onclick="toggleUserStatus('{{id}}', false)">비활성화</button>{{/isActive}}
+                            {{^isActive}}<button class="btn btn-restore" onclick="toggleUserStatus('{{id}}', true)">활성화</button>{{/isActive}}
+                            <button onclick="deleteUser('{{id}}')" class="btn btn-delete">영구 삭제</button>
+                        </td>
+                    </tr>
+                {{/users}}
+                {{^users}}
+                    <tr>
+                        <td colspan="7" class="text-center p-4">등록된 사용자가 없습니다.</td>
+                    </tr>
+                {{/users}}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 섹션 2: 추가 콘텐츠 영역 -->
+    <section id="section2" class="scroll-section">
+        <div class="text-center">
+            <h2>추가 관리자 기능</h2>
+            <p>이곳에 다른 관리자 메뉴나 통계 등을 추가할 수 있습니다.</p>
+        </div>
+    </section>
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // [병합] 스크롤 애니메이션 스크립트
+    document.addEventListener('DOMContentLoaded', () => {
+        const sections = document.querySelectorAll('.scroll-section');
+        const navLinks = document.querySelectorAll('.side-nav a');
+
+        function updateActiveState() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - (window.innerHeight / 2)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', updateActiveState);
+        updateActiveState(); // 초기 로드 시 실행
+    });
+
+    // [병합] 관리자 기능 API 호출 스크립트
+    function updateRole(userId, newRole) {
+        const roleKor = newRole === 'ADMIN' ? '관리자' : '사용자';
+        if (!confirm(`사용자 ID ${userId}의 역할을 ${roleKor}(으)로 변경하시겠습니까?`)) return;
+        fetch(`/admin/users/${userId}/role`, {
+            method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: `role=${newRole}`
+        }).then(handleResponse).catch(handleError);
+    }
+    function toggleUserStatus(userId, shouldRestore) {
+        const action = shouldRestore ? '활성화' : '비활성화';
+        const url = shouldRestore ? `/admin/users/${userId}/restore` : `/admin/users/${userId}/withdraw`;
+        if (!confirm(`사용자 ID ${userId}를 ${action} 상태로 변경하시겠습니까?`)) return;
+        fetch(url, { method: 'POST' }).then(handleResponse).catch(handleError);
+    }
+    function deleteUser(userId) {
+        if (!confirm(`[경고] 사용자 ID ${userId}를 영구적으로 삭제합니다. 되돌릴 수 없습니다.`)) return;
+        fetch(`/admin/users/${userId}`, { method: 'DELETE' }).then(handleResponse).catch(handleError);
+    }
+    function handleResponse(response) {
+        if (response.ok) {
+            alert('작업이 성공적으로 완료되었습니다.');
+            window.location.reload();
+        } else {
+            response.text().then(text => alert(`오류가 발생했습니다: ${text}`));
+        }
+    }
+    function handleError(error) {
+        console.error('네트워크 오류:', error);
+        alert('서버와 통신 중 오류가 발생했습니다.');
+    }
+</script>
+</body>
+</html>

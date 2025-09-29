@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CancerRecommendationRequest {
+public class CancerFilterRequest {
     @JsonProperty("min_coverage")
     private Integer minCoverage;
     
@@ -25,7 +25,7 @@ public class CancerRecommendationRequest {
     private Integer topN;
 
     // 기본 생성자
-    public CancerRecommendationRequest() {}
+    public CancerFilterRequest() {}
 
     // Getters and Setters
     public Integer getMinCoverage() {

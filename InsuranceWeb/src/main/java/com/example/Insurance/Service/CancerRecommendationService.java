@@ -1,6 +1,6 @@
 package com.example.Insurance.Service;
 
-import com.example.Insurance.DTO.CancerRecommendationRequest;
+import com.example.Insurance.DTO.CancerFilterRequest;
 import com.example.Insurance.DTO.CancerRecommendationResponse;
 import com.example.Insurance.DTO.UserProfileRecommendationRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,18 +17,18 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class CancerService {
+public class CancerRecommendationService {
 
     @Value("${cancer.api.url:http://localhost:8001}")
     private String cancerApiUrl;
 
     private final RestTemplate restTemplate;
 
-    public CancerService(RestTemplate restTemplate) {
+    public CancerRecommendationService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    public CancerRecommendationResponse getRecommendations(CancerRecommendationRequest request) {
+    public CancerRecommendationResponse findRecommendations(CancerFilterRequest request) {
         try {
             // 요청 데이터 로깅
             System.out.println("=== Spring Boot에서 FastAPI로 전달하는 데이터 ===");
@@ -46,7 +46,7 @@ public class CancerService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             
-            HttpEntity<CancerRecommendationRequest> entity = new HttpEntity<>(request, headers);
+            HttpEntity<CancerFilterRequest> entity = new HttpEntity<>(request, headers);
             
             ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
             
@@ -68,7 +68,7 @@ public class CancerService {
         }
     }
 
-    public List<Map<String, Object>> getAllProducts() {
+    public List<Map<String, Object>> findAllProducts() {
         try {
             // FastAPI 서버에서 모든 상품 조회
             String url = cancerApiUrl + "/products/sample";
@@ -134,6 +134,16 @@ public class CancerService {
                 product.setStabilityScore(((Number) productData.get("stability_score")).doubleValue());
                 product.setFinalScore(((Number) productData.get("final_score")).doubleValue());
                 
+                // coverage_details 추가
+                Object coverageDetails = productData.get("coverage_details");
+                if (coverageDetails instanceof List) {
+                    @SuppressWarnings("unchecked")
+                    List<String> detailsList = (List<String>) coverageDetails;
+                    product.setCoverageDetails(detailsList);
+                } else {
+                    product.setCoverageDetails(new ArrayList<>());
+                }
+                
                 recommendations.add(product);
             }
         }
@@ -164,9 +174,9 @@ public class CancerService {
         }
     }
 
-    public CancerRecommendationResponse getProfileRecommendations(UserProfileRecommendationRequest request) {
+    public CancerRecommendationResponse findProfileRecommendations(UserProfileRecommendationRequest request) {
         try {
-            // FastAPI 서버로 사용자 특성 기반 추천 요청 전송
+            // 기존 엔드포인트 사용 (이제 간단한 추천 시스템으로 변경됨)
             String url = cancerApiUrl + "/recommend/user-profile";
             
             HttpHeaders headers = new HttpHeaders();

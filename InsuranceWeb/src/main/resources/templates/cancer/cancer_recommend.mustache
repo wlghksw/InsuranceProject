@@ -53,441 +53,562 @@
             margin-bottom: 0.5rem;
         }
         .form-control, .form-select {
-            border-radius: 10px;
             border: 2px solid #e9ecef;
+            border-radius: 10px;
             padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
         .form-control:focus, .form-select:focus {
             border-color: #17ec42;
             box-shadow: 0 0 0 0.2rem rgba(23, 236, 66, 0.25);
         }
-        .btn-recommend {
-            background-color: #17ec42;
+        .btn-primary {
+            background: linear-gradient(135deg, #17ec42 0%, #14c238 100%);
             border: none;
-            border-radius: 25px;
+            border-radius: 10px;
             padding: 0.75rem 2rem;
             font-weight: 600;
             font-size: 1.1rem;
+            transition: all 0.3s ease;
         }
-        .btn-recommend:hover {
-            background-color: #15d65a;
+        .btn-primary:hover {
             transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(23, 236, 66, 0.4);
         }
         .result-card {
             background: white;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            transition: transform 0.2s ease;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
         .result-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .product-header {
+            background: linear-gradient(135deg, #17ec42 0%, #14c238 100%);
+            color: white;
+            padding: 1.5rem;
         }
         .company-name {
-            color: #17ec42;
-            font-weight: 700;
             font-size: 1.2rem;
-        }
-        .product-name {
-            color: #333;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
-        .coverage-amount {
-            color: #dc3545;
+        .product-name {
+            font-size: 1.5rem;
             font-weight: 700;
-            font-size: 1.3rem;
+            margin-bottom: 1rem;
         }
-        .premium-info {
+        .product-details {
+            padding: 1.5rem;
+        }
+        .detail-item {
+            margin-bottom: 1rem;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+        .detail-value {
+            font-weight: 700;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        .preset-section {
+            margin-bottom: 2rem;
+        }
+        .preset-title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        .preset-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .preset-card:hover {
+            border-color: #17ec42;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .preset-card.selected {
+            border-color: #17ec42;
+            background: linear-gradient(135deg, #f8fff9, #f0fdf4);
+        }
+        .preset-title-text {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.3rem;
+            font-size: 1rem;
+        }
+        .preset-desc {
             color: #666;
             font-size: 0.9rem;
         }
-        .score-badge {
-            background-color: #17ec42;
-            color: white;
-            padding: 0.25rem 0.75rem;
+        .results-section {
+            background: white;
             border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+            min-height: 600px;
         }
-        .loading {
+        .coverage-summary {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #17ec42, #14c738);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .coverage-summary:hover {
+            background: linear-gradient(135deg, #14c738, #12b834);
+            transform: translateY(-1px);
+        }
+        .coverage-summary.active {
+            background: linear-gradient(135deg, #14c738, #12b834);
+        }
+        .coverage-icon {
+            margin-right: 0.5rem;
+        }
+        .coverage-arrow {
+            margin-left: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        .coverage-details {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #17ec42;
+        }
+        .coverage-content h6 {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .coverage-item {
+            background: white;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #555;
+            border-left: 3px solid #17ec42;
+        }
+        .coverage-note {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 1rem;
+            font-style: italic;
+        }
+        .initial-message {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            margin-top: 3rem;
+        }
+        .loading-spinner {
             display: none;
             text-align: center;
-            padding: 2rem;
+            margin: 2rem 0;
         }
         .spinner-border {
             color: #17ec42;
         }
+        .result-count {
+            font-weight: 600;
+            color: #17ec42;
+            margin-bottom: 1rem;
+        }
+        .section-title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            border-bottom: 3px solid #17ec42;
+            padding-bottom: 0.5rem;
+        }
     </style>
 </head>
 <body>
-
-<nav class="navbar navbar-expand-lg custom-navbar">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/main">🐢거북이 보험</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/service_intro">서비스 소개</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/user/my_insurance">내 보험찾기</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/notice">공지사항</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                {{#user}}
-                    <li class="nav-item">
-                        <span class="nav-link text-dark">안녕하세요. {{nickname}}님</span>
-                    </li>
-                    <li class="nav-item">
-                        <form action="/logout" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-outline-dark">로그아웃</button>
-                        </form>
-                    </li>
-                {{/user}}
-                {{^user}}
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="/user/login">로그인</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="/user/register">회원가입</a>
-                    </li>
-                {{/user}}
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="text-center mb-4">
-                <h1 style="color: #17ec42; font-weight: bold;">암보험 추천</h1>
-                <p class="text-muted">나에게 맞는 암보험을 찾아보세요</p>
+    <!-- Navigation -->
+    <nav class="custom-navbar navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/main">거북이 보험</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/main">홈</a>
+                <a class="nav-link" href="/savings/recommend">저축성보험</a>
+                <a class="nav-link active" href="/cancer/recommend">암보험</a>
+                <a class="nav-link" href="/user/myPage">마이페이지</a>
+                <a class="nav-link" href="/user/logout">로그아웃</a>
             </div>
+        </div>
+    </nav>
 
-            <div class="recommend-form">
-                <form id="recommendForm">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="minCoverage" class="form-label">최소 보장금액 (원)</label>
-                            <input type="number" class="form-control" id="minCoverage" name="minCoverage" 
-                                   placeholder="예: 30000000" min="0">
-                            <div class="form-text">원하는 최소 보장금액을 입력하세요</div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 왼쪽 추천 설정 -->
+            <div class="col-md-4">
+                <div class="recommend-form">
+                    <h3 class="section-title">맞춤형 암보험 추천</h3>
+                    
+                    <!-- 프리셋 선택 -->
+                    <div class="preset-section">
+                        <div class="preset-title">추천 스타일</div>
+                        
+                        <div class="preset-card" onclick="selectPreset('coverage', event)">
+                            <div class="preset-title-text">보장금액 중심</div>
+                            <div class="preset-desc">최대 보장금액 우선</div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="maxPremium" class="form-label">최대 평균 보험료 (원)</label>
-                            <input type="number" class="form-control" id="maxPremium" name="maxPremium" 
-                                   placeholder="예: 20000" min="0">
-                            <div class="form-text">월 보험료 상한선을 입력하세요</div>
+                        
+                        <div class="preset-card" onclick="selectPreset('value', event)">
+                            <div class="preset-title-text">가성비 중심</div>
+                            <div class="preset-desc">보장과 보험료의 균형</div>
+                        </div>
+                        
+                        <div class="preset-card" onclick="selectPreset('stability', event)">
+                            <div class="preset-title-text">안정성 중심</div>
+                            <div class="preset-desc">낮은 보험료 우선</div>
                         </div>
                     </div>
                     
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="renewalType" class="form-label">갱신형 선호도</label>
+                    <!-- 상세 설정 -->
+                    <form id="recommendForm">
+                        <div class="mb-3">
+                            <label class="form-label">최소 보장금액은?</label>
+                            <select class="form-select" id="minCoverage" name="minCoverage">
+                                <option value="10000000">1천만원</option>
+                                <option value="15000000">1천5백만원</option>
+                                <option value="20000000">2천만원</option>
+                                <option value="25000000">2천5백만원</option>
+                                <option value="30000000" selected>3천만원</option>
+                                <option value="50000000">5천만원</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">월 보험료 예산은?</label>
+                            <select class="form-select" id="maxPremium" name="maxPremium">
+                                <option value="10000">1만원 이하</option>
+                                <option value="15000">1만5천원 이하</option>
+                                <option value="20000" selected>2만원 이하</option>
+                                <option value="25000">2만5천원 이하</option>
+                                <option value="30000">3만원 이하</option>
+                                <option value="50000">5만원 이하</option>
+                                <option value="100000">10만원 이하</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">갱신 방식은?</label>
                             <select class="form-select" id="renewalType" name="renewalType">
-                                <option value="true">비갱신형 선호</option>
-                                <option value="false">갱신형 선호</option>
-                                <option value="neutral">중립</option>
+                                <option value="neutral" selected>상관없음</option>
+                                <option value="non-renewal">갱신 없음</option>
+                                <option value="renewal">갱신 있음</option>
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="salesChannel" class="form-label">판매 채널</label>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">판매 채널은?</label>
                             <select class="form-select" id="salesChannel" name="salesChannel">
-                                <option value="">전체</option>
+                                <option value="" selected>상관없음</option>
                                 <option value="온라인">온라인</option>
-                                <option value="대면채널">대면채널</option>
+                                <option value="오프라인">오프라인</option>
+                                <option value="모바일">모바일</option>
                             </select>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <label for="coverageWeight" class="form-label">보장금액 가중치</label>
-                                <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" 
-                                        data-bs-placement="top" title="보장금액이 높은 상품을 우선 추천합니다. 최대한 많은 보장을 받고 싶을 때 높게 설정하세요.">
-                                    <i class="fas fa-info-circle"></i>
-                                </button>
-                            </div>
-                            <input type="range" class="form-range" id="coverageWeight" name="coverageWeight" 
-                                   min="0" max="100" value="50">
-                            <div class="form-text text-center" id="coverageWeightValue">50%</div>
-                            <div class="text-center">
-                                <small class="text-muted" id="coverageDescription">보장금액과 가성비를 균형있게 고려</small>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <label for="valueWeight" class="form-label">가치 가중치</label>
-                                <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" 
-                                        data-bs-placement="top" title="보장금액 대비 보험료가 저렴한 상품을 우선 추천합니다. 가성비를 중시할 때 높게 설정하세요.">
-                                    <i class="fas fa-info-circle"></i>
-                                </button>
-                            </div>
-                            <input type="range" class="form-range" id="valueWeight" name="valueWeight" 
-                                   min="0" max="100" value="30">
-                            <div class="form-text text-center" id="valueWeightValue">30%</div>
-                            <div class="text-center">
-                                <small class="text-muted" id="valueDescription">보험료 대비 보장금액 효율성 중시</small>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <label for="stabilityWeight" class="form-label">안정성 가중치</label>
-                                <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" 
-                                        data-bs-placement="top" title="비갱신형, 해약환급금이 있는 상품을 우선 추천합니다. 장기적으로 안정적인 보험을 원할 때 높게 설정하세요.">
-                                    <i class="fas fa-info-circle"></i>
-                                </button>
-                            </div>
-                            <input type="range" class="form-range" id="stabilityWeight" name="stabilityWeight" 
-                                   min="0" max="100" value="20">
-                            <div class="form-text text-center" id="stabilityWeightValue">20%</div>
-                            <div class="text-center">
-                                <small class="text-muted" id="stabilityDescription">비갱신형, 해약환급금 등 안정성 중시</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 가중치 조절 가이드 -->
-                    <div class="card mt-3 mb-3" style="background-color: #f8f9fa; border: 1px solid #e9ecef;">
-                        <div class="card-header">
-                            <h6 class="mb-0">
-                                <i class="fas fa-lightbulb me-2" style="color: #17ec42;"></i>가중치 조절 가이드
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <h6 class="text-success">보장금액 중심</h6>
-                                    <p class="small mb-2">보장금액 70% | 가치 20% | 안정성 10%</p>
-                                    <button type="button" class="btn btn-sm btn-outline-success" onclick="setWeights(70, 20, 10)">
-                                        적용하기
-                                    </button>
-                                </div>
-                                <div class="col-md-4">
-                                    <h6 class="text-primary">가성비 중심</h6>
-                                    <p class="small mb-2">보장금액 30% | 가치 50% | 안정성 20%</p>
-                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="setWeights(30, 50, 20)">
-                                        적용하기
-                                    </button>
-                                </div>
-                                <div class="col-md-4">
-                                    <h6 class="text-warning">안정성 중심</h6>
-                                    <p class="small mb-2">보장금액 30% | 가치 20% | 안정성 50%</p>
-                                    <button type="button" class="btn btn-sm btn-outline-warning" onclick="setWeights(30, 20, 50)">
-                                        적용하기
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-recommend">
-                            <i class="fas fa-search me-2"></i>보험 추천받기
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>맞춤형 암보험 찾기
                         </button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="loading" id="loading">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">로딩중...</span>
+                    </form>
                 </div>
-                <p class="mt-2">추천 상품을 찾고 있습니다...</p>
             </div>
-
-            <div id="results" style="display: none;">
-                <h3 class="mb-3">추천 결과</h3>
-                <div id="resultsList"></div>
+            
+            <!-- 가운데 결과 -->
+            <div class="col-md-8">
+                <div class="results-section">
+                    <h3 class="section-title">추천 결과</h3>
+                    
+                    <div class="initial-message">
+                        <i class="fas fa-shield-alt fa-3x text-muted mb-3"></i>
+                        <p>왼쪽 설정을 조정하고 "맞춤형 암보험 찾기"를 클릭하세요!</p>
+                        <p class="text-muted">당신에게 최적화된 암보험을 찾아드립니다.</p>
+                    </div>
+                    
+                    <div class="loading-spinner" id="loadingSpinner">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">최적의 암보험을 찾고 있습니다...</p>
+                    </div>
+                    
+                    <div id="resultsContainer"></div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // 가중치 슬라이더 이벤트
-    document.getElementById('coverageWeight').addEventListener('input', function() {
-        document.getElementById('coverageWeightValue').textContent = this.value + '%';
-        updateDescription();
-    });
-    document.getElementById('valueWeight').addEventListener('input', function() {
-        document.getElementById('valueWeightValue').textContent = this.value + '%';
-        updateDescription();
-    });
-    document.getElementById('stabilityWeight').addEventListener('input', function() {
-        document.getElementById('stabilityWeightValue').textContent = this.value + '%';
-        updateDescription();
-    });
-
-    // 가중치 조절 가이드 함수
-    function setWeights(coverage, value, stability) {
-        document.getElementById('coverageWeight').value = coverage;
-        document.getElementById('valueWeight').value = value;
-        document.getElementById('stabilityWeight').value = stability;
-        
-        document.getElementById('coverageWeightValue').textContent = coverage + '%';
-        document.getElementById('valueWeightValue').textContent = value + '%';
-        document.getElementById('stabilityWeightValue').textContent = stability + '%';
-        
-        updateDescription();
-    }
-
-    // 설명 업데이트 함수
-    function updateDescription() {
-        const coverage = parseInt(document.getElementById('coverageWeight').value);
-        const value = parseInt(document.getElementById('valueWeight').value);
-        const stability = parseInt(document.getElementById('stabilityWeight').value);
-        
-        // 보장금액 설명 업데이트
-        let coverageDesc = '';
-        if (coverage >= 60) {
-            coverageDesc = '보장금액을 최우선으로 고려';
-        } else if (coverage >= 40) {
-            coverageDesc = '보장금액을 중시하되 균형 고려';
-        } else {
-            coverageDesc = '보장금액보다 다른 요소 중시';
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // closest 함수 폴백 (구형 브라우저 지원)
+        function findClosestElement(element, selector) {
+            while (element && element.nodeType === 1) {
+                if (element.matches && element.matches(selector)) {
+                    return element;
+                }
+                element = element.parentElement;
+            }
+            return null;
         }
-        document.getElementById('coverageDescription').textContent = coverageDesc;
         
-        // 가치 설명 업데이트
-        let valueDesc = '';
-        if (value >= 50) {
-            valueDesc = '가성비를 최우선으로 고려';
-        } else if (value >= 30) {
-            valueDesc = '가성비를 중시하되 균형 고려';
-        } else {
-            valueDesc = '가성비보다 다른 요소 중시';
-        }
-        document.getElementById('valueDescription').textContent = valueDesc;
-        
-        // 안정성 설명 업데이트
-        let stabilityDesc = '';
-        if (stability >= 50) {
-            stabilityDesc = '안정성을 최우선으로 고려';
-        } else if (stability >= 30) {
-            stabilityDesc = '안정성을 중시하되 균형 고려';
-        } else {
-            stabilityDesc = '안정성보다 다른 요소 중시';
-        }
-        document.getElementById('stabilityDescription').textContent = stabilityDesc;
-    }
-
-    // 툴팁 초기화
-    document.addEventListener('DOMContentLoaded', function() {
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-        
-        // 초기 설명 업데이트
-        updateDescription();
-    });
-
-    // 폼 제출 이벤트
-    document.getElementById('recommendForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(this);
-        const data = {
-            min_coverage: formData.get('minCoverage') ? parseInt(formData.get('minCoverage')) : null,
-            max_premium_avg: formData.get('maxPremium') ? parseFloat(formData.get('maxPremium')) : null,
-            prefer_non_renewal: formData.get('renewalType') === 'true',
-            require_sales_channel: formData.get('salesChannel') || null,
-            weights: [
-                parseInt(formData.get('coverageWeight')) / 100,
-                parseInt(formData.get('valueWeight')) / 100,
-                parseInt(formData.get('stabilityWeight')) / 100
-            ],
-            top_n: 10
-        };
-        
-        // 디버깅을 위한 로그
-        console.log('JavaScript에서 전달하는 데이터:', data);
-        console.log('renewalType 값:', formData.get('renewalType'));
-        console.log('preferNonRenewal 계산:', formData.get('renewalType') === 'true');
-        
-        // 디버깅을 위한 로그
-        console.log('JavaScript에서 전달하는 데이터:', data);
-        
-        // 디버깅을 위한 로그
-        console.log('JavaScript에서 전달하는 데이터:', data);
-
-        // 로딩 표시
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('results').style.display = 'none';
-
-        // API 호출
-        fetch('/cancer/recommend/api', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('loading').style.display = 'none';
-            displayResults(data);
-        })
-        .catch(error => {
-            document.getElementById('loading').style.display = 'none';
-            console.error('Error:', error);
-            alert('추천 요청 중 오류가 발생했습니다.');
-        });
-    });
-
-    function displayResults(data) {
-        const resultsDiv = document.getElementById('results');
-        const resultsList = document.getElementById('resultsList');
-        
-        if (data.recommendations && data.recommendations.length > 0) {
-            resultsList.innerHTML = '';
+        // 프리셋 선택 함수
+        function selectPreset(type, event) {
+            // 모든 프리셋 카드에서 selected 클래스 제거
+            document.querySelectorAll('.preset-card').forEach(card => {
+                card.classList.remove('selected');
+            });
             
-            data.recommendations.forEach((product, index) => {
+            // 선택된 카드에 selected 클래스 추가 (event가 있을 때만)
+            if (event) {
+                const target = event.target || event.srcElement;
+                const closestElement = target.closest ? target.closest('.preset-card') : findClosestElement(target, '.preset-card');
+                if (closestElement) {
+                    closestElement.classList.add('selected');
+                }
+            } else {
+                // event가 없을 때는 해당 타입의 프리셋 카드를 찾아서 선택
+                const presetCard = document.querySelector(`.preset-card[onclick*="${type}"]`);
+                if (presetCard) {
+                    presetCard.classList.add('selected');
+                }
+            }
+            
+            // 프리셋에 따른 설정값 조정 (실제 데이터 범위에 맞게 수정)
+            if (type === 'coverage') {
+                // 보장금액 중심: 높은 보장금액 우선 (조건 완화)
+                document.getElementById('minCoverage').value = '20000000';
+                document.getElementById('maxPremium').value = '50000';
+            } else if (type === 'value') {
+                // 가성비 중심: 보장과 보험료의 균형 (조건 완화)
+                document.getElementById('minCoverage').value = '15000000';
+                document.getElementById('maxPremium').value = '30000';
+            } else if (type === 'stability') {
+                // 안정성 중심: 낮은 보험료 우선 (조건 완화)
+                document.getElementById('minCoverage').value = '10000000';
+                document.getElementById('maxPremium').value = '20000';
+            }
+        }
+
+        // 폼 제출 처리
+        document.getElementById('recommendForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 로딩 표시
+            document.querySelector('.initial-message').style.display = 'none';
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('resultsContainer').innerHTML = '';
+            
+            // 폼 데이터 수집
+            const formData = new FormData(this);
+            const data = {
+                minCoverage: parseInt(formData.get('minCoverage')),
+                maxPremium: parseInt(formData.get('maxPremium')),
+                renewalType: formData.get('renewalType'),
+                salesChannel: formData.get('salesChannel'),
+                coverageWeight: 30,
+                valueWeight: 50,
+                stabilityWeight: 20
+            };
+            
+            // 선택된 프리셋에 따른 가중치 조정
+            const selectedPreset = document.querySelector('.preset-card.selected');
+            if (selectedPreset) {
+                const presetTitle = selectedPreset.querySelector('.preset-title-text').textContent;
+                if (presetTitle === '보장금액 중심') {
+                    data.coverageWeight = 70;
+                    data.valueWeight = 20;
+                    data.stabilityWeight = 10;
+                } else if (presetTitle === '가성비 중심') {
+                    data.coverageWeight = 30;
+                    data.valueWeight = 50;
+                    data.stabilityWeight = 20;
+                } else if (presetTitle === '안정성 중심') {
+                    data.coverageWeight = 10;
+                    data.valueWeight = 20;
+                    data.stabilityWeight = 70;
+                }
+            }
+            
+            // API 호출
+            fetch('/cancer/recommend/api', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loadingSpinner').style.display = 'none';
+                displayResults(data.recommendations || []);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('resultsContainer').innerHTML = 
+                    '<div class="alert alert-danger">추천을 불러오는 중 오류가 발생했습니다.</div>';
+            });
+        });
+
+        // 결과 표시 함수
+        function displayResults(recommendations) {
+            const container = document.getElementById('resultsContainer');
+            
+            if (!recommendations || recommendations.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        조건에 맞는 암보험 상품을 찾을 수 없습니다. 다른 조건으로 다시 시도해보세요.
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="result-count">
+                    <i class="fas fa-check-circle me-2"></i>
+                    총 ${recommendations.length}개의 맞춤형 암보험을 찾았습니다!
+                </div>
+            `;
+            
+            recommendations.forEach((rec, index) => {
                 const card = document.createElement('div');
                 card.className = 'result-card';
                 card.innerHTML = `
-                    <div class="mb-2">
-                        <div class="company-name">${product.insuranceCompany}</div>
-                        <div class="product-name">${product.productName}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="coverage-amount">${product.coverageAmount.toLocaleString()}원</div>
-                            <div class="premium-info">
-                                남성: ${product.malePremium ? product.malePremium.toLocaleString() + '원' : 'N/A'} | 
-                                여성: ${product.femalePremium ? product.femalePremium.toLocaleString() + '원' : 'N/A'}
+                    <div class="product-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="company-name">${rec.insuranceCompany || '정보없음'}</div>
+                                <div class="product-name">${rec.productName || '상품명 없음'}</div>
+                            </div>
+                            <div class="text-end">
+                                <div class="coverage-summary" onclick="toggleCoverageDetails(${index})">
+                                    <span class="coverage-icon">🛡️</span>
+                                    <span class="coverage-text">보장 내용 보기</span>
+                                    <span class="coverage-arrow">▼</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="premium-info">
-                                <strong>갱신형태:</strong> ${product.renewalCycle}<br>
-                                <strong>판매채널:</strong> ${product.salesChannel}<br>
-                                <strong>해약환급금:</strong> ${product.surrenderValue}
+                    </div>
+                    <div class="product-details">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="detail-item">
+                                    <div class="detail-label">보장금액</div>
+                                    <div class="detail-value">${rec.coverageAmount ? rec.coverageAmount.toLocaleString() + '원' : '정보없음'}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">월 보험료</div>
+                                    <div class="detail-value">${rec.avgPremium ? rec.avgPremium.toLocaleString() + '원' : '정보없음'}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="detail-item">
+                                    <div class="detail-label">갱신형</div>
+                                    <div class="detail-value">${rec.renewalCycle || '정보없음'}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">판매채널</div>
+                                    <div class="detail-value">${rec.salesChannel || '정보없음'}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="coverage-details" id="details-${index}" style="display: none;">
+                            <div class="coverage-content">
+                                <h6>주요 보장 내용</h6>
+                                <div class="coverage-content" data-product-index="${index}">
+                                    <div class="coverage-item">보장 내용 로딩 중...</div>
+                                </div>
+                                <div class="coverage-note">
+                                    ※ 상세한 보장 조건과 지급 한도는 각 상품의 약관을 참조하세요.
+                                </div>
                             </div>
                         </div>
                     </div>
                 `;
-                resultsList.appendChild(card);
+                container.appendChild(card);
+                
+                // 보장 내용 동적 렌더링
+                const coverageContentDiv = card.querySelector('[data-product-index="' + index + '"]');
+                if (rec.coverageDetails && rec.coverageDetails.length > 0) {
+                    coverageContentDiv.innerHTML = rec.coverageDetails.map(detail => 
+                        `<div class="coverage-item">${detail}</div>`
+                    ).join('');
+                } else {
+                    coverageContentDiv.innerHTML = '<div class="coverage-item">보장 내용 정보를 불러올 수 없습니다.</div>';
+                }
             });
-            
-            resultsDiv.style.display = 'block';
-        } else {
-            resultsList.innerHTML = '<div class="alert alert-warning">조건에 맞는 상품을 찾을 수 없습니다.</div>';
-            resultsDiv.style.display = 'block';
         }
-    }
-</script>
+
+        // 보장 내용 토글 함수
+        function toggleCoverageDetails(index) {
+            const detailsElement = document.getElementById('details-' + index);
+            const summaryElement = detailsElement.previousElementSibling.querySelector('.coverage-summary');
+            
+            if (detailsElement.style.display === 'none' || detailsElement.style.display === '') {
+                // 다른 모든 보장 내용 숨기기
+                document.querySelectorAll('.coverage-details').forEach(el => {
+                    if (el.id !== 'details-' + index) {
+                        el.style.display = 'none';
+                        const otherSummary = el.previousElementSibling.querySelector('.coverage-summary');
+                        if (otherSummary) {
+                            otherSummary.classList.remove('active');
+                            const arrow = otherSummary.querySelector('.coverage-arrow');
+                            arrow.textContent = '▼';
+                        }
+                    }
+                });
+                
+                // 현재 보장 내용 보이기
+                detailsElement.style.display = 'block';
+                summaryElement.classList.add('active');
+                
+                // 화살표 회전
+                const arrow = summaryElement.querySelector('.coverage-arrow');
+                arrow.textContent = '▲';
+            } else {
+                // 현재 보장 내용 숨기기
+                detailsElement.style.display = 'none';
+                summaryElement.classList.remove('active');
+                
+                // 화살표 원래대로
+                const arrow = summaryElement.querySelector('.coverage-arrow');
+                arrow.textContent = '▼';
+            }
+        }
+
+        // 페이지 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            // 기본 프리셋 선택 (event 객체 없이 호출)
+            selectPreset('value', null);
+        });
+    </script>
 </body>
 </html>

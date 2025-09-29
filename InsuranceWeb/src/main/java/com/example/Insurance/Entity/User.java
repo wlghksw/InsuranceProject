@@ -3,18 +3,17 @@ package com.example.Insurance.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA를 위한 기본 생성자
+@AllArgsConstructor(access = AccessLevel.PRIVATE) // Builder를 통한 생성만 허용
 @Builder
+@EqualsAndHashCode(of = "id") // [보완] id를 기준으로 엔티티의 동등성을 비교
+@ToString(exclude = {"password", "ssn"}) // [보완] 로그 출력 시 민감 정보 제외
 @Table(name = "users")
-@DynamicInsert
-@DynamicUpdate
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,53 +28,89 @@ public class User {
     private String realName;
 
     private String nickname;
+
     private String phone;
+
     private Integer birthYear;
+
     private String gender;
+
     private String profileImage;
 
+    // [보안] 주민번호와 같은 민감 정보는 암호화하여 저장하는 것을 권장합니다.
     @Column(unique = true)
     private String ssn;
 
-    @Column(columnDefinition = "boolean default true")
-    private Boolean isActive;
+    @Builder.Default // [보완] Builder 사용 시 기본값을 true로 설정
+    @Column(nullable = false)
+    private Boolean isActive = true;
 
-    @Column(columnDefinition = "boolean default false")
-    private Boolean isAdmin;
+    @Enumerated(EnumType.STRING)
+    @Builder.Default // [보완] Builder 사용 시 기본 역할을 USER로 설정
+    @Column(nullable = false)
+    private UserRole role = UserRole.USER;
 
-    @Column(updatable = false)
+    @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    // 엔티티가 영속화(persist) 되기 전 실행
     @PrePersist
     public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-        this.isActive = (this.isActive != null) ? this.isActive : true;
-        this.isAdmin = (this.isAdmin != null) ? this.isAdmin : false;
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
     }
 
-    // 엔티티가 업데이트(update) 되기 전 실행
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // [추가] 템플릿에서 {{user.ssnFront}}를 사용할 수 있도록 해주는 메서드
+    //== 비즈니스 로직 (수정 메서드) ==//
+
+    /**
+     * [보완] 사용자 프로필 정보 수정
+     */
+    public void updateProfile(String nickname, String phone, String profileImage) {
+        this.nickname = nickname;
+        this.phone = phone;
+        this.profileImage = profileImage;
+    }
+
+    /**
+     * [보완] 관리자에 의한 사용자 역할 변경
+     */
+    public void updateRole(UserRole role) {
+        this.role = role;
+    }
+
+    /**
+     * [보완] 관리자에 의한 사용자 상태 변경 (활성/비활성)
+     */
+    public void updateStatus(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+
+    //== 조회용 편의 메서드 ==//
+
     public String getSsnFront() {
         if (ssn != null && ssn.contains("-")) {
             return ssn.split("-")[0];
         }
-        return ""; // ssn이 없거나 형식이 맞지 않으면 빈 문자열 반환
+        return "";
     }
 
-    // [추가] 템플릿에서 {{user.ssnBack}}를 사용할 수 있도록 해주는 메서드
     public String getSsnBack() {
         if (ssn != null && ssn.contains("-")) {
             return ssn.split("-")[1];
         }
         return "";
+    }
+
+    public boolean isAdmin() {
+        return this.role == UserRole.ADMIN;
     }
 }

@@ -10,8 +10,6 @@ public class UserProfileRecommendationRequest {
     @JsonProperty("sex")
     private String sex;
     
-    @JsonProperty("smoker_flag")
-    private Integer smokerFlag;
     
     
     @JsonProperty("monthly_budget")
@@ -29,6 +27,12 @@ public class UserProfileRecommendationRequest {
     @JsonProperty("require_sales_channel")
     private String requireSalesChannel;
     
+    @JsonProperty("family_cancer_history")
+    private Boolean familyCancerHistory = false;
+    
+    @JsonProperty("preferred_coverage_period")
+    private String preferredCoveragePeriod;
+    
     @JsonProperty("top_n")
     private Integer topN = 10;
     
@@ -36,18 +40,20 @@ public class UserProfileRecommendationRequest {
     public UserProfileRecommendationRequest() {}
     
     // 생성자
-    public UserProfileRecommendationRequest(Integer age, String sex, Integer smokerFlag, 
+    public UserProfileRecommendationRequest(Integer age, String sex, 
                                           Integer monthlyBudget,
                                           Integer minCoverage, Double maxPremiumAvg, 
-                                          Boolean preferNonRenewal, String requireSalesChannel, Integer topN) {
+                                          Boolean preferNonRenewal, String requireSalesChannel, 
+                                          Boolean familyCancerHistory, String preferredCoveragePeriod, Integer topN) {
         this.age = age;
         this.sex = sex;
-        this.smokerFlag = smokerFlag;
         this.monthlyBudget = monthlyBudget;
         this.minCoverage = minCoverage;
         this.maxPremiumAvg = maxPremiumAvg;
         this.preferNonRenewal = preferNonRenewal;
         this.requireSalesChannel = requireSalesChannel;
+        this.familyCancerHistory = familyCancerHistory;
+        this.preferredCoveragePeriod = preferredCoveragePeriod;
         this.topN = topN;
     }
     
@@ -66,14 +72,6 @@ public class UserProfileRecommendationRequest {
     
     public void setSex(String sex) {
         this.sex = sex;
-    }
-    
-    public Integer getSmokerFlag() {
-        return smokerFlag;
-    }
-    
-    public void setSmokerFlag(Integer smokerFlag) {
-        this.smokerFlag = smokerFlag;
     }
     
     
@@ -125,17 +123,34 @@ public class UserProfileRecommendationRequest {
         this.topN = topN;
     }
     
+    public Boolean getFamilyCancerHistory() {
+        return familyCancerHistory;
+    }
+    
+    public void setFamilyCancerHistory(Boolean familyCancerHistory) {
+        this.familyCancerHistory = familyCancerHistory;
+    }
+    
+    public String getPreferredCoveragePeriod() {
+        return preferredCoveragePeriod;
+    }
+    
+    public void setPreferredCoveragePeriod(String preferredCoveragePeriod) {
+        this.preferredCoveragePeriod = preferredCoveragePeriod;
+    }
+    
     @Override
     public String toString() {
         return "UserProfileRecommendationRequest{" +
                 "age=" + age +
                 ", sex='" + sex + '\'' +
-                ", smokerFlag=" + smokerFlag +
                 ", monthlyBudget=" + monthlyBudget +
                 ", minCoverage=" + minCoverage +
                 ", maxPremiumAvg=" + maxPremiumAvg +
                 ", preferNonRenewal=" + preferNonRenewal +
                 ", requireSalesChannel='" + requireSalesChannel + '\'' +
+                ", familyCancerHistory=" + familyCancerHistory +
+                ", preferredCoveragePeriod='" + preferredCoveragePeriod + '\'' +
                 ", topN=" + topN +
                 '}';
     }

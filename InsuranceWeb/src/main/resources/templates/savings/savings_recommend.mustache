@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <title>저축성보험 추천 - 거북이 보험</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8f9fa;
+            padding-top: 80px;
+        }
+        .custom-navbar {
+            background-color: #fcf8f0;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 1rem 1.5rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .custom-navbar .navbar-brand {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: 700;
+            color: #17ec42;
+            font-size: 1.8rem;
+        }
+        .custom-navbar .nav-link {
+            font-weight: 700;
+            color: #555;
+            margin-right: 1.5rem;
+        }
+        .custom-navbar .nav-link:hover {
+            color: #17ec42;
+        }
+        .recommend-form {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        .form-control, .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #17ec42;
+            box-shadow: 0 0 0 0.2rem rgba(23, 236, 66, 0.25);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #17ec42 0%, #14c238 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(23, 236, 66, 0.4);
+        }
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .product-header {
+            background: linear-gradient(135deg, #17ec42 0%, #14c238 100%);
+            color: white;
+            padding: 1.5rem;
+        }
+        .company-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+        .score-badge {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .product-details {
+            padding: 1.5rem;
+        }
+        .detail-item {
+            margin-bottom: 1rem;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+        .rate-value {
+            color: #17ec42;
+            font-size: 1.2rem;
+        }
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.3em;
+        }
+        .feature-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .feature-badge {
+            background: #e9ecef;
+            color: #495057;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .feature-badge.available {
+            background: #d4edda;
+            color: #155724;
+        }
+        .feature-badge.unavailable {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .recommendation-section {
+            margin-top: 2rem;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .weight-slider {
+            margin-bottom: 1rem;
+        }
+        .weight-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        .weight-display {
+            text-align: center;
+            font-weight: 700;
+            color: #17ec42;
+            font-size: 1.1rem;
+        }
+        .form-check-input:checked {
+            background-color: #17ec42;
+            border-color: #17ec42;
+        }
+        .form-check-label {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        /* 추천 분석 스타일 */
+        .recommendation-analysis {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            border: 1px solid #e9ecef;
+        }
+        .analysis-header h6 {
+            color: #17ec42;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .analysis-item {
+            text-align: center;
+            padding: 0.5rem;
+        }
+        .analysis-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+        .analysis-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #17ec42;
+        }
+        .analysis-value small {
+            font-size: 0.7rem;
+            color: #999;
+            font-weight: 400;
+        }
+        .recommendation-reason {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid #17ec42;
+        }
+        .reason-header {
+            color: #17ec42;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .reason-content {
+            color: #333;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        /* 프리셋 카드 스타일 */
+        .preset-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+        .preset-card:hover {
+            border-color: #17ec42;
+            box-shadow: 0 2px 8px rgba(23, 236, 66, 0.2);
+        }
+        .preset-card.selected {
+            border-color: #17ec42;
+            background: linear-gradient(135deg, #f8fff9 0%, #e8f5e8 100%);
+            box-shadow: 0 2px 8px rgba(23, 236, 66, 0.3);
+        }
+        .preset-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+        }
+        .preset-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.2rem;
+        }
+        .preset-desc {
+            color: #666;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg custom-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-shield-alt me-2"></i>거북이 보험
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">홈</a>
+                <a class="nav-link" href="/cancer/recommend">암보험</a>
+                <a class="nav-link active" href="/savings/recommend">저축성보험</a>
+                <a class="nav-link" href="/user/mypage">마이페이지</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- 왼쪽: 추천 설정 패널 -->
+            <div class="col-md-4">
+                <div class="recommend-form">
+                    <h4 class="mb-3">
+                        <i class="fas fa-piggy-bank me-2"></i>
+                        저축성보험 추천 설정
+                    </h4>
+                    
+                    <form id="recommendationForm">
+                        <!-- 1단계: 기본 정보 -->
+                        <div class="mb-3">
+                            <label for="age" class="form-label">
+                                나이는 어떻게 되시나요?
+                            </label>
+                            <select class="form-select" id="age" name="age" required>
+                                <option value="">선택해주세요</option>
+                                <option value="25">25세</option>
+                                <option value="30">30세</option>
+                                <option value="35" selected>35세</option>
+                                <option value="40">40세</option>
+                                <option value="45">45세</option>
+                                <option value="50">50세</option>
+                                <option value="55">55세</option>
+                                <option value="60">60세</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="monthlyBudget" class="form-label">
+                                월 예산은 얼마인가요?
+                            </label>
+                            <select class="form-select" id="monthlyBudget" name="monthlyBudget" required>
+                                <option value="">선택해주세요</option>
+                                <option value="30000">30,000원</option>
+                                <option value="50000" selected>50,000원</option>
+                                <option value="70000">70,000원</option>
+                                <option value="100000">100,000원</option>
+                                <option value="150000">150,000원</option>
+                                <option value="200000">200,000원</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="preferredTerm" class="form-label">
+                                얼마나 오래 보험을 들고 싶으신가요?
+                            </label>
+                            <select class="form-select" id="preferredTerm" name="preferredTerm" required>
+                                <option value="">선택해주세요</option>
+                                <option value="10">10년</option>
+                                <option value="15" selected>15년</option>
+                                <option value="20">20년</option>
+                                <option value="25">25년</option>
+                                <option value="30">30년</option>
+                            </select>
+                        </div>
+
+                        <!-- 2단계: 핵심 필터 -->
+                        <div class="mb-3">
+                            <label for="minGuaranteedRate" class="form-label">
+                                최소한 이 정도는 받고 싶어요
+                            </label>
+                            <select class="form-select" id="minGuaranteedRate" name="minGuaranteedRate">
+                                <option value="0.01">연 1% 이상 (안전하게)</option>
+                                <option value="0.02">연 2% 이상 (괜찮게)</option>
+                                <option value="0.025" selected>연 2.5% 이상 (좋게)</option>
+                                <option value="0.03">연 3% 이상 (더 좋게)</option>
+                                <option value="0.04">연 4% 이상 (최고로)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="minRefund10Y" class="form-label">
+                                10년 후 돈을 빼면 얼마나 받을까요?
+                            </label>
+                            <select class="form-select" id="minRefund10Y" name="minRefund10Y">
+                                <option value="0.80">80% 이상 (납입한 돈의 80% 이상)</option>
+                                <option value="0.85">85% 이상 (납입한 돈의 85% 이상)</option>
+                                <option value="0.90" selected>90% 이상 (납입한 돈의 90% 이상)</option>
+                                <option value="0.93">93% 이상 (납입한 돈의 93% 이상)</option>
+                                <option value="0.95">95% 이상 (납입한 돈의 95% 이상)</option>
+                            </select>
+                        </div>
+
+                        <!-- 3단계: 추천 스타일 선택 -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                추천 스타일
+                            </label>
+                            <div class="preset-card" onclick="selectPreset('safe')">
+                                <div class="preset-title">안전 우선형</div>
+                                <div class="preset-desc">원금 보장 + 안정적 수익</div>
+                            </div>
+                            <div class="preset-card" onclick="selectPreset('balanced')">
+                                <div class="preset-title">균형 추구형</div>
+                                <div class="preset-desc">안전과 수익의 균형</div>
+                            </div>
+                            <div class="preset-card" onclick="selectPreset('growth')">
+                                <div class="preset-title">성장 추구형</div>
+                                <div class="preset-desc">높은 수익률 중심</div>
+                            </div>
+                        </div>
+
+                        <!-- 숨겨진 프리셋 설정 -->
+                        <input type="hidden" id="selectedPreset" name="selectedPreset" value="balanced">
+
+                        <!-- 추천 버튼 -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                보험 찾기
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 가운데: 결과 리스트 -->
+            <div class="col-md-8">
+                <!-- 결과 헤더 -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">
+                        <i class="fas fa-list me-2"></i>
+                        추천 결과
+                    </h4>
+                    <span class="badge bg-success" id="resultCount" style="display: none;">0개 상품</span>
+                </div>
+
+                <!-- 로딩 스피너 -->
+                <div class="loading-spinner text-center py-5" id="loadingSpinner" style="display: none;">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">최적의 저축성보험을 찾고 있습니다...</p>
+                </div>
+
+                <!-- 초기 안내 메시지 -->
+                <div class="text-center py-5" id="initialMessage">
+                    <h5 class="text-muted">왼쪽 설정을 조정하고 '보험 찾기'를 클릭하세요</h5>
+                    <p class="text-muted">맞춤형 저축성보험을 추천해드립니다!</p>
+                </div>
+
+                <!-- 추천 결과 리스트 -->
+                <div id="recommendationResults" style="display: none;">
+                    <div id="resultsContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 프리셋 선택 함수
+        function selectPreset(presetType) {
+            // 모든 카드에서 selected 클래스 제거
+            document.querySelectorAll('.preset-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // 선택된 카드에 selected 클래스 추가
+            let targetCard = event.target.closest ? event.target.closest('.preset-card') : null;
+            if (!targetCard) {
+                // closest가 지원되지 않는 경우 대체 방법
+                let element = event.target;
+                while (element && element.classList && !element.classList.contains('preset-card')) {
+                    element = element.parentElement;
+                }
+                targetCard = element;
+            }
+            if (targetCard && targetCard.classList) {
+                targetCard.classList.add('selected');
+            }
+            
+            // 숨겨진 필드에 선택된 프리셋 저장
+            document.getElementById('selectedPreset').value = presetType;
+            
+            // 프리셋에 따른 기본값 설정
+            if (presetType === 'safe') {
+                // 안전 우선형: 높은 보증이율, 높은 환급률
+                document.getElementById('minGuaranteedRate').value = '0.03';
+                document.getElementById('minRefund10Y').value = '0.95';
+            } else if (presetType === 'growth') {
+                // 성장 추구형: 낮은 보증이율, 높은 수익률
+                document.getElementById('minGuaranteedRate').value = '0.02';
+                document.getElementById('minRefund10Y').value = '0.85';
+            } else {
+                // 균형 추구형: 기본값
+                document.getElementById('minGuaranteedRate').value = '0.025';
+                document.getElementById('minRefund10Y').value = '0.90';
+            }
+        }
+        
+        // 페이지 로드 시 기본 프리셋 선택
+        document.addEventListener('DOMContentLoaded', function() {
+            selectPreset('balanced');
+            const balancedCard = document.querySelector('.preset-card[onclick*="balanced"]');
+            if (balancedCard && balancedCard.classList) {
+                balancedCard.classList.add('selected');
+            }
+        });
+
+        // 간단한 폼 제출 처리
+        document.getElementById('recommendationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // 폼 데이터 수집
+            const formData = new FormData(e.target);
+            
+            // 새로운 필터 값들 수집
+            const minGuaranteedRate = parseFloat(formData.get('minGuaranteedRate')) || 0.025;
+            const minRefund10Y = parseFloat(formData.get('minRefund10Y')) || 0.90;
+            const selectedPreset = formData.get('selectedPreset') || 'balanced';
+            
+            // 프리셋에 따른 가중치 설정
+            let weights = {
+                return: 0.3,   // 수익률
+                refund: 0.3,   // 환급률  
+                tax: 0.2,      // 세제혜택
+                flex: 0.2      // 유연성
+            };
+            
+            // 프리셋에 따른 가중치 조정
+            if (selectedPreset === 'safe') {
+                // 안전 우선형: 환급률과 안정성 중시
+                weights.return = 0.2;
+                weights.refund = 0.5;
+                weights.tax = 0.2;
+                weights.flex = 0.1;
+            } else if (selectedPreset === 'growth') {
+                // 성장 추구형: 수익률과 세제혜택 중시
+                weights.return = 0.5;
+                weights.refund = 0.2;
+                weights.tax = 0.3;
+                weights.flex = 0.0;
+            } else {
+                // 균형 추구형: 기본 가중치
+                weights.return = 0.3;
+                weights.refund = 0.3;
+                weights.tax = 0.2;
+                weights.flex = 0.2;
+            }
+            
+            const requestData = {
+                age: parseInt(formData.get('age')) || 35,  // 나이 (기본값: 35)
+                monthlyBudget: parseInt(formData.get('monthlyBudget')) || 300000,  // 월 예산 (기본값: 30만원)
+                purpose: getPurposeFromPreset(selectedPreset),  // 프리셋에 따른 목적 설정
+                preferredTerm: parseInt(formData.get('preferredTerm')) || 10,  // 보험기간 (기본값: 10년)
+                preferUniversal: formData.get('preferUniversal') === 'true',
+                minGuaranteedRate: minGuaranteedRate || 2.0,  // 최소 보증이율 (기본값: 2.0%)
+                topN: 5  // 추천 상품 개수
+            };
+            
+            // 프리셋에 따른 목적 매핑 함수
+            function getPurposeFromPreset(preset) {
+                switch(preset) {
+                    case 'safe': return '연금준비';      // 안전 우선형 -> 연금준비
+                    case 'growth': return '세제혜택';    // 성장 추구형 -> 세제혜택
+                    default: return '단기저축';          // 균형 추구형 -> 단기저축
+                }
+            }
+
+            // 로딩 표시
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('recommendationResults').style.display = 'none';
+            document.getElementById('initialMessage').style.display = 'none';
+
+            try {
+                const response = await fetch('/savings/recommend/api', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                const result = await response.json();
+                
+                // 로딩 숨기기
+                document.getElementById('loadingSpinner').style.display = 'none';
+                
+                if (result.success) {
+                    displayRecommendations(result.recommendations);
+                    document.getElementById('recommendationResults').style.display = 'block';
+                    // 결과 카운트 표시
+                    document.getElementById('resultCount').textContent = `${result.recommendations.length}개 상품`;
+                    document.getElementById('resultCount').style.display = 'inline-block';
+                } else {
+                    alert('추천 요청 중 오류가 발생했습니다: ' + result.message);
+                }
+            } catch (error) {
+                document.getElementById('loadingSpinner').style.display = 'none';
+                alert('네트워크 오류가 발생했습니다: ' + error.message);
+            }
+        });
+
+        // 추천 결과 표시
+        function displayRecommendations(recommendations) {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '';
+
+            recommendations.forEach((rec, index) => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <div class="product-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="company-name">${rec.company}</div>
+                                <div class="product-name">${rec.productName || '상품명 없음'}</div>
+                            </div>
+                            <div class="text-end">
+                                <div class="score-badge">${rec.score.toFixed(1)}점</div>
+                                <div class="mt-2">
+                                    <small>${rec.productType || '상품유형'}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="detail-item">
+                                    <div class="detail-label">최소 보장 금리</div>
+                                    <div class="detail-value rate-value">${rec.guaranteedRate || '정보없음'}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">예상 수익률</div>
+                                    <div class="detail-value rate-value">${rec.currentRate || '정보없음'}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">보험기간</div>
+                                    <div class="detail-value">${rec.term}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">10년 후 해약 시 받을 돈</div>
+                                    <div class="detail-value rate-value">${rec.surrender10y || '정보없음'}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="detail-item">
+                                    <div class="detail-label">매월 납입할 돈</div>
+                                    <div class="detail-value">${rec.monthlyPremiumEstimate || '정보없음'}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">연간 저축액</div>
+                                    <div class="detail-value">${rec.annualSavings || '정보없음'}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">세금 혜택</div>
+                                    <div class="detail-value ${rec.taxBenefit === '비과세' ? 'rate-value' : ''}">${rec.taxBenefit || '정보없음'}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-badges">
+                            <span class="feature-badge ${rec.extraContribution === '가능' ? 'available' : 'unavailable'}">
+                                추가로 돈 넣기: ${rec.extraContribution || '정보없음'}
+                            </span>
+                            <span class="feature-badge ${rec.partialWithdrawal === '가능' ? 'available' : 'unavailable'}">
+                                중간에 돈 빼기: ${rec.partialWithdrawal || '정보없음'}
+                            </span>
+                            <span class="feature-badge ${rec.premiumHoliday === '가능' ? 'available' : 'unavailable'}">
+                                납입 중단하기: ${rec.premiumHoliday || '정보없음'}
+                            </span>
+                        </div>
+                        
+                        <!-- 추천 이유 및 점수 세부사항 -->
+                        <div class="recommendation-analysis mt-3">
+                            <div class="analysis-header">
+                                <h6 class="mb-2">
+                                    추천 분석
+                                </h6>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="analysis-item">
+                                        <div class="analysis-label">
+                                            수익성 점수
+                                        </div>
+                                        <div class="analysis-value">
+                                            ${rec.returnScore ? rec.returnScore.toFixed(1) : 'N/A'}점
+                                            <small class="text-muted d-block">이율 기반</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="analysis-item">
+                                        <div class="analysis-label">
+                                            환급성 점수
+                                        </div>
+                                        <div class="analysis-value">
+                                            ${rec.refundScore ? rec.refundScore.toFixed(1) : 'N/A'}점
+                                            <small class="text-muted d-block">환급률 기반</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="analysis-item">
+                                        <div class="analysis-label">
+                                            세제혜택 점수
+                                        </div>
+                                        <div class="analysis-value">
+                                            ${rec.taxScore ? rec.taxScore.toFixed(1) : 'N/A'}점
+                                            <small class="text-muted d-block">세제혜택 기반</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 추천 이유 -->
+                            <div class="recommendation-reason mt-3">
+                                <div class="reason-header">
+                                    <strong>추천 이유:</strong>
+                                </div>
+                                <div class="reason-content mt-1">
+                                    ${rec.replacementReason || '추천 이유 없음'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>

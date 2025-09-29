@@ -60,6 +60,7 @@ public class CancerRecommendationResponse {
         private double valueScore;
         private double stabilityScore;
         private double finalScore;
+        private List<String> coverageDetails;
 
         // 기본 생성자
         public CancerProduct() {}
@@ -175,6 +176,14 @@ public class CancerRecommendationResponse {
 
         public void setFinalScore(double finalScore) {
             this.finalScore = finalScore;
+        }
+
+        public List<String> getCoverageDetails() {
+            return coverageDetails;
+        }
+
+        public void setCoverageDetails(List<String> coverageDetails) {
+            this.coverageDetails = coverageDetails;
         }
     }
 }

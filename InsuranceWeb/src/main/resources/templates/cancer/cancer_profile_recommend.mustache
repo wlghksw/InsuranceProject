@@ -40,12 +40,21 @@
         .custom-navbar .nav-link:hover {
             color: #17ec42;
         }
+        .container-fluid {
+            padding: 2rem;
+        }
         .recommend-form {
             background: white;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             padding: 2rem;
             margin-bottom: 2rem;
+        }
+        .section-title {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
         }
         .form-label {
             font-weight: 600;
@@ -68,40 +77,115 @@
             padding: 0.75rem 2rem;
             font-weight: 600;
             font-size: 1.1rem;
+            width: 100%;
         }
         .btn-recommend:hover {
             background-color: #15d65a;
             transform: translateY(-2px);
         }
-        .result-card {
+        .results-section {
             background: white;
             border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+            min-height: 400px;
+        }
+        .result-card {
+            background: white;
+            border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             padding: 1.5rem;
             margin-bottom: 1rem;
             transition: transform 0.2s ease;
+            border-left: 4px solid #17ec42;
         }
         .result-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .product-header {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
         }
         .company-name {
             color: #17ec42;
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
         }
         .product-name {
             color: #333;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            font-size: 1rem;
         }
-        .coverage-amount {
-            color: #dc3545;
-            font-weight: 700;
-            font-size: 1.3rem;
+        .product-details {
+            margin-top: 1rem;
         }
-        .premium-info {
+        .detail-item {
+            margin-bottom: 0.8rem;
+        }
+        .detail-label {
             color: #666;
             font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+        .detail-value {
+            color: #333;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .coverage-summary {
+            background: #e8f5e8;
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .coverage-summary:hover {
+            background: #d4edda;
+        }
+        .coverage-icon {
+            color: #17ec42;
+            font-size: 1.1rem;
+            margin-right: 0.5rem;
+        }
+        .coverage-arrow {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .coverage-details {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        .coverage-content {
+            font-size: 0.9rem;
+        }
+        .coverage-item {
+            background: white;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            border-left: 3px solid #17ec42;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        .coverage-note {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background: #fff3cd;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #856404;
+            border: 1px solid #ffeaa7;
         }
         .score-badge {
             background-color: #17ec42;
@@ -110,6 +194,8 @@
             border-radius: 15px;
             font-size: 0.8rem;
             font-weight: 600;
+            margin-top: 0.5rem;
+            display: inline-block;
         }
         .loading {
             display: none;
@@ -118,6 +204,17 @@
         }
         .spinner-border {
             color: #17ec42;
+        }
+        .initial-message {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            padding: 3rem;
+        }
+        .result-count {
+            color: #17ec42;
+            font-weight: 600;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
@@ -165,77 +262,95 @@
     </div>
 </nav>
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="text-center mb-4">
-                <h1 style="color: #17ec42; font-weight: bold;">맞춤형 암보험 추천</h1>
-                <p class="text-muted">나이, 성별, 직업, 예산 등 당신의 특성만으로 최적의 암보험을 추천받으세요</p>
-            </div>
-
+<div class="container-fluid">
+    <div class="row">
+        <!-- 왼쪽 추천 설정 -->
+        <div class="col-md-4">
             <div class="recommend-form">
+                <h3 class="section-title">맞춤형 암보험 추천</h3>
+                <p class="text-muted mb-4">나이, 성별, 직업, 예산 등 당신의 특성만으로 최적의 암보험을 추천받으세요</p>
+                
                 <form id="profileForm">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="age" class="form-label">나이</label>
-                            <input type="number" class="form-control" id="age" name="age" 
-                                   placeholder="예: 35" min="18" max="80" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="sex" class="form-label">성별</label>
-                            <select class="form-select" id="sex" name="sex" required>
-                                <option value="">성별을 선택하세요</option>
-                                <option value="M">남성</option>
-                                <option value="F">여성</option>
-                            </select>
-                        </div>
+                    <div class="mb-3">
+                        <label for="age" class="form-label">나이</label>
+                        <input type="number" class="form-control" id="age" name="age" 
+                               placeholder="예: 35" min="18" max="80" required>
                     </div>
                     
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="smokerFlag" class="form-label">흡연 여부</label>
-                            <select class="form-select" id="smokerFlag" name="smokerFlag" required>
-                                <option value="0">비흡연</option>
-                                <option value="1">흡연</option>
-                            </select>
-                        </div>
+                    <div class="mb-3">
+                        <label for="sex" class="form-label">성별</label>
+                        <select class="form-select" id="sex" name="sex" required>
+                            <option value="">성별을 선택하세요</option>
+                            <option value="M">남성</option>
+                            <option value="F">여성</option>
+                        </select>
                     </div>
                     
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="monthlyBudget" class="form-label">월 예산 (원)</label>
-                            <input type="number" class="form-control" id="monthlyBudget" name="monthlyBudget" 
-                                   placeholder="예: 50000" min="10000" max="500000" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="topN" class="form-label">추천 상품 개수</label>
-                            <select class="form-select" id="topN" name="topN">
-                                <option value="5">5개</option>
-                                <option value="10" selected>10개</option>
-                                <option value="15">15개</option>
-                                <option value="20">20개</option>
-                            </select>
-                        </div>
+                    
+                    <div class="mb-3">
+                        <label for="monthlyBudget" class="form-label">월 예산</label>
+                        <input type="number" class="form-control" id="monthlyBudget" name="monthlyBudget" 
+                               placeholder="예: 50000" min="10000" max="500000" required>
                     </div>
                     
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-recommend">
-                            <i class="fas fa-search me-2"></i>보험 추천받기
-                        </button>
+                    <!-- 암보험 특화 조건들 -->
+                    <div class="mb-3">
+                        <label for="familyCancerHistory" class="form-label">가족 암 병력</label>
+                        <select class="form-select" id="familyCancerHistory" name="familyCancerHistory">
+                            <option value="false">없음</option>
+                            <option value="true">있음</option>
+                        </select>
                     </div>
+                    
+                    <div class="mb-3">
+                        <label for="preferredCoveragePeriod" class="form-label">선호 보장기간</label>
+                        <select class="form-select" id="preferredCoveragePeriod" name="preferredCoveragePeriod">
+                            <option value="">상관없음</option>
+                            <option value="10년">10년</option>
+                            <option value="20년">20년</option>
+                            <option value="종신">종신</option>
+                        </select>
+                    </div>
+                    
+                    <!-- 암 종류 선호도와 보험료 납입 방법은 현재 데이터에 특화 상품이 없어서 제거 -->
+                    
+                    <div class="mb-4">
+                        <label for="topN" class="form-label">추천 상품 개수</label>
+                        <select class="form-select" id="topN" name="topN">
+                            <option value="5">5개</option>
+                            <option value="10" selected>10개</option>
+                            <option value="15">15개</option>
+                            <option value="20">20개</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-recommend">
+                        <i class="fas fa-search me-2"></i>맞춤형 암보험 찾기
+                    </button>
                 </form>
             </div>
-
-            <div class="loading" id="loading">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">로딩중...</span>
+        </div>
+        
+        <!-- 오른쪽 결과 표시 -->
+        <div class="col-md-8">
+            <div class="results-section">
+                <div class="initial-message" id="initialMessage">
+                    <i class="fas fa-user-md fa-3x text-muted mb-3"></i>
+                    <p>당신의 특성에 맞는 최적의 암보험을 찾아드릴게요</p>
+                    <p class="text-muted">왼쪽 폼을 작성하고 추천받기 버튼을 눌러보세요</p>
                 </div>
-                <p class="mt-2">추천 상품을 찾고 있습니다...</p>
-            </div>
-
-            <div id="results" style="display: none;">
-                <h3 class="mb-3">추천 결과</h3>
-                <div id="resultsList"></div>
+                
+                <div class="loading" id="loading" style="display: none;">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">로딩중...</span>
+                    </div>
+                    <p class="mt-2">최적의 암보험을 찾고 있습니다...</p>
+                </div>
+                
+                <div id="results" style="display: none;">
+                    <div class="result-count" id="resultCount"></div>
+                    <div id="resultsList"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -251,14 +366,18 @@
         const data = {
             age: parseInt(formData.get('age')),
             sex: formData.get('sex'),
-            smoker_flag: parseInt(formData.get('smokerFlag')),
+            smoker_flag: 0, // 기본값: 비흡연
             monthly_budget: parseInt(formData.get('monthlyBudget')),
+            // 암보험 특화 조건들
+            family_cancer_history: formData.get('familyCancerHistory') === 'true',
+            preferred_coverage_period: formData.get('preferredCoveragePeriod') || null,
             top_n: parseInt(formData.get('topN'))
         };
 
         // 로딩 표시
         document.getElementById('loading').style.display = 'block';
         document.getElementById('results').style.display = 'none';
+        document.getElementById('initialMessage').style.display = 'none';
 
         // API 호출
         fetch('/cancer/profile-recommend/api', {
@@ -283,42 +402,107 @@
     function displayResults(data) {
         const resultsDiv = document.getElementById('results');
         const resultsList = document.getElementById('resultsList');
+        const resultCount = document.getElementById('resultCount');
         
         if (data.recommendations && data.recommendations.length > 0) {
+            resultCount.textContent = `총 ${data.recommendations.length}개의 상품을 찾았습니다`;
             resultsList.innerHTML = '';
             
             data.recommendations.forEach((product, index) => {
                 const card = document.createElement('div');
                 card.className = 'result-card';
                 card.innerHTML = `
-                    <div class="mb-2">
-                        <div class="company-name">${product.insuranceCompany}</div>
-                        <div class="product-name">${product.productName}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="coverage-amount">${product.coverageAmount.toLocaleString()}원</div>
-                            <div class="premium-info">
-                                남성: ${product.malePremium ? product.malePremium.toLocaleString() + '원' : 'N/A'} | 
-                                여성: ${product.femalePremium ? product.femalePremium.toLocaleString() + '원' : 'N/A'}
+                    <div class="product-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="company-name">${product.insuranceCompany || '정보없음'}</div>
+                                <div class="product-name">${product.productName || '상품명 없음'}</div>
+                            </div>
+                            <div class="text-end">
+                                <div class="coverage-summary" onclick="toggleCoverageDetails(${index})">
+                                    <span class="coverage-icon">🛡️</span>
+                                    <span class="coverage-text">보장 내용 보기</span>
+                                    <span class="coverage-arrow">▼</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="premium-info">
-                                <strong>갱신형태:</strong> ${product.renewalCycle}<br>
-                                <strong>판매채널:</strong> ${product.salesChannel}<br>
-                                <strong>해약환급금:</strong> ${product.surrenderValue}
+                    </div>
+                    <div class="product-details">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="detail-item">
+                                    <div class="detail-label">보장금액</div>
+                                    <div class="detail-value">${product.coverageAmount ? product.coverageAmount.toLocaleString() + '원' : '정보없음'}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">월 보험료</div>
+                                    <div class="detail-value">${product.avgPremium ? product.avgPremium.toLocaleString() + '원' : '정보없음'}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="detail-item">
+                                    <div class="detail-label">갱신형태</div>
+                                    <div class="detail-value">${product.renewalCycle || '정보없음'}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">판매채널</div>
+                                    <div class="detail-value">${product.salesChannel || '정보없음'}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="coverage-details" id="details-${index}" style="display: none;">
+                            <div class="coverage-content">
+                                <h6>주요 보장 내용</h6>
+                                <div class="coverage-content" data-product-index="${index}">
+                                    <div class="coverage-item">보장 내용 로딩 중...</div>
+                                </div>
+                                <div class="coverage-note">
+                                    ※ 상세한 보장 조건과 지급 한도는 각 상품의 약관을 참조하세요.
+                                </div>
                             </div>
                         </div>
                     </div>
                 `;
+                
+                // 보장 내용 동적 렌더링
+                const coverageContentDiv = card.querySelector('[data-product-index="' + index + '"]');
+                if (product.coverageDetails && product.coverageDetails.length > 0) {
+                    coverageContentDiv.innerHTML = product.coverageDetails.map(detail => 
+                        `<div class="coverage-item">${detail}</div>`
+                    ).join('');
+                } else {
+                    coverageContentDiv.innerHTML = '<div class="coverage-item">보장 내용 정보를 불러올 수 없습니다.</div>';
+                }
+                
                 resultsList.appendChild(card);
             });
             
             resultsDiv.style.display = 'block';
         } else {
+            resultCount.textContent = '조건에 맞는 상품을 찾을 수 없습니다';
             resultsList.innerHTML = '<div class="alert alert-warning">조건에 맞는 상품을 찾을 수 없습니다.</div>';
             resultsDiv.style.display = 'block';
+        }
+    }
+
+    function toggleCoverageDetails(index) {
+        const detailsDiv = document.getElementById(`details-${index}`);
+        const arrow = event.target.closest('.coverage-summary').querySelector('.coverage-arrow');
+        
+        // 다른 모든 보장 내용 숨기기
+        document.querySelectorAll('.coverage-details').forEach(div => {
+            if (div.id !== `details-${index}`) {
+                div.style.display = 'none';
+            }
+        });
+        
+        // 현재 보장 내용 토글
+        if (detailsDiv.style.display === 'none') {
+            detailsDiv.style.display = 'block';
+            arrow.textContent = '▲';
+        } else {
+            detailsDiv.style.display = 'none';
+            arrow.textContent = '▼';
         }
     }
 </script>

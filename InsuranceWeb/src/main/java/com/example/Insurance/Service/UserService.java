@@ -1,17 +1,22 @@
 package com.example.Insurance.Service;
 
-import com.example.Insurance.DTO.UserDTO;
+import com.example.Insurance.DTO.UserRegisterDTO;
 import com.example.Insurance.Entity.User;
+import com.example.Insurance.Entity.UserRole;
 import com.example.Insurance.Repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -22,10 +27,8 @@ public class UserService {
     }
 
     @Transactional
-    public void register(UserDTO dto) {
-        // 아이디 중복 검사
+    public User register(UserRegisterDTO dto) { // [개선] 생성된 User 객체를 반환하도록 변경
         if (userRepository.existsByLoginId(dto.getLoginId())) {
-            // [개선] 더 구체적인 예외를 사용하여 컨트롤러에서 처리하기 용이하게 만듭니다.
             throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
         }
 
@@ -44,22 +47,26 @@ public class UserService {
                 .phone(dto.getPhone())
                 .birthYear(birthYear)
                 .gender(dto.getGender())
-                .isActive(true)
-                .isAdmin(false)
+                .role(UserRole.USER)
+                .isActive(true) // [개선] 명시적으로 활성 상태로 생성
                 .build();
 
-        userRepository.save(user);
+        return userRepository.save(user); // [개선] 저장된 객체 반환
     }
 
-    public Optional<User> getUserByLoginId(String loginId) {
+    // [이름 변경] getUserByLoginId -> findByLoginId
+    public Optional<User> findByLoginId(String loginId) {
         return userRepository.findByLoginId(loginId);
     }
 
+    // 이 메서드는 더 이상 필요하지 않아 주석 처리 또는 삭제 가능
+    /*
     public String findLoginId(String realName, String phone, Integer birthYear) {
         return userRepository.findByRealNameAndPhoneAndBirthYear(realName, phone, birthYear)
                 .map(User::getLoginId)
                 .orElse(null);
     }
+    */
 
     public Optional<User> findByRealNameAndPhone(String realName, String phone) {
         return userRepository.findByRealNameAndPhone(realName, phone);
@@ -67,5 +74,22 @@ public class UserService {
 
     public Optional<User> findByRealNameAndSsn(String realName, String ssn) {
         return userRepository.findByRealNameAndSsn(realName, ssn);
+    }
+
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + loginId));
+
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getLoginId())
+                .password(user.getPassword())
+                .roles(user.getRole().name())
+                .disabled(!user.getIsActive()) // [✅ 핵심 수정] 계정 활성화 상태 체크 로직 추가
+                .build();
     }
 }
