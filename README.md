@@ -1,74 +1,94 @@
-# 암보험 상품 추천 API
+# 상해보험 맞춤 추천 API 🐢
 
-효율성 중심의 암보험 상품 추천 시스템
+**사용자 조건(나이, 성별)과 우선순위(추천 점수, 보장금액)에 맞춰** 최적의 상해보험 상품을 추천하는 FastAPI 기반 API입니다. 다양한 필터링과 정렬 옵션을 통해 합리적인 상품 선택을 돕습니다.
 
-## 🎯 추천 규칙
+## ⚙️ 추천 로직
+
+추천 과정은 **필수 조건 필터링(Filter)**, **점수 계산(Scoring)**, \*\*최종 정렬(Sorting)\*\*의 세 단계로 이루어집니다.
 
 ### 1. 필수 조건 (Filter 단계)
 
-가입 가능성 보장을 위한 필수 필터링:
+API가 요청을 받으면, 아래 조건에 맞지 않는 상품은 추천 후보에서 **자동으로 제외**합니다.
 
-- **나이 범위**: `min_age ≤ 사용자 나이 ≤ max_age`
-- **보장금액 범위**: `min_coverage ≤ coverage_amount ≤ max_coverage`
-- **상품 판매 상태**: `sales_date` (현재 판매 중인 상품만)
-- **제외 조건**: `special_notes` (특정 질환자 제외 등)
+  * **성별 필터링**: 요청한 성별의 보험료 정보가 없거나 가입이 불가능한 상품(예: 남성 전용 상품에 여성 사용자가 요청)을 제외합니다.
+  * **나이 필터링**: 각 상품의 `special_notes`(특이사항)에 명시된 가입 가능 나이(`15세~80세` 등)를 분석하여, 사용자의 나이가 이 범위에 속하지 않는 상품을 제외합니다.
+  * **보장금액 필터링**: `coverage_amount`(보장금액) 정보가 누락된 상품은 신뢰할 수 없으므로 추천 후보에서 제외합니다.
 
-→ 이 조건을 통과하지 못한 상품은 자동 제외
+### 2. 점수 계산 (Scoring 단계)
 
-### 2. 효율성 지표 (Ranking 단계)
+필터링을 통과한 상품들을 대상으로 아래 3가지 지표를 점수화하여 상품의 매력도를 평가합니다.
 
-남은 상품을 점수화하여 우선순위 부여:
+| 지표 | 설명 | 기준 |
+| :--- | :--- | :--- |
+| **보장금액 점수** (Coverage Score) | 상품의 기본적인 보장 수준을 평가합니다. | 보장금액(`coverage_amount`)이 높을수록 높은 점수를 받습니다. |
+| **가치 점수** (Value Score) | \*\*'가성비'\*\*를 평가합니다. | 평균 보험료(`avg_premium`)가 낮을수록 높은 점수를 받습니다. |
+| **안정성 점수** (Stability Score) | 상품의 **장기적 안정성**을 평가합니다. | 갱신주기(`renewal_cycle`)가 '비갱신'일 경우 더 높은 점수를 받습니다. |
 
-#### 보장금액 점수 (Coverage Score)
+#### 최종 추천 점수
 
-- 일반암 진단비(`coverage_name`에 "일반암") 기준
-- `payment_amount`가 클수록 높은 점수
+각 지표의 점수에 고정된 가중치를 적용하여 최종 점수를 계산합니다.
 
-#### 보험료 대비 효율성 (Value Score)
+> **최종 점수** = (보장금액 점수 × 0.5) + (가치 점수 × 0.4) + (안정성 점수 × 0.1)
 
-- **공식**: `보장금액 ÷ 월 보험료`
-- 같은 보장이라면 보험료가 저렴할수록 유리
+### 3\. 최종 정렬 (Sorting 단계)
 
-#### 상품 안정성 (Stability Score)
+사용자의 `sort_by` 요청 값에 따라 최종 순서를 결정합니다.
 
-- 해약환급금(`surrender_value`)이 높을수록 점수 ↑
-- 갱신주기(`renewal_cycle`)가 길수록 점수 ↑ (갱신형 < 종신형/정기형)
+  * `default` (기본값): 위에서 계산된 **최종 점수**가 높은 순서대로 정렬합니다.
+  * `coverage_desc`: **보장금액**이 높은 순서대로 정렬합니다.
+  * `coverage_asc`: **보장금액**이 낮은 순서대로 정렬합니다.
 
-### 3. 최종 추천 점수
+-----
 
-```
-최종점수 = (Coverage Score × 0.5)
-         + (Value Score × 0.3)
-         + (Stability Score × 0.2)
-```
+## 🚀 설치 및 실행
 
-## 🚀 빠른 시작
+### 1단계: 의존성 설치
 
-### 설치 및 실행
+프로젝트 최상위 폴더(`InsuranceProject--`)에서 아래 명령어를 실행하여 필요한 라이브러리를 설치합니다.
 
 ```bash
-# 의존성 설치
 pip install -r requirements.txt
-
-# 서버 실행
-python run_server.py
 ```
 
-서버: `http://localhost:8001`
+### 2단계: 데이터 준비 (최초 1회만 실행)
 
-### API 사용
+제공된 원본 보험 데이터(`insurance_data_raw.csv`)를 API가 사용할 수 있는 형식으로 변환합니다.
 
-```http
-POST http://localhost:8001/recommend
-Content-Type: application/json
+1.  프로젝트 최상위 폴더에 `insurance_data_raw.csv` 파일이 있는지 확인합니다.
 
-{
-    "min_coverage": 30000000,
-    "max_premium_avg": 50000,
-    "prefer_non_renewal": true,
-    "coverage_weight": 0.5,
-    "value_weight": 0.3,
-    "stability_weight": 0.2,
+2.  아래 명령어를 실행하여 데이터를 가공하고, `InsuranceWeb/products/accident_products.csv` 파일을 생성합니다.
+
+    ```bash
+    python app/converter.py
+    ```
+
+### 3단계: API 서버 실행
+
+아래 명령어를 실행하여 API 서버를 시작합니다.
+
+```bash
+uvicorn app.main:app --reload --port 8000
+```
+
+서버가 정상적으로 실행되면 **`http://localhost:8000`** 에서 접속할 수 있습니다.
+
+-----
+
+## 📖 API 사용법
+
+`POST` 요청을 통해 실시간으로 상해보험 상품을 추천받을 수 있습니다.
+
+  * **Endpoint**: `POST http://localhost:8000/recommend/accident`
+  * **Body 예시**:
+    ```json
+    {
+      "age": 35,
+      "sex": "F",
+      "top_n": 5,
+      "sort_by": "coverage_desc"
+    }
+    ```
+  * API의 모든 기능은 **`http://localhost:8000/docs`** 에서 직접 테스트해볼 수 있습니다.    "stability_weight": 0.2,
     "top_n": 10
 }
 ```
