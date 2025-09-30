@@ -15,7 +15,10 @@ class SavingsRecommendationEngine:
     def load_data(self):
         """연금 보험 데이터 로드"""
         try:
-            csv_path = "../Product/savings_products_cleaned.csv"
+            # 절대 경로로 데이터 로드
+            import os
+            base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            csv_path = os.path.join(base_path, "Product", "savings_products_cleaned.csv")
             self.df = pd.read_csv(csv_path, encoding='utf-8-sig')
             
             if self.df is not None and not self.df.empty:

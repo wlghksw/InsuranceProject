@@ -64,14 +64,14 @@ public class SavingsService {
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 return convertToSavingsResponse(response.getBody());
             } else {
-                throw new RuntimeException("저축성보험 추천 API 호출 실패");
+                throw new RuntimeException("연금보험 추천 API 호출 실패");
             }
             
         } catch (Exception e) {
             e.printStackTrace();
             SavingsRecommendationResponse errorResponse = new SavingsRecommendationResponse();
             errorResponse.setSuccess(false);
-            errorResponse.setMessage("저축성보험 추천 서비스 오류: " + e.getMessage());
+            errorResponse.setMessage("연금보험 추천 서비스 오류: " + e.getMessage());
             errorResponse.setTotalProducts(0);
             errorResponse.setRecommendations(new ArrayList<>());
             return errorResponse;
@@ -80,7 +80,7 @@ public class SavingsService {
 
     public SavingsRecommendationResponse getProfileRecommendations(UserProfileRecommendationRequest request) {
         try {
-            // 사용자 프로필 기반 저축성보험 추천
+            // 사용자 프로필 기반 연금보험 추천
             String url = savingsApiUrl + "/savings/profile-recommend";
             
             HttpHeaders headers = new HttpHeaders();
@@ -93,14 +93,14 @@ public class SavingsService {
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 return response.getBody();
             } else {
-                throw new RuntimeException("사용자 프로필 기반 저축성보험 추천 API 호출 실패");
+                throw new RuntimeException("사용자 프로필 기반 연금보험 추천 API 호출 실패");
             }
             
         } catch (Exception e) {
             e.printStackTrace();
             SavingsRecommendationResponse errorResponse = new SavingsRecommendationResponse();
             errorResponse.setSuccess(false);
-            errorResponse.setMessage("사용자 프로필 기반 저축성보험 추천 서비스 오류: " + e.getMessage());
+            errorResponse.setMessage("사용자 프로필 기반 연금보험 추천 서비스 오류: " + e.getMessage());
             errorResponse.setTotalProducts(0);
             errorResponse.setRecommendations(new ArrayList<>());
             return errorResponse;
@@ -115,13 +115,13 @@ public class SavingsService {
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 return response.getBody();
             } else {
-                throw new RuntimeException("저축성보험 분석 요약 API 호출 실패");
+                throw new RuntimeException("연금보험 분석 요약 API 호출 실패");
             }
             
         } catch (Exception e) {
             e.printStackTrace();
             Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", "저축성보험 분석 요약 조회 중 오류가 발생했습니다: " + e.getMessage());
+            errorResponse.put("error", "연금보험 분석 요약 조회 중 오류가 발생했습니다: " + e.getMessage());
             return errorResponse;
         }
     }
@@ -134,7 +134,7 @@ public class SavingsService {
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 return response.getBody();
             } else {
-                throw new RuntimeException("저축성보험 상품 목록 API 호출 실패");
+                throw new RuntimeException("연금보험 상품 목록 API 호출 실패");
             }
             
         } catch (Exception e) {
@@ -188,17 +188,17 @@ public class SavingsService {
                 
                 recommendation.setGuaranteedRate((String) recData.get("guaranteed_rate"));
                 recommendation.setCurrentRate((String) recData.get("current_rate"));
-                recommendation.setPayPeriod((String) recData.get("pay_period"));
+                recommendation.setPayPeriod((String) recData.get("payment_method"));
                 recommendation.setTerm((String) recData.get("term"));
-                recommendation.setMonthlyPremiumEstimate((String) recData.get("monthly_premium_estimate"));
+                recommendation.setMonthlyPremiumEstimate((String) recData.get("monthly_premium"));
                 recommendation.setAnnualSavings((String) recData.get("annual_savings"));
                 recommendation.setSurrender5y((String) recData.get("surrender_5y"));
-                recommendation.setSurrender10y((String) recData.get("surrender_10y"));
+                recommendation.setSurrender10y((String) recData.get("surrender_value"));
                 recommendation.setExtraContribution((String) recData.get("extra_contribution"));
                 recommendation.setPartialWithdrawal((String) recData.get("partial_withdrawal"));
                 recommendation.setPremiumHoliday((String) recData.get("premium_holiday"));
                 recommendation.setTaxBenefit((String) recData.get("tax_benefit"));
-                recommendation.setReplacementReason((String) recData.get("replacement_reason"));
+                recommendation.setReplacementReason((String) recData.get("recommendation_reason"));
                 
                 // 세부 점수 필드 추가
                 Object returnScoreObj = recData.get("return_score");

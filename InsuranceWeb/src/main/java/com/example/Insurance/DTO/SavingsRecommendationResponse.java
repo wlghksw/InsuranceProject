@@ -54,7 +54,7 @@ public class SavingsRecommendationResponse {
         this.requestParams = requestParams;
     }
 
-    // 내부 클래스: 저축성보험 상품 추천 정보
+    // 내부 클래스: 연금보험 상품 추천 정보
     public static class SavingsProductRecommendation {
         @JsonProperty("product_id")
         private String productId;

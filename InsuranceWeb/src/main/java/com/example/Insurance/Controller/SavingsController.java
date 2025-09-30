@@ -51,7 +51,7 @@ public class SavingsController {
             e.printStackTrace();
             SavingsRecommendationResponse errorResponse = new SavingsRecommendationResponse();
             errorResponse.setSuccess(false);
-            errorResponse.setMessage("저축성보험 추천 요청 중 오류가 발생했습니다: " + e.getMessage());
+            errorResponse.setMessage("연금보험 추천 요청 중 오류가 발생했습니다: " + e.getMessage());
             errorResponse.setTotalProducts(0);
             errorResponse.setRecommendations(List.of());
             return errorResponse;
@@ -62,7 +62,7 @@ public class SavingsController {
     @ResponseBody
     public SavingsRecommendationResponse getProfileRecommendations(@RequestBody UserProfileRecommendationRequest request) {
         try {
-            System.out.println("=== 사용자 특성 기반 저축성보험 추천 Controller에서 받은 데이터 ===");
+            System.out.println("=== 사용자 특성 기반 연금보험 추천 Controller에서 받은 데이터 ===");
             System.out.println("age: " + request.getAge());
             System.out.println("sex: " + request.getSex());
             System.out.println("monthlyBudget: " + request.getMonthlyBudget());
@@ -78,7 +78,7 @@ public class SavingsController {
             e.printStackTrace();
             SavingsRecommendationResponse errorResponse = new SavingsRecommendationResponse();
             errorResponse.setSuccess(false);
-            errorResponse.setMessage("사용자 특성 기반 저축성보험 추천 요청 중 오류가 발생했습니다: " + e.getMessage());
+            errorResponse.setMessage("사용자 특성 기반 연금보험 추천 요청 중 오류가 발생했습니다: " + e.getMessage());
             errorResponse.setTotalProducts(0);
             errorResponse.setRecommendations(List.of());
             return errorResponse;
@@ -92,7 +92,7 @@ public class SavingsController {
             return savingsService.getAnalyticsSummary();
         } catch (Exception e) {
             e.printStackTrace();
-            return Map.of("error", "저축성보험 분석 요약 조회 중 오류가 발생했습니다: " + e.getMessage());
+            return Map.of("error", "연금보험 분석 요약 조회 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
 
@@ -104,7 +104,7 @@ public class SavingsController {
             return "savings/savings_products";
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("error", "저축성보험 상품 조회 중 오류가 발생했습니다: " + e.getMessage());
+            model.addAttribute("error", "연금보험 상품 조회 중 오류가 발생했습니다: " + e.getMessage());
             return "savings/savings_products";
         }
     }

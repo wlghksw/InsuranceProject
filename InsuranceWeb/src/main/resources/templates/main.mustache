@@ -208,9 +208,43 @@
         }
 
         .section-box .btn-learn-more:hover {
-            background-color: #1c2f48; /* 네이비 */
+            background-color: #1c2f48;
             color: #fff;
         }
+
+   .btn-gold-outline {
+  color: #d4b46b;
+  border: 2px solid #d4b46b;
+  background: transparent;
+}
+.btn-gold-outline:hover {
+  background: #d4b46b;
+  color: #fff;
+}
+         .btn-gold-outline {
+    color: #1c2f48;
+    border: 2px solid #1c2f48;
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-gold-outline:hover {
+    background-color:#1c2f48;
+    color: #d4b46b;
+}
+        .btn-gold-outline {
+    color: #d4b46b;
+    border: 2px solid #d4b46b;
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-gold-outline:hover {
+    background-color: #d4b46b;
+    color: #fff;
+}
+
+
 
 
 
@@ -262,8 +296,9 @@
                     </li>
                     <li class="nav-item">
                         <form action="/logout" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-outline-dark">로그아웃</button>
+                            <button type="submit" class="btn btn-gold-outline">로그아웃</button>
                         </form>
+
                     </li>
                 {{/user}}
                 {{^user}}
@@ -295,8 +330,8 @@
                         <div class="row text-center">
                             <div class="col-6 col-md-3 mb-3 mb-md-0">
                                 <a href="#section2" class="insurance-item" style="color:#d4b46b;">
-                                    <i class="fas fa-stethoscope fa-2x" style="color:#d4b46b;"></i>
-                                    <p style="color:#d4b46b;">실손의료보험</p>
+                                    <i class="fas fa-shield-alt fa-2x" style="color:#d4b46b;"></i>
+                                    <p style="color:#d4b46b;">상해보험</p>
                                 </a>
                             </div>
 
@@ -309,15 +344,17 @@
 
                             <div class="col-6 col-md-3">
                                 <a href="#section4" class="insurance-item" style="color:#d4b46b;">
-                                    <i class="fas fa-ribbon fa-2x" style="color:#d4b46b;"></i>
+                                    <i class="fas fa-lungs fa-2x" style="color:#d4b46b;"></i>
                                     <p style="color:#d4b46b;">암보험</p>
                                 </a>
                             </div>
 
+
+
                             <div class="col-6 col-md-3">
                                 <a href="#section5" class="insurance-item" style="color:#d4b46b;">
                                     <i class="fas fa-piggy-bank fa-2x" style="color:#d4b46b;"></i>
-                                    <p style="color:#d4b46b;">저축성보험</p>
+                                    <p style="color:#d4b46b;">연금보험</p>
                                 </a>
                             </div>
                         </div>
@@ -328,12 +365,14 @@
     <section id="section2" class="scroll-section section-box">
         <div class="container d-flex flex-column align-items-end justify-content-center text-end">
             <h2 class="main-title">
-                “병원비 부담,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                실손보험으로 <span class="highlight">덜어내세요</span>”&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                "예상치 못한 사고,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                상해보험으로 <span class="highlight">보호받으세요</span>"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </h2>
-            <p class="sub-title">“국민 보험, 실손의료보험 비교하고 가입하세요”&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="sub-title">"다양한 상해사고에 대한 든든한 보장"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
             <div class="w-100 d-flex justify-content-center mt-3">
-                <a href="#!" class="btn-learn-more" style="transform: translateX(240px);">+ 더 알아보기</a>
+                <a href="/accident/recommend" class=" btn-learn-more btn btn-gold-outline btn-lg px-4 py-3 " style="transform: translateX(240px);">
+                    <i class="fas fa-search me-2 fas fa-shield-alt fa-1x"></i>상해보험 추천
+                </a>
             </div>
 
         </div>
@@ -367,10 +406,10 @@
                 “치료비 부담을 덜어주는 든든한 암보험”&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </p>
             <div class="w-100 d-flex justify-content-center mt-3">
-                <a href="/cancer/recommend" class="btn btn-success btn-lg px-4 py-3 me-2" style="background-color: #17ec42; border: none; border-radius: 25px; font-weight: bold; font-size: 1.1rem;">
+                <a href="/cancer/recommend" class="btn btn-gold-outline btn-lg px-4 py-3 me-2 btn-learn-more" style="transform: translateX(240px);">
                     <i class="fas fa-search me-2"></i>보장금액 추천
                 </a>
-                <a href="/cancer/profile-recommend" class="btn btn-warning btn-lg px-4 py-3" style="background: linear-gradient(45deg, #ff6b6b, #ffa500); border: none; border-radius: 25px; font-weight: bold; font-size: 1.1rem;">
+                <a href="/cancer/profile-recommend" class="btn btn-gold-outline btn-lg px-4 py-3 btn-learn-more" style="transform: translateX(240px);">
                     <i class="fas fa-user-edit me-2"></i>맞춤형 추천
                 </a>
             </div>
@@ -382,14 +421,14 @@
         <div class="container d-flex flex-column align-items-end justify-content-center text-end">
             <h2 class="main-title">
                 "미래를 위한 저축,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                저축성보험으로 <span class="highlight">안전하게</span>"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                연금보험으로 <span class="highlight">안전하게</span>"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </h2>
             <p class="sub-title">
-                "저축성보험으로 더 나은 미래를 준비하세요"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                "연금보험으로 더 나은 미래를 준비하세요"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </p>
             <div class="w-100 d-flex justify-content-center mt-3">
-                <a href="/savings/recommend" class="btn btn-success btn-lg px-4 py-3" style="background-color: #17ec42; border: none; border-radius: 25px; font-weight: bold; font-size: 1.1rem;">
-                    <i class="fas fa-search me-2"></i>저축성보험 추천
+                <a href="/savings/recommend" class="btn btn-gold-outline btn-lg px-4 py-3 btn-learn-more" style="transform: translateX(240px);">
+                    <i class="fas fa-search me-2 fas fa-piggy-bank fa-1x"></i>연금보험 추천
                 </a>
             </div>
         </div>
