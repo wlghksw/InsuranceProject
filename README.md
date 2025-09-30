@@ -51,13 +51,20 @@ pip install -r requirements.txt
 
 1.  `보험용어정리_new.csv` 파일이 `static/` 폴더 안에 있는지 확인합니다.
 
-2.  아래 명령어를 실행하여 `train_model.py`를 실행합니다.
+  
+2.  챗봇 폴더로 이동헙니다
+
+    ```bash
+    cd python_chatbot
+    ```
+
+3.  아래 명령어를 실행하여 `train_model.py`를 실행합니다.
 
     ```bash
     python train_model.py
     ```
 
-3.  실행이 완료되면, `static/` 폴더 안에 `insurance_terms.pkl`과 `faiss_index.bin` 두 개의 모델 파일이 생성됩니다.
+4.  실행이 완료되면, `static/` 폴더 안에 `insurance_terms.pkl`과 `faiss_index.bin` 두 개의 모델 파일이 생성됩니다.
 
 ### 3단계: 챗봇 서버 실행
 
