@@ -19,6 +19,12 @@
 
 ## ⚙️ 작동 원리
 
+
+train_model.py가 보험용어정리_new.csv를 읽어서 AI 모델 파일(faiss_index.bin, insurance_terms.pkl)을 만들고,
+
+app.py가 이 모델 파일들을 불러와서 챗봇 서비스를 실행하는 구조입니다.
+
+
 1.  **데이터 준비**: `보험용어정리_new.csv`에 있는 보험 용어와 그 의미를 읽어옵니다.
 2.  **임베딩 생성**: **Sentence-BERT** 모델(`jhgan/ko-sbert-nli`)을 사용하여 각 용어의 '의미'를 나타내는 고차원 벡터(임베딩)로 변환합니다.
 3.  **Faiss 인덱싱**: 변환된 모든 용어 벡터를 **Faiss** 인덱스에 저장하여, 유사도 검색을 위한 초고속 데이터 구조를 구축합니다.
@@ -67,18 +73,15 @@ python app.py
 
 ## 📁 프로젝트 구조
 
-```
-├── app.py                      # Flask 웹 서버 및 챗봇 응답 로직
-├── train_model.py              # 데이터 임베딩 및 Faiss 인덱스 생성/학습 스크립트
-├── create_csv.py               # (데이터 생성을 위한 보조 스크립트)
-│
-├── static/
-│   ├── 보험용어정리_new.csv      # 챗봇이 학습할 원본 데이터
-│   ├── insurance_terms.pkl     # 학습된 용어 데이터 (train_model.py가 생성)
-│   └── faiss_index.bin         # Faiss 벡터 인덱스 (train_model.py가 생성)
+├── python_chatbot/
+│   ├── 보험용어정리_new.csv           # 챗봇이 학습할 원본 데이터
+│   ├── app.py                      # Flask 웹 서버 및 챗봇 응답 로직
+│   ├── create_csv.py               # (데이터 생성을 위한 보조 스크립트)
+│   ├── train_model.py              # 데이터 임베딩 및 Faiss 인덱스 생성/학습 스크립트
+│   ├── insurance_terms.pkl         # (train_model.py가 생성)
+│   ├── faiss_index.bin             # (train_model.py가 생성)
+│   └── requirements.txt            # Python 의존성 목록
 │
 ├── templates/
-│   └── index.html              # 챗봇 UI를 위한 HTML 템플릿
-│
-└── requirements.txt            # Python 의존성 목록
-```
+│   └── chat.mustache               # 챗봇 UI를 위한 HTML 템플릿
+
