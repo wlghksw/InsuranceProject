@@ -19,12 +19,6 @@
 
 ## ⚙️ 작동 원리
 
-
-train_model.py가 보험용어정리_new.csv를 읽어서 AI 모델 파일(faiss_index.bin, insurance_terms.pkl)을 만들고,
-
-app.py가 이 모델 파일들을 불러와서 챗봇 서비스를 실행하는 구조입니다.
-
-
 1.  **데이터 준비**: `보험용어정리_new.csv`에 있는 보험 용어와 그 의미를 읽어옵니다.
 2.  **임베딩 생성**: **Sentence-BERT** 모델(`jhgan/ko-sbert-nli`)을 사용하여 각 용어의 '의미'를 나타내는 고차원 벡터(임베딩)로 변환합니다.
 3.  **Faiss 인덱싱**: 변환된 모든 용어 벡터를 **Faiss** 인덱스에 저장하여, 유사도 검색을 위한 초고속 데이터 구조를 구축합니다.
@@ -37,51 +31,47 @@ app.py가 이 모델 파일들을 불러와서 챗봇 서비스를 실행하는 
 
 ## 🚀 설치 및 실행
 
-### 1단계: 의존성 설치
+모든 명령어는 **`python_chatbot`** 폴더 안에서 실행합니다.
 
-프로젝트 최상위 폴더에서 아래 명령어를 실행하여 필요한 라이브러리를 설치합니다.
+### 1단계: 폴더 이동 및 의존성 설치
 
 ```bash
+# 1. 챗봇 폴더로 이동합니다.
+cd python_chatbot
+
+# 2. 의존성 목록 파일을 이용해 필요한 라이브러리를 설치합니다.
 pip install -r requirements.txt
 ```
 
-### 2단계: 데이터 준비 및 모델 학습 (최초 1회만 실행)
+### 2단계: 모델 학습 (최초 1회만 실행)
 
-추천 모델이 질문을 이해하고 답변을 찾을 수 있도록, 데이터를 가공하고 Faiss 인덱스를 생성해야 합니다.
+AI 모델이 답변을 생성할 수 있도록 학습을 진행합니다.
 
-1.  `보험용어정리_new.csv` 파일이 `static/` 폴더 안에 있는지 확인합니다.
+```bash
+# (현재 위치: python_chatbot 폴더)
+python train_model.py
+```
 
-  
-2.  챗봇 폴더로 이동헙니다
-
-    ```bash
-    cd python_chatbot
-    ```
-
-3.  아래 명령어를 실행하여 `train_model.py`를 실행합니다.
-
-    ```bash
-    python train_model.py
-    ```
-
-4.  실행이 완료되면, `static/` 폴더 안에 `insurance_terms.pkl`과 `faiss_index.bin` 두 개의 모델 파일이 생성됩니다.
+  * 실행이 완료되면 `insurance_terms.pkl`과 `faiss_index.bin` 파일이 생성됩니다.
 
 ### 3단계: 챗봇 서버 실행
 
-아래 명령어를 실행하여 Flask 웹 서버를 시작합니다.
+Flask 웹 서버를 시작합니다.
 
 ```bash
+# (현재 위치: python_chatbot 폴더)
 python app.py
 ```
 
-서버가 정상적으로 실행되면 **`http://127.0.0.1:5001`** 주소로 접속하여 챗봇을 사용할 수 있습니다.
+  * 서버가 정상적으로 실행되면 **`http://127.0.0.1:5001`** 주소로 접속하여 챗봇을 사용할 수 있습니다.
 
 -----
 
 ## 📁 프로젝트 구조
 
+```
 ├── python_chatbot/
-│   ├── 보험용어정리_new.csv           # 챗봇이 학습할 원본 데이터
+│   ├── 보험용어정리_new.csv      # 챗봇이 학습할 원본 데이터
 │   ├── app.py                      # Flask 웹 서버 및 챗봇 응답 로직
 │   ├── create_csv.py               # (데이터 생성을 위한 보조 스크립트)
 │   ├── train_model.py              # 데이터 임베딩 및 Faiss 인덱스 생성/학습 스크립트
@@ -89,6 +79,6 @@ python app.py
 │   ├── faiss_index.bin             # (train_model.py가 생성)
 │   └── requirements.txt            # Python 의존성 목록
 │
-├── templates/
-│   └── chat.mustache               # 챗봇 UI를 위한 HTML 템플릿
-
+└── templates/
+    └── chat.mustache               # 챗봇 UI를 위한 HTML 템플릿
+```
