@@ -31,14 +31,14 @@ AI 기반 맞춤형 보험 상품 추천 및 관리 시스템
 
 ### 데이터 규모
 
-| 항목 | 규모 |
-|------|------|
-| **보험 상품** | 5,000개 이상 (암보험, 상해보험, 저축성보험, 연금보험, 종신보험) |
-| **암보험** | 96개 상품 |
-| **상해보험** | 46개 상품 |
-| **저축성보험** | 732개 상품 |
-| **종신보험** | 4,326개 상품 (KNN 알고리즘) |
-| **챗봇 학습 데이터** | 100개 이상 보험 용어 |
+| 항목                 | 규모                                                            |
+| -------------------- | --------------------------------------------------------------- |
+| **보험 상품**        | 5,000개 이상 (암보험, 상해보험, 저축성보험, 연금보험, 종신보험) |
+| **암보험**           | 96개 상품                                                       |
+| **상해보험**         | 46개 상품                                                       |
+| **저축성보험**       | 732개 상품                                                      |
+| **종신보험**         | 4,326개 상품 (KNN 알고리즘)                                     |
+| **챗봇 학습 데이터** | 100개 이상 보험 용어                                            |
 
 ---
 
@@ -51,6 +51,7 @@ AI 기반 맞춤형 보험 상품 추천 및 관리 시스템
 사용자가 직접 설정한 조건에 따라 보험 상품을 필터링하고 추천합니다.
 
 **주요 필터 조건:**
+
 - 보장금액: 최소/최대 보장금액 설정
 - 보험료: 월 납입 보험료 범위 지정
 - 갱신주기: 갱신형, 비갱신형, 종신형 선택
@@ -59,6 +60,7 @@ AI 기반 맞춤형 보험 상품 추천 및 관리 시스템
 - 보험회사: 특정 보험사 선택/제외
 
 **추천 알고리즘:**
+
 ```
 최종점수 = (보장금액 점수 × 0.5) + (가성비 점수 × 0.3) + (안정성 점수 × 0.2)
 ```
@@ -72,6 +74,7 @@ AI 기반 맞춤형 보험 상품 추천 및 관리 시스템
 사용자의 개인 정보를 분석하여 최적의 상품을 자동으로 추천합니다.
 
 **분석 항목:**
+
 - 나이: 연령대별 위험도 분석
 - 성별: 성별 특화 보장 내용 고려
 - 직업: 직업군별 위험도 평가
@@ -80,18 +83,20 @@ AI 기반 맞춤형 보험 상품 추천 및 관리 시스템
 - 소득 수준: 납입 가능 보험료 산정
 
 **추천 프로세스:**
+
 1. 사용자 프로필 데이터 수집
 2. FastAPI 추천 엔진으로 전송
 3. AI 알고리즘 기반 상품 매칭
 4. 상위 N개 상품 추천 및 이유 제시
 
-#### 1-3. KNN 기반 추천 (종신보험)
+#### 1-3. KNN 기반 추천 (종신보험) - FastAPI 통합
 
 **K-Nearest Neighbors 알고리즘 사용**
 
 사용자가 원하는 조건과 가장 유사한 보험 상품을 찾아 추천합니다.
 
 **특징:**
+
 - 5차원 특징 벡터: [보험료, 지급금액, 나이, 직업, 직업위험도]
 - 성별별 모델 분리: 남성/여성 각각 최적화된 추천
 - StandardScaler: 공정한 거리 측정을 위한 정규화
@@ -101,6 +106,7 @@ AI 기반 맞춤형 보험 상품 추천 및 관리 시스템
   - `coverage`: 보장금액 근접도 기준
 
 **알고리즘 흐름:**
+
 ```
 1. 사용자 입력 (성별, 나이, 직업, 희망 보험료, 희망 보장금액)
    ↓
@@ -118,6 +124,7 @@ AI 기반 맞춤형 보험 상품 추천 및 관리 시스템
 ```
 
 **기술 스택:**
+
 - scikit-learn: KNN, StandardScaler, LabelEncoder
 - pandas: 데이터 처리
 - numpy: 수치 계산
@@ -143,16 +150,19 @@ AI 기반 맞춤형 보험 상품 추천 및 관리 시스템
 #### 3-1. 보험 용어 설명 (딥러닝)
 
 **기술:**
+
 - Sentence Transformers: 한국어 임베딩 모델 (`jhgan/ko-sroberta-multitask`)
 - Cosine Similarity: 의미 유사도 계산
 - 임계값 기반 응답: 0.6 이상일 때만 답변
 
 **지원 용어 (100개+):**
+
 - 전문 용어: 피보험자, 보험수익자, 해약환급금 등
 - 보장 용어: 일반암, 유사암, 소액암, 후유장해 등
 - 계약 용어: 갱신, 만기, 납입면제, 자동갱신 등
 
 **추천 로직:**
+
 ```
 질문 임베딩 생성 → (용어 유사도 × 0.8) + (설명 유사도 × 0.2) → 최적 답변 반환
 ```
@@ -203,50 +213,45 @@ AI 기반 맞춤형 보험 상품 추천 및 관리 시스템
 ```mermaid
 flowchart LR
     User[사용자 브라우저] -->|HTTP 요청| Spring[Spring Boot<br/>:8080<br/>웹 애플리케이션]
-    
-    Spring -->|암/연금/저축/상해보험| FastAPI[FastAPI<br/>:8002<br/>추천 엔진]
-    Spring -->|종신보험 KNN| Python[Python Script<br/>life_insurance_knn.py]
+
+    Spring -->|모든 보험 추천 요청| FastAPI[FastAPI<br/>:8002<br/>추천 엔진<br/>AI 통합]
     Spring -->|챗봇 질문| Flask[Flask<br/>:5001<br/>AI 챗봇]
-    
-    FastAPI -->|데이터 조회| CSV1[(CSV Files<br/>cancer.csv<br/>savings.csv<br/>accident.csv)]
-    Python -->|데이터 조회| CSV2[(CSV Files<br/>analysis.csv<br/>4,326개 종신보험)]
+
+    FastAPI -->|데이터 조회| CSV[(CSV Files<br/>cancer.csv 96개<br/>savings.csv 732개<br/>accident.csv 46개<br/>analysis.csv 4,326개)]
     Spring -->|사용자 데이터| DB[(MariaDB<br/>users/cart/insurances)]
-    
+
     FastAPI -->|추천 결과| Spring
-    Python -->|JSON 응답| Spring
     Flask -->|답변| Spring
     Spring -->|화면 렌더링| User
-    
+
     style User fill:#e3f2fd
     style Spring fill:#fff3e0
     style FastAPI fill:#fce4ec
-    style Python fill:#e1f5fe
     style Flask fill:#e0f2f1
-    style CSV1 fill:#f5f5f5
-    style CSV2 fill:#f5f5f5
+    style CSV fill:#f5f5f5
     style DB fill:#f3e5f5
 ```
 
 ### 서버 역할
 
-| 서버 | 포트 | 역할 | 기술 스택 |
-|------|------|------|-----------|
-| **Spring Boot** | 8080 | 웹 애플리케이션, 사용자 관리, 인증 | Java 17, Spring Boot 3.x, JPA, MariaDB |
-| **FastAPI** | 8002 | 암/연금/저축/상해보험 추천 엔진 | Python 3.13, FastAPI, Pandas, NumPy |
-| **Python Script** | - | 종신보험 KNN 추천 (ProcessBuilder) | Python 3.x, scikit-learn, KNN |
-| **Flask** | 5001 | AI 챗봇, 자연어 처리 | Python 3.x, Flask, Sentence Transformers |
+| 서버            | 포트 | 역할                                     | 기술 스택                                        |
+| --------------- | ---- | ---------------------------------------- | ------------------------------------------------ |
+| **Spring Boot** | 8080 | 웹 애플리케이션, 사용자 관리, 인증       | Java 17, Spring Boot 3.x, JPA, MariaDB           |
+| **FastAPI**     | 8002 | 모든 보험 추천 엔진 (AI 통합)            | Python 3.13, FastAPI, Pandas, NumPy, scikit-learn |
+| **Flask**       | 5001 | AI 챗봇, 자연어 처리                     | Python 3.x, Flask, Sentence Transformers         |
 
-### 추천 엔진 구조
+### 추천 엔진 구조 (FastAPI 통합)
 
 ```
 app/
-├── main.py                  FastAPI 메인 서버
-├── cancer_engine.py         암보험 추천 (필터 + 프로필)
-├── pension_engine.py        연금보험 추천
-├── savings_engine.py        저축성보험 추천
-├── basic_engine.py          상해보험 추천
-├── life_insurance_knn.py    종신보험 KNN 추천 ★ AI
-└── data_loader.py           CSV 데이터 로더
+├── main.py              FastAPI 메인 서버
+├── cancer_engine.py     암보험 추천 (필터 + 프로필)
+├── pension_engine.py    연금보험 추천
+├── savings_engine.py    저축성보험 추천
+├── basic_engine.py      상해보험 추천
+├── life_engine.py       종신보험 KNN 추천 ★ AI (scikit-learn)
+├── data_loader.py       CSV 데이터 로더
+└── models.py            Pydantic 요청/응답 모델
 ```
 
 ---
@@ -260,6 +265,7 @@ app/
 <td width="33%" valign="top">
 
 **Spring Boot**
+
 - Java 17
 - Spring Boot 3.x
 - Spring Security
@@ -271,6 +277,7 @@ app/
 <td width="33%" valign="top">
 
 **FastAPI**
+
 - Python 3.13
 - FastAPI
 - Pandas
@@ -281,6 +288,7 @@ app/
 <td width="33%" valign="top">
 
 **Flask + AI**
+
 - Python 3.x
 - Flask
 - Sentence Transformers
@@ -293,13 +301,13 @@ app/
 
 ### Machine Learning
 
-| 알고리즘 | 용도 | 파일 |
-|----------|------|------|
-| **K-Nearest Neighbors** | 종신보험 유사 상품 추천 | `life_insurance_knn.py` |
-| **Sentence Transformers** | 챗봇 의미 분석 | Flask `main.py` |
-| **Cosine Similarity** | 질문-답변 유사도 계산 | Flask `main.py` |
-| **StandardScaler** | 특징 정규화 | `life_insurance_knn.py` |
-| **LabelEncoder** | 범주형 데이터 인코딩 | `life_insurance_knn.py` |
+| 알고리즘                  | 용도                    | 파일               | 서버    |
+| ------------------------- | ----------------------- | ------------------ | ------- |
+| **K-Nearest Neighbors**   | 종신보험 유사 상품 추천 | `life_engine.py`   | FastAPI |
+| **StandardScaler**        | 특징 정규화             | `life_engine.py`   | FastAPI |
+| **LabelEncoder**          | 범주형 데이터 인코딩    | `life_engine.py`   | FastAPI |
+| **Sentence Transformers** | 챗봇 의미 분석          | Flask `main.py`    | Flask   |
+| **Cosine Similarity**     | 질문-답변 유사도 계산   | Flask `main.py`    | Flask   |
 
 ### Database
 
@@ -365,7 +373,7 @@ app/
 <td>종신보험 (KNN)</td>
 <td><code>POST</code></td>
 <td><code>/life/recommend</code></td>
-<td>종신보험 KNN 추천</td>
+<td>종신보험 KNN 추천 (FastAPI 연동)</td>
 <td>없음</td>
 </tr>
 <tr style="background-color: #e8f5e9;">
@@ -540,6 +548,16 @@ app/
 <td>상해보험 상품 추천</td>
 <td><code>basic_engine.py</code></td>
 </tr>
+<tr style="background-color: #e1f5fe;">
+<td colspan="5"><strong>종신보험 (KNN)</strong></td>
+</tr>
+<tr>
+<td>KNN 추천</td>
+<td><code>POST</code></td>
+<td><code>/recommend/life</code></td>
+<td>종신보험 KNN 추천 (AI)</td>
+<td><code>life_engine.py</code></td>
+</tr>
 <tr style="background-color: #f3e5f5;">
 <td colspan="5"><strong>시스템</strong></td>
 </tr>
@@ -610,7 +628,7 @@ classDiagram
         +TIMESTAMP created_at
         +TIMESTAMP updated_at
     }
-    
+
     class insurances {
         +BIGINT id PK
         +BIGINT user_id FK
@@ -619,7 +637,7 @@ classDiagram
         +INT monthly_premium
         +TIMESTAMP subscription_date
     }
-    
+
     class cart {
         +BIGINT id PK
         +BIGINT user_id
@@ -629,7 +647,7 @@ classDiagram
         +VARCHAR recommendation_reason
         +TIMESTAMP added_at
     }
-    
+
     users "1" --> "0..*" insurances : "가입한 보험"
     users "1" --> "0..*" cart : "담은 상품"
 ```
@@ -909,18 +927,21 @@ python data_generator.py
 ### 3. 서버 실행
 
 **터미널 1 - Spring Boot (Port 8080)**
+
 ```bash
 cd InsuranceWeb
 ./gradlew bootRun
 ```
 
 **터미널 2 - FastAPI (Port 8002)**
+
 ```bash
 cd app
-python main.py
+uvicorn main:app --host 0.0.0.0 --port 8002 --reload
 ```
 
 **터미널 3 - Flask 챗봇 (Port 5001)**
+
 ```bash
 cd chatbot
 python main.py
@@ -959,9 +980,9 @@ InsuranceProject/
 │   ├── pension_engine.py            # 연금보험 추천 엔진
 │   ├── savings_engine.py            # 저축성보험 추천 엔진
 │   ├── basic_engine.py              # 상해보험 추천 엔진
-│   ├── life_insurance_knn.py        # 종신보험 KNN 추천 (AI)
+│   ├── life_engine.py               # 종신보험 KNN 추천 엔진 (AI)
 │   ├── data_loader.py               # CSV 데이터 로더
-│   └── models.py                    # Pydantic 모델
+│   └── models.py                    # Pydantic 요청/응답 모델
 │
 ├── chatbot/                         # Flask AI 챗봇
 │   ├── main.py                      # Flask 서버 (Sentence Transformers)
@@ -986,16 +1007,19 @@ InsuranceProject/
 ### 1. 다양한 AI 알고리즘
 
 **K-Nearest Neighbors (종신보험)**
+
 - 5차원 특징 벡터 기반 유사 상품 검색
 - 성별별 최적화 모델
 - StandardScaler 정규화
 
 **Sentence Transformers (챗봇)**
+
 - 한국어 임베딩 모델 (`jhgan/ko-sroberta-multitask`)
 - 의미 기반 질의응답
 - Cosine Similarity 유사도 측정
 
 **필터 기반 알고리즘 (암/연금/저축/상해보험)**
+
 - 다중 조건 필터링
 - 가중치 기반 점수 계산
 - 실시간 랭킹
@@ -1028,6 +1052,7 @@ InsuranceProject/
 ### 종신보험 추천 (KNN)
 
 **요청:**
+
 ```json
 {
   "gender": "남자",
@@ -1041,6 +1066,7 @@ InsuranceProject/
 ```
 
 **응답:**
+
 ```json
 {
   "items": [
@@ -1057,6 +1083,7 @@ InsuranceProject/
 ### 챗봇 질의응답
 
 **요청:**
+
 ```json
 {
   "question": "피보험자가 뭐야?"
@@ -1064,6 +1091,7 @@ InsuranceProject/
 ```
 
 **응답:**
+
 ```json
 {
   "answer": "피보험자: 보험 대상이 되는 사람입니다...",
