@@ -7,7 +7,7 @@ import os
 class DataLoader:
     """암보험 데이터 로더 클래스"""
     
-    def __init__(self, data_dir: str = "products"):
+    def __init__(self, data_dir: str = "data/csv"):
         self.data_dir = data_dir
         self.coverages = None
         self.eligibility = None
@@ -26,7 +26,7 @@ class DataLoader:
             # CSV 파일 로드
             self.coverages = pd.read_csv(os.path.join(data_path, "cancer_coverages.csv"))
             self.eligibility = pd.read_csv(os.path.join(data_path, "cancer_eligibility.csv"))
-            self.policies = pd.read_csv(os.path.join(data_path, "cancer_policies.csv"))
+            self.policies = pd.read_csv(os.path.join(data_path, "cancer.csv"))
             self.rates = pd.read_csv(os.path.join(data_path, "cancer_rates.csv"))
             
             # 데이터 전처리

@@ -19,7 +19,7 @@ public class UserAPIController {
 
     @GetMapping("/api/user/current")
     public ResponseEntity<Map<String, Object>> getCurrentUser() {
-        // Spring Security 컨텍스트에서 현재 인증된 사용자 정보를 가져옵니다.
+        // Spring Security 컨텍스트에서 현재 인증된 사용자 정보를 가져옴
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Map<String, Object> userDetails = new HashMap<>();
 

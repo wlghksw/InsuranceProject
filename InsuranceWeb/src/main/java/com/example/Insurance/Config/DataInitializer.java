@@ -22,7 +22,7 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // 관리자 계정이 이미 존재하는지 확인
         if (userRepository.existsByLoginId("admin")) {
-            System.out.println("✅ 관리자 계정이 이미 존재합니다.");
+            System.out.println("관리자 계정이 이미 존재합니다.");
             return;
         }
 
@@ -37,9 +37,5 @@ public class DataInitializer implements CommandLineRunner {
                 .build();
 
         userRepository.save(admin);
-        System.out.println("🎉 기본 관리자 계정이 생성되었습니다!");
-        System.out.println("   아이디: admin");
-        System.out.println("   비밀번호: 123");
-        System.out.println("   권한: ADMIN");
     }
 }

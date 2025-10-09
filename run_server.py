@@ -15,10 +15,15 @@ if __name__ == "__main__":
     print("🚀 암보험 상품 추천 API 서버를 시작합니다...")
     print("📊 데이터를 로딩 중입니다...")
     
+    # app 디렉토리로 이동
+    import os
+    app_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "app")
+    os.chdir(app_dir)
+    
     uvicorn.run(
-        "app.main:app",
+        "main:app",
         host="0.0.0.0",
-        port=8001,
+        port=8002,
         reload=True,
         log_level="info"
     )

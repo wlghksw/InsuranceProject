@@ -10,23 +10,45 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
-        /* [병합] 기존 메인 페이지 레이아웃 스타일 */
         html, body {
             margin: 0; padding: 0; scroll-behavior: smooth; font-family: 'Noto Sans KR', sans-serif;
         }
+        /* 네비게이션 바 - 네이비+골드 */
         .custom-navbar {
-            background-color: #fcf8f0; border-bottom: 1px solid #e0e0e0; padding: 1rem 1.5rem;
+            background-color: #1c2f48;
+            border-bottom: 1px solid rgba(0,0,0,.25);
+            padding: 14px 20px;
             position: fixed; width: 100%; top: 0; z-index: 1000;
         }
         .custom-navbar .navbar-brand {
-            font-weight: 700; color: #17ec42; font-size: 1.8rem;
+            color: #d4b46b !important;
+            font-weight: 900;
+            font-size: 32px;
+        }
+        .custom-navbar .nav-link {
+            color: #d4b46b !important;
+            font-weight: 700;
+            font-size: 18px;
+            margin-right: 24px;
+        }
+        .custom-navbar .nav-link:hover {
+            color: #e5c57b !important;
+        }
+        .custom-navbar .btn-light {
+            background-color: #d4b46b;
+            border-color: #d4b46b;
+            color: #1c2f48;
+            font-weight: 600;
+        }
+        .custom-navbar .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
         }
         .scroll-section {
             min-height: 100vh; display: flex; align-items: center; justify-content: center;
             padding: 8rem 2rem 2rem 2rem; box-sizing: border-box;
         }
-        #section1 { background: #dcfbca; }
-        #section2 { background: #a5fa8e; }
+        #section1, #section2 { background: #ffffff; }
         .side-nav {
             position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
             z-index: 1000; list-style: none; margin: 0; padding: 0;
@@ -36,24 +58,39 @@
             display: block; width: 12px; height: 12px; background-color: #ccc;
             border-radius: 50%; transition: background-color 0.3s ease; text-indent: -9999px;
         }
-        .side-nav li a.active { background-color: #17ec42; }
+        .side-nav li a.active { background-color: #d4b46b; }
 
-        /* [병합] 기존 대시보드 테이블 및 버튼 스타일 */
-        .table-container { width: 100%; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #333; margin-bottom: 1.5rem; }
+        /* 테이블 스타일 - 네이비+골드 */
+        .table-container {
+            width: 100%; max-width: 1400px; background: white; padding: 2.5rem;
+            border-radius: 15px; box-shadow: 0 4px 20px rgba(28,47,72,0.1);
+        }
+        h1 {
+            text-align: center; color: #1c2f48; margin-bottom: 2rem;
+            font-weight: 700; border-bottom: 3px solid #d4b46b; padding-bottom: 1rem;
+        }
         table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #e0e0e0; padding: 12px; text-align: center; }
-        th { background-color: #f2f2f2; font-weight: bold; }
-        tr:nth-child(even) { background-color: #fafafa; }
-        .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; color: white; font-size: 0.9em; margin: 2px; min-width: 80px; }
-        .btn-role-admin { background-color: #34495E; }
-        .btn-role-user { background-color: #f39c12; }
-        .btn-withdraw { background-color: #e74c3c; }
-        .btn-restore { background-color: #3498db; }
-        .btn-delete { background-color: #c0392b; }
+        th {
+            background-color: #1c2f48;
+            color: #d4b46b;
+            font-weight: 600;
+        }
+        tr:nth-child(even) { background-color: #f8f9fa; }
+        tr:hover { background-color: rgba(212,180,107,0.1); }
+        .btn {
+            padding: 6px 12px; border: none; border-radius: 4px;
+            cursor: pointer; color: white; font-size: 0.9em;
+            margin: 2px; min-width: 80px; font-weight: 600;
+        }
+        .btn-role-admin { background-color: #1c2f48; }
+        .btn-role-user { background-color: #d4b46b; color: #1c2f48; }
+        .btn-withdraw { background-color: #dc3545; }
+        .btn-restore { background-color: #28a745; }
+        .btn-delete { background-color: #6c757d; }
         .user-status { font-weight: bold; }
-        .status-active { color: #27AE60; }
-        .status-inactive { color: #C0392B; }
+        .status-active { color: #28a745; }
+        .status-inactive { color: #dc3545; }
     </style>
 </head>
 <body>
@@ -67,18 +104,17 @@
 <!-- 상단 네비게이션 바 -->
 <nav class="navbar navbar-expand-lg custom-navbar">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/main">🐢거북이 보험 (관리자)</a>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <span class="nav-link text-dark">안녕하세요. <span class="fw-bold">{{loginAdminName}}</span>님</span>
-                </li>
-                <li class="nav-item ms-2">
-                    <form action="/logout" method="post" class="d-inline">
-                        <button type="submit" class="btn btn-secondary">로그아웃</button>
-                    </form>
-                </li>
-            </ul>
+        <a class="navbar-brand" href="/main" style="color:#d4b46b; font-weight:900;">
+            B
+        </a>
+        <div class="d-flex align-items-center">
+            <a href="/admin/products" class="nav-link">
+                상품 관리
+            </a>
+            <span class="nav-link">관리자: <strong>{{loginAdminName}}</strong></span>
+            <form action="/logout" method="post" class="d-inline ms-2">
+                <button type="submit" class="btn btn-secondary btn-sm">로그아웃</button>
+            </form>
         </div>
     </div>
 </nav>

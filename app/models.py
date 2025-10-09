@@ -124,7 +124,7 @@ class SavingsProductRecommendation(BaseModel):
     score: float
     monthly_premium: str
     term: str
-    accumulation_rate: str
+    accumulation_rate: str = "N/A"
     current_rate: str
     guaranteed_rate: str
     surrender_value: str
@@ -140,5 +140,33 @@ class SavingsRecommendationResponse(BaseModel):
     total_products: int
     recommendations: List[SavingsProductRecommendation]
     request_params: Optional[SavingsRecommendationRequest] = None
+
+# === 종신보험 KNN 추천 모델 ===
+class LifeInsuranceRequest(BaseModel):
+    """종신보험 KNN 추천 요청 모델"""
+    gender: str = Field(..., description="성별", example="남자")
+    age: int = Field(..., description="나이", example=25, ge=18, le=80)
+    job: str = Field(..., description="직업", example="사무직")
+    desiredPremium: int = Field(..., description="희망 보험료", example=50000, ge=10000, le=1000000)
+    desiredCoverage: int = Field(..., description="희망 보장금액", example=20000000, ge=5000000, le=100000000)
+    topk: int = Field(5, description="추천 개수", ge=1, le=20)
+    sortBy: str = Field("distance", description="정렬 기준 (distance/premium/coverage)")
+
+class LifeInsuranceProduct(BaseModel):
+    """종신보험 상품 정보"""
+    product: str
+    premium: int
+    coverage: int
+    age: int
+    distance: float
+    job: Optional[str] = None
+    risk: Optional[str] = None
+
+class LifeInsuranceResponse(BaseModel):
+    """종신보험 추천 응답 모델"""
+    success: bool
+    message: str
+    total_products: int
+    recommendations: List[dict]
 
 

@@ -15,30 +15,31 @@
         body {
             font-family: 'Noto Sans KR', sans-serif;
             background-color: #f8f9fa;
-            padding-top: 80px;
+            padding-top: 90px;
         }
         .custom-navbar {
-            background-color: #fcf8f0;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 1rem 1.5rem;
+            background-color: #1c2f48;
+            border-bottom: 1px solid rgba(0,0,0,.25);
+            padding: 8px 20px;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
         }
         .custom-navbar .navbar-brand {
-            font-family: 'Noto Sans KR', sans-serif;
-            font-weight: 700;
-            color: #17ec42;
-            font-size: 1.8rem;
+            color: #d4b46b !important;
+            font-weight: 900;
+            font-size: 40px;
+            margin-right: 30px;
         }
         .custom-navbar .nav-link {
-            font-weight: 700;
-            color: #555;
-            margin-right: 1.5rem;
+            color: #d4b46b !important;
+            font-weight: 800;
+            font-size: 20px;
+            margin-right: 36px;
         }
         .custom-navbar .nav-link:hover {
-            color: #17ec42;
+            color: #e5c57b !important;
         }
         .container-fluid {
             padding: 2rem;
@@ -67,11 +68,12 @@
             padding: 0.75rem 1rem;
         }
         .form-control:focus, .form-select:focus {
-            border-color: #17ec42;
-            box-shadow: 0 0 0 0.2rem rgba(23, 236, 66, 0.25);
+            border-color: #d4b46b;
+            box-shadow: 0 0 0 0.2rem rgba(212,180,107,0.25);
         }
         .btn-recommend {
-            background-color: #17ec42;
+            background-color: #1c2f48;
+            color: #d4b46b;
             border: none;
             border-radius: 25px;
             padding: 0.75rem 2rem;
@@ -88,7 +90,18 @@
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             padding: 2rem;
-            min-height: 400px;
+            min-height: 600px;
+        }
+        .initial-message {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            margin-top: 3rem;
+        }
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
         }
         .result-card {
             background: white;
@@ -97,7 +110,7 @@
             padding: 1.5rem;
             margin-bottom: 1rem;
             transition: transform 0.2s ease;
-            border-left: 4px solid #17ec42;
+            border-left: 4px solid #d4b46b;
         }
         .result-card:hover {
             transform: translateY(-2px);
@@ -109,7 +122,7 @@
             border-bottom: 1px solid #e9ecef;
         }
         .company-name {
-            color: #17ec42;
+            color: #1c2f48;
             font-weight: 700;
             font-size: 1.1rem;
             margin-bottom: 0.3rem;
@@ -151,7 +164,7 @@
             background: #d4edda;
         }
         .coverage-icon {
-            color: #17ec42;
+            color: #d4b46b;
             font-size: 1.1rem;
             margin-right: 0.5rem;
         }
@@ -174,7 +187,7 @@
             padding: 0.8rem;
             margin-bottom: 0.5rem;
             border-radius: 6px;
-            border-left: 3px solid #17ec42;
+            border-left: 3px solid #d4b46b;
             font-size: 0.85rem;
             line-height: 1.4;
         }
@@ -188,8 +201,8 @@
             border: 1px solid #ffeaa7;
         }
         .score-badge {
-            background-color: #17ec42;
-            color: white;
+            background-color: #1c2f48;
+            color: #d4b46b;
             padding: 0.25rem 0.75rem;
             border-radius: 15px;
             font-size: 0.8rem;
@@ -203,7 +216,7 @@
             padding: 2rem;
         }
         .spinner-border {
-            color: #17ec42;
+            color: #1c2f48;
         }
         .initial-message {
             text-align: center;
@@ -212,7 +225,7 @@
             padding: 3rem;
         }
         .result-count {
-            color: #17ec42;
+            color: #1c2f48;
             font-weight: 600;
             margin-bottom: 1rem;
         }
@@ -220,45 +233,18 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg custom-navbar">
+<nav class="custom-navbar navbar navbar-expand-lg">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/main">🐢거북이 보험</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/service_intro">서비스 소개</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/user/my_insurance">내 보험찾기</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/notice">공지사항</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                {{#user}}
-                    <li class="nav-item">
-                        <span class="nav-link text-dark">안녕하세요. {{nickname}}님</span>
-                    </li>
-                    <li class="nav-item">
-                        <form action="/logout" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-outline-dark">로그아웃</button>
-                        </form>
-                    </li>
-                {{/user}}
-                {{^user}}
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="/user/login">로그인</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="/user/register">회원가입</a>
-                    </li>
-                {{/user}}
-            </ul>
-        </div>
+        <a class="navbar-brand" href="/main" style="color:#d4b46b; font-weight:900;">
+            B
+        </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/savings/recommend">연금보험</a>
+                <a class="nav-link active" href="/cancer/recommend">암보험</a>
+                <a class="nav-link" href="/life/recommend">종신보험</a>
+                <a class="nav-link" href="/user/myPage">마이페이지</a>
+                <a class="nav-link" href="/user/logout">로그아웃</a>
+            </div>
     </div>
 </nav>
 
@@ -267,16 +253,18 @@
         <!-- 왼쪽 추천 설정 -->
         <div class="col-md-4">
             <div class="recommend-form">
-                <h3 class="section-title">맞춤형 암보험 추천</h3>
+                <h3 class="section-title">
+                    <i class="fas fa-user-md me-2"></i>맞춤형 암보험 추천
+                </h3>
                 <p class="text-muted mb-4">나이, 성별, 직업, 예산 등 당신의 특성만으로 최적의 암보험을 추천받으세요</p>
-                
+
                 <form id="profileForm">
                     <div class="mb-3">
                         <label for="age" class="form-label">나이</label>
-                        <input type="number" class="form-control" id="age" name="age" 
+                        <input type="number" class="form-control" id="age" name="age"
                                placeholder="예: 35" min="18" max="80" required>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="sex" class="form-label">성별</label>
                         <select class="form-select" id="sex" name="sex" required>
@@ -285,14 +273,14 @@
                             <option value="F">여성</option>
                         </select>
                     </div>
-                    
-                    
+
+
                     <div class="mb-3">
                         <label for="monthlyBudget" class="form-label">월 예산</label>
-                        <input type="number" class="form-control" id="monthlyBudget" name="monthlyBudget" 
+                        <input type="number" class="form-control" id="monthlyBudget" name="monthlyBudget"
                                placeholder="예: 50000" min="10000" max="500000" required>
                     </div>
-                    
+
                     <!-- 암보험 특화 조건들 -->
                     <div class="mb-3">
                         <label for="familyCancerHistory" class="form-label">가족 암 병력</label>
@@ -301,7 +289,7 @@
                             <option value="true">있음</option>
                         </select>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="preferredCoveragePeriod" class="form-label">선호 보장기간</label>
                         <select class="form-select" id="preferredCoveragePeriod" name="preferredCoveragePeriod">
@@ -311,9 +299,9 @@
                             <option value="종신">종신</option>
                         </select>
                     </div>
-                    
+
                     <!-- 암 종류 선호도와 보험료 납입 방법은 현재 데이터에 특화 상품이 없어서 제거 -->
-                    
+
                     <div class="mb-4">
                         <label for="topN" class="form-label">추천 상품 개수</label>
                         <select class="form-select" id="topN" name="topN">
@@ -323,30 +311,30 @@
                             <option value="20">20개</option>
                         </select>
                     </div>
-                    
+
                     <button type="submit" class="btn btn-recommend">
                         <i class="fas fa-search me-2"></i>맞춤형 암보험 찾기
                     </button>
                 </form>
             </div>
         </div>
-        
+
         <!-- 오른쪽 결과 표시 -->
         <div class="col-md-8">
             <div class="results-section">
                 <div class="initial-message" id="initialMessage">
-                    <i class="fas fa-user-md fa-3x text-muted mb-3"></i>
-                    <p>당신의 특성에 맞는 최적의 암보험을 찾아드릴게요</p>
-                    <p class="text-muted">왼쪽 폼을 작성하고 추천받기 버튼을 눌러보세요</p>
+                    <i class="fas fa-user-md fa-3x mb-3" style="color: #6c757d;"></i>
+                    <h5 style="font-weight: 700; color: #333; margin-bottom: 0.5rem;">왼쪽 설정을 조정하고 "맞춤형 암보험 찾기"를 클릭하세요!</h5>
+                    <p style="color: #999; font-size: 1rem;">당신에게 최적화된 암보험을 찾아드립니다.</p>
                 </div>
-                
+
                 <div class="loading" id="loading" style="display: none;">
                     <div class="spinner-border" role="status">
                         <span class="visually-hidden">로딩중...</span>
                     </div>
                     <p class="mt-2">최적의 암보험을 찾고 있습니다...</p>
                 </div>
-                
+
                 <div id="results" style="display: none;">
                     <div class="result-count" id="resultCount"></div>
                     <div id="resultsList"></div>
@@ -361,7 +349,7 @@
     // 폼 제출 이벤트
     document.getElementById('profileForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         const formData = new FormData(this);
         const data = {
             age: parseInt(formData.get('age')),
@@ -403,11 +391,11 @@
         const resultsDiv = document.getElementById('results');
         const resultsList = document.getElementById('resultsList');
         const resultCount = document.getElementById('resultCount');
-        
+
         if (data.recommendations && data.recommendations.length > 0) {
             resultCount.textContent = `총 ${data.recommendations.length}개의 상품을 찾았습니다`;
             resultsList.innerHTML = '';
-            
+
             data.recommendations.forEach((product, index) => {
                 const card = document.createElement('div');
                 card.className = 'result-card';
@@ -463,20 +451,20 @@
                         </div>
                     </div>
                 `;
-                
+
                 // 보장 내용 동적 렌더링
                 const coverageContentDiv = card.querySelector('[data-product-index="' + index + '"]');
                 if (product.coverageDetails && product.coverageDetails.length > 0) {
-                    coverageContentDiv.innerHTML = product.coverageDetails.map(detail => 
+                    coverageContentDiv.innerHTML = product.coverageDetails.map(detail =>
                         `<div class="coverage-item">${detail}</div>`
                     ).join('');
                 } else {
                     coverageContentDiv.innerHTML = '<div class="coverage-item">보장 내용 정보를 불러올 수 없습니다.</div>';
                 }
-                
+
                 resultsList.appendChild(card);
             });
-            
+
             resultsDiv.style.display = 'block';
         } else {
             resultCount.textContent = '조건에 맞는 상품을 찾을 수 없습니다';
@@ -488,14 +476,14 @@
     function toggleCoverageDetails(index) {
         const detailsDiv = document.getElementById(`details-${index}`);
         const arrow = event.target.closest('.coverage-summary').querySelector('.coverage-arrow');
-        
+
         // 다른 모든 보장 내용 숨기기
         document.querySelectorAll('.coverage-details').forEach(div => {
             if (div.id !== `details-${index}`) {
                 div.style.display = 'none';
             }
         });
-        
+
         // 현재 보장 내용 토글
         if (detailsDiv.style.display === 'none') {
             detailsDiv.style.display = 'block';

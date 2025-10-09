@@ -22,7 +22,7 @@ public class SavingsController {
 
     @GetMapping("/recommend")
     public String recommendPage(Model model) {
-        return "savings/savings_recommend";
+        return "pension/pension_recommend";
     }
 
     @GetMapping("/profile-recommend")
