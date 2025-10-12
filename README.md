@@ -59,7 +59,7 @@ API가 요청을 받으면, 아래 조건에 맞지 않는 상품은 추천 후�
 
 -----
 
-## 🚀 빠른 시작
+## 빠른 시작
 
 ### 설치 및 실행
 
@@ -121,7 +121,7 @@ uvicorn app.main:app --reload --port 8000
 
 -----
 
-## 🚀 빠른 시작
+## 빠른 시작
 
 ### 설치 및 실행
 
@@ -152,7 +152,7 @@ uvicorn app.main:app --reload --port 8000
 
 -----
 
-## 📁 프로젝트 구조
+## 프로젝트 구조
 
 ```
 ├── app/
@@ -185,7 +185,7 @@ uvicorn app.main:app --reload --port 8000
 
 -----
 
-## 📖 API 사용법
+## API 사용법
 
 `POST` 요청을 통해 실시간으로 상해보험 상품을 추천받을 수 있습니다.
 
@@ -204,7 +204,7 @@ uvicorn app.main:app --reload --port 8000
 }
 ```
 
-## 📁 핵심 파일
+## 핵심 파일
 
 - `app/main.py` - FastAPI 서버
 - `app/recommendation_engine.py` - 추천 알고리즘
@@ -212,7 +212,7 @@ uvicorn app.main:app --reload --port 8000
 - `products/` - 암보험 상품 데이터 (CSV)
 - `requirements.txt` - Python 의존성
 
-## 💡 핵심 특징
+## 핵심 특징
 
 - **가입 불가 상품 자동 제외**: 필수 조건 미달 시 자동 필터링
 - **효율성 우선**: 보험료 대비 보장금액이 높은 상품 우선 추천
