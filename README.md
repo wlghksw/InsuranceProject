@@ -12,7 +12,9 @@ CSV의 스키마에 맞춰 라벨 인코딩과 스케일링을 수행하고,
 직업 위험도 추정:
 직업명 → 위험도 매핑이 불확실할 경우, 동일 직업군의 위험도 mode 값 사용
 
-정렬 옵션:
+---
+
+## 정렬 옵션:
 
 distance (기본): 전체 피처 거리
 
@@ -22,6 +24,8 @@ coverage: 지급금액 차이 절댓값
 
 상품명 복원:
 내부적으로 LabelEncoder로 인코딩하지만, 출력 시 원래 상품명으로 복원
+
+---
 
 ## Repository 구조
 life-insurance-recommender/
@@ -37,6 +41,8 @@ life-insurance-recommender/
 └─ scripts/
    └─ demo.py
 
+---
+
 ## 의존성
 from dataclasses import dataclass
 from typing import Optional, Literal
@@ -44,6 +50,8 @@ import numpy as np
 import pandas as pd
 from difflib import get_close_matches
 from sklearn.preprocessing import LabelEncoder, StandardScaler
+
+---
 
 ## 역할
 모듈
@@ -82,11 +90,15 @@ fit_csv() → CSV 로드 및 인코딩
 
 recommend_top_k() → 입력값 기반 추천 수행
 
+---
+
 ## 전처리 및 학습
 fit_csv / fit_df
 def fit_csv(self, csv_path: str) -> "Recommender":
     df = pd.read_csv(csv_path)
     return self.fit_df(df)
+
+---
 
 def fit_df(self, df: pd.DataFrame) -> "Recommender":
     required = ["상품명","성별","남자(보험료)","여자(보험료)","지급금액","가입금액","나이","직업","직업 위험도"]
@@ -108,6 +120,8 @@ def fit_df(self, df: pd.DataFrame) -> "Recommender":
     self.df_m = df[df["성별"] == 1].copy()
     self._fit_gender_pool()
 
+---
+
 ## 성별별 스케일링
 def _fit_gender_pool(self):
     # Female
@@ -119,8 +133,9 @@ def _fit_gender_pool(self):
     X_m = self.df_m[["남자(보험료)","지급금액","나이","직업","직업 위험도"]].astype(float).values
     self.scaler_m = StandardScaler().fit(X_m)
     self.X_m_scaled = self.scaler_m.transform(X_m)
+---
 
-💡 추천 함수 예시
+## 추천 함수 예시
 res = recommender.recommend_top_k(
     gender_input="남자",
     premium=50000,
@@ -136,11 +151,17 @@ print(res)
 # 1. 환경 설정
 pip install -r requirements.txt
 
+---
+
 # 2. CSV 파일 준비
 # 예: ./insurance_core.csv
 
+---
+
 # 3. 실행
 python scripts/demo.py
+
+---
 
 ## 구현 포인트 요약
 # 설명
@@ -150,12 +171,14 @@ get_close_matches	직업명 오타/근사 대응
 직업→위험도	동일 직업군의 최빈(mode) 위험도 추정
 정렬 옵션	거리·보험료·지급금액 기준 선택 가능
 상품명 복원	추천 결과에 실제 상품명 표시
+
+---
 ## 예시 결과
 상품명	남자(보험료)	지급금액	나이	직업(원문)	직업 위험도(원문)
 ○○생명 종신보장형	45,000	10,000,000	25	사무직	낮음
 △△생명 플러스형	48,000	9,500,000	26	사무직	낮음
 
-------------------
+---
 
 ## 카카오 로그인 API 사용
 
