@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>종신보험 맞춤 추천</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root { --navy:#1c2f48; --gold:#d4b46b; }
+        body { background:#f7f8fb; }
+        .btn-gold { background:var(--gold); color:#1c2f48; border:none; }
+        .btn-gold:hover { filter:brightness(0.95); color:#1c2f48; }
+        .card { border-radius:16px; }
+        .badge-navy { background:var(--navy); }
+        .spinner { display:none; }
+        .chips { display:flex; flex-wrap:wrap; gap:.5rem; }
+        .chip {
+          padding:.4rem .8rem; border:1px solid #e2e6ef; border-radius:999px;
+          background:#fff; cursor:pointer; font-size:.95rem;
+        }
+        .chip:hover { background:#f3f6fb; }
+        .chip.active {
+          background:#ecf2ff; border-color:#cbd6ff; color:#1c2f48; font-weight:600;
+        }
+        .help-hint { font-size:.85rem; color:#6c757d; }
+
+        /* 숫자 입력 스피너 제거 (크롬/사파리/엣지) */
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        /* 파이어폭스/기타 */
+        input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    </style>
+</head>
+<body>
+<div class="container py-4">
+    <h1 class="mb-2"> 종신보험 맞춤 추천</h1>
+
+    <div class="row g-4">
+        <!-- 입력 -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <select id="gender" class="form-select">
+                            <option value="" disabled selected>성별</option>
+                            <option value="남">남</option>
+                            <option value="여">여</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <select id="age" class="form-select">
+                            <option value="" disabled selected>나이</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <select id="job" class="form-select">
+                            <option value="" disabled selected>직업</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">희망 월 보험료</label>
+                        <input id="premium" type="number" class="form-control" placeholder="예) 50000">
+                        <div class="chips mt-2" id="premiumChips"></div>
+                        <div class="help-hint">※ 칩을 누르면 자동 입력됩니다. 직접 입력도 가능합니다.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">희망 보장금액 (원)</label>
+                        <input id="coverage" type="number" class="form-control" placeholder="예) 10000000">
+                        <div class="chips mt-2" id="coverageChips"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label d-block">정렬 기준</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="sort_by" value="premium" id="sort1" checked>
+                            <label class="form-check-label" for="sort1">보험료 가까운순</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="sort_by" value="coverage" id="sort2">
+                            <label class="form-check-label" for="sort2">보장금액 가까운순</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="sort_by" value="distance" id="sort3">
+                            <label class="form-check-label" for="sort3">종합</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">추천 개수</label>
+                        <input id="topk" type="number" class="form-control" value="5" min="1" max="50">
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button id="btnRecommend" class="btn btn-gold btn-lg">맞춤형 추천 받기</button>
+                    </div>
+
+                    <div id="loading" class="spinner mt-3">
+                        <div class="d-flex align-items-center">
+                            <div class="spinner-border me-2" role="status"></div>
+                            <span>추천 계산 중...</span>
+                        </div>
+                    </div>
+                    <div id="error" class="alert alert-danger mt-3 d-none"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 결과 -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="m-0">추천 결과</h5>
+                        <span id="resultCount" class="badge badge-navy"></span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                            <tr>
+                                <th style="width:50%">상품명</th>
+                                <th class="text-end">월 보험료</th>
+                                <th class="text-end">보장금액</th>
+                            </tr>
+                            </thead>
+                            <tbody id="resultBody">
+                            <tr class="text-muted">
+                                <td colspan="3">왼쪽에서 정보를 입력하고 “맞춤형 추천 받기” 버튼을 눌러주세요.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <small class="text-muted">※ 실제 보험료는 조건/특약에 따라 달라질 수 있습니다.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const $ = (id) => document.getElementById(id);
+
+    // 필요시 상단에서 window.RECO_API 로 덮어쓰기 가능
+    const RECOMMEND_API = window.RECO_API || "/life/recommend";
+
+    /* ====== 옵션 데이터 ====== */
+    const JOB_OPTIONS = [
+      "무직","학생","회사원","사무직","행정직","서비스직","판매직","마케터","콜센터","요식업","자영업",
+      "의사","간호사","약사","회계사","법률사무","컨설턴트","연구원","교사","디자이너","HR","금융직",
+      "기술직","엔지니어","개발자","전기공","항공정비사","철도작업자",
+      "공무원","소방관","경찰","군인","운전기사","배달원","선원",
+      "제조업라인","생산직","산업현장근로자","중장비기사","철강노동자",
+      "건설업","벌목공","광부","잠수부","위험화학작업자",
+      "농업","어업","요리사","주방","항만노동자"
+    ].sort((a,b)=>a.localeCompare(b,'ko'));
+
+    /* ====== 유틸 ====== */
+    function toKRW(n) {
+      if (n === null || n === undefined || isNaN(n)) return "-";
+      return Number(n).toLocaleString("ko-KR");
+    }
+
+    // 500만원, 1억, 1억 500만원 등
+    function formatMoneyKRW(value) {
+      if (value >= 100000000) {
+        const eok = Math.floor(value / 100000000);
+        const man = Math.floor((value % 100000000) / 10000);
+        return man === 0 ? `${eok}억` : `${eok}억 ${man}만원`;
+      }
+      return `${(value/10000).toLocaleString("ko-KR")}만원`;
+    }
+
+    async function postJSON(url, data) {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data),
+        credentials: "same-origin"
+      });
+      const text = await res.text();
+      let json;
+      try { json = text ? JSON.parse(text) : {}; } catch { json = { raw:text }; }
+      if (!res.ok) {
+        const msg = (json && (json.error || json.message)) || text || `HTTP ${res.status}`;
+        throw new Error(msg);
+      }
+      return json;
+    }
+
+    function ensureArrayLike(obj) {
+      if (Array.isArray(obj)) return obj;
+      if (Array.isArray(obj?.items)) return obj.items;
+      if (Array.isArray(obj?.top)) return obj.top;
+      if (Array.isArray(obj?.data)) return obj.data;
+      if (Array.isArray(obj?.results)) return obj.results;
+      return [];
+    }
+
+    function validateInputs() {
+      const gender = $("gender").value.trim();
+      const age = $("age").value.trim();
+      const job = $("job").value.trim();
+      const errs = [];
+      if (!gender) errs.push("성별을 선택하세요.");
+      if (!age) errs.push("나이를 선택하세요.");
+      if (!job) errs.push("직업을 선택하세요.");
+      if (age && (+age < 15 || +age > 80)) errs.push("나이는 15~80세 범위여야 합니다.");
+      return errs;
+    }
+
+    function renderChips(container, values, onPick) {
+      container.innerHTML = "";
+      values.forEach(v => {
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "chip";
+        chip.textContent = formatMoneyKRW(v);
+        chip.addEventListener("click", () => {
+          [...container.querySelectorAll(".chip")].forEach(c => c.classList.remove("active"));
+          chip.classList.add("active");
+          onPick(v);
+        });
+        container.appendChild(chip);
+      });
+    }
+
+    function fillAgeSelect() {
+      const sel = $("age");
+      for (let i=15; i<=80; i++) sel.innerHTML += `<option value="${i}">${i}</option>`;
+    }
+    function fillJobSelect() {
+      $("job").innerHTML += JOB_OPTIONS.map(j => `<option value="${j}">${j}</option>`).join("");
+    }
+
+    /* ====== 초기 렌더 ====== */
+    document.addEventListener("DOMContentLoaded", () => {
+      fillAgeSelect();
+      fillJobSelect();
+
+      // 보험료 (1~20만원)
+      const premiumValues = Array.from({length:20},(_,i)=>(i+1)*10000);
+      renderChips($("premiumChips"), premiumValues, (val)=>{$("premium").value=val;});
+
+      // 보장금액 (대표값)
+      const coveragePreset = [500,1000,1500,2000,3000,5000,10000,20000,30000,50000,100000,200000].map(m=>m*10000);
+      renderChips($("coverageChips"), coveragePreset, (val)=>{$("coverage").value=val;});
+
+      // 휠 실수 방지(포커스 해제)
+      document.querySelectorAll('input[type=number]').forEach(el => {
+        el.addEventListener('wheel', e => e.target.blur(), {passive:true});
+      });
+    });
+
+    /* ====== 액션 ====== */
+    const btn = $("btnRecommend");
+    const loading = $("loading");
+    const errorBox = $("error");
+    const body = $("resultBody");
+    const count = $("resultCount");
+
+    btn.addEventListener("click", async () => {
+      const errs = validateInputs();
+      if (errs.length) {
+        errorBox.textContent = errs.join(" ");
+        errorBox.classList.remove("d-none");
+        return;
+      }
+
+      errorBox.classList.add("d-none");
+      body.innerHTML = "";
+      count.textContent = "";
+      loading.style.display = "block";
+      btn.disabled = true;
+
+      // ✅ DTO에 맞춰 보냄: desiredPremium / desiredCoverage / topk
+      const payload = {
+        gender: $("gender").value,
+        age: Number($("age").value),
+        job: $("job").value,
+        desiredPremium: Number($("premium").value || 0),
+        desiredCoverage: Number($("coverage").value || 0),
+        topk: Number($("topk").value || 5),
+        // 워커도 받도록 함께 전송(서비스에서 필요없으면 무시)
+        sortBy: (document.querySelector('input[name=\"sort_by\"]:checked')?.value) || "premium"
+      };
+
+      try {
+        const data = await postJSON(RECOMMEND_API, payload);
+        const items = ensureArrayLike(data);
+
+        loading.style.display = "none";
+        btn.disabled = false;
+
+        count.textContent = items.length ? `총 ${items.length}건` : "";
+
+        if (!items.length) {
+          body.innerHTML = "<tr><td colspan='3' class='text-muted'>추천 결과가 없습니다.</td></tr>";
+          return;
+        }
+
+        body.innerHTML = items.map(it => {
+          const name = it.product ?? it.name ?? it["상품명"] ?? "-";
+          // 서비스/워커 어느쪽이든 호환
+          const prem = it.productPremium ?? it.premium ?? it.price ?? it["보험료"];
+          const cov  = it.productCoverage ?? it.coverage ?? it.cover ?? it["지급금액"];
+          return `
+            <tr>
+              <td>${name}</td>
+              <td class="text-end">${toKRW(prem)} 원</td>
+              <td class="text-end">${toKRW(cov)} 원</td>
+            </tr>
+          `;
+        }).join("");
+
+      } catch (e) {
+        loading.style.display = "none";
+        btn.disabled = false;
+        errorBox.textContent = "추천 실패: " + (e.message || e);
+        errorBox.classList.remove("d-none");
+        body.innerHTML = "<tr><td colspan='3' class='text-muted'>오류로 결과를 표시할 수 없습니다.</td></tr>";
+        console.error("Recommend error:", e);
+      }
+    });
+</script>
+</body>
+</html>
