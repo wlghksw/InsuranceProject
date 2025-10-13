@@ -637,7 +637,3 @@ curl -X POST "http://localhost:8002/recommend/life" \
 ```
 
 ---
-
-## 라이선스
-
-이 프로젝트는 교육 목적으로 제작되었습니다.
