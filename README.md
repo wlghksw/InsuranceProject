@@ -603,37 +603,3 @@ uvicorn main:app --host 0.0.0.0 --port 8002 --reload
 http://localhost:8002/docs
 ```
 
-### 테스트 요청 예시
-
-**암보험 추천:**
-
-```bash
-curl -X POST "http://localhost:8002/recommend/user-profile" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "age": 30,
-    "sex": "M",
-    "monthly_budget": 50000,
-    "family_cancer_history": false,
-    "smoker_flag": 0,
-    "top_n": 5
-  }'
-```
-
-**종신보험 KNN 추천:**
-
-```bash
-curl -X POST "http://localhost:8002/recommend/life" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "gender": "남자",
-    "age": 25,
-    "job": "사무직",
-    "desiredPremium": 50000,
-    "desiredCoverage": 20000000,
-    "topk": 5,
-    "sortBy": "distance"
-  }'
-```
-
----
