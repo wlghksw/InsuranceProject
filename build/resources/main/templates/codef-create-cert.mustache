@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>CODEF connectedId 발급/추가 등록</title>
+    <style>
+        body {max-width: 960px; margin: 24px auto; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;}
+        .card {border:1px solid #e5e7eb; border-radius:12px; padding:16px; margin:16px 0;}
+        .row {display:grid; grid-template-columns: 180px 1fr; gap:12px; align-items:center; margin:10px 0;}
+        .row > label {color:#374151; font-weight:600;}
+        input[type=text], input[type=password], select {width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px;}
+        input[type=file]{width:100%;}
+        .grid-2 {display:grid; grid-template-columns: 1fr 1fr; gap:12px;}
+        .hidden {display:none;}
+        .btn {padding:10px 16px; background:#2563eb; color:#fff; border:none; border-radius:10px; cursor:pointer; font-weight:600;}
+        .btn:disabled{opacity:.5; cursor:not-allowed;}
+        .muted{color:#6b7280; font-size:13px;}
+        pre {white-space:pre-wrap; background:#f9fafb; padding:12px; border-radius:8px; border:1px solid #e5e7eb; max-height:360px; overflow:auto;}
+        .req::after{content:" *"; color:#ef4444;}
+    </style>
+</head>
+<body>
+<h1>connectedId 발급 / 기존 connectedId에 계정 추가</h1>
+
+<div class="card">
+    <div class="row">
+        <label for="businessType">업무 구분</label>
+        <select id="businessType">
+            <option value="BK">은행(BK)</option>
+            <option value="IS">보험(IS)</option>
+        </select>
+    </div>
+
+    <div class="row">
+        <label for="organization" class="req">기관 코드</label>
+        <input id="organization" type="text" placeholder="예: IBK 0003, KB 0004, NH 0011, 삼성화재 0108"/>
+    </div>
+
+    <div class="row">
+        <label for="clientType">고객 구분</label>
+        <select id="clientType">
+            <option value="P" selected>개인(P)</option>
+            <option value="B">법인(B)</option>
+        </select>
+    </div>
+
+    <div class="row">
+        <label for="loginType">로그인 방식</label>
+        <select id="loginType">
+            <option value="1" selected>인증서(1)</option>
+        </select>
+    </div>
+
+    <!-- ✅ 기존 connectedId에 계정 추가 등록용 -->
+    <div class="row">
+        <label for="useConnectedId">기존 connectedId 사용</label>
+        <select id="useConnectedId">
+            <option value="N" selected>아니요 (새 발급)</option>
+            <option value="Y">예 (기존 connectedId에 계정 추가)</option>
+        </select>
+    </div>
+    <div class="row hidden" id="rowConnectedId">
+        <label for="connectedId" class="req">connectedId</label>
+        <input id="connectedId" type="text" placeholder="예: bT1ykQg7QgA8gm9D.i.y1-"/>
+    </div>
+    <p id="connectedIdHelp" class="muted hidden">
+        기존 connectedId에 삼성화재(0108) 같은 다른 기관 계정을 붙일 때 입력하세요.
+    </p>
+
+    <!-- ✅ 은행(BK)+인증서(1)+IBK/KB/NH ⇒ ID/PW 필수 -->
+    <div class="row hidden" id="rowBankId">
+        <label for="bankId" class="req">인터넷뱅킹 ID</label>
+        <input id="bankId" type="text" placeholder="은행 인터넷뱅킹 아이디"/>
+    </div>
+    <div class="row hidden" id="rowBankPw">
+        <label for="bankPw" class="req">인터넷뱅킹 비밀번호</label>
+        <input id="bankPw" type="password" placeholder="영문/숫자/특수문자 조합(개인정보·연속문자 금지)"/>
+    </div>
+    <p id="bankIdHelp" class="muted hidden">IBK(0003)·KB(0004)·NH(0011)은 인증서 방식에서도 인터넷뱅킹 ID/비밀번호가 필요합니다.</p>
+
+    <div class="row">
+        <label for="certType">인증서 타입</label>
+        <select id="certType">
+            <option value="pfx" selected>PFX (권장: 파일 1개)</option>
+            <option value="1">der/key (파일 4개)</option>
+        </select>
+    </div>
+
+    <!-- PFX 업로드 -->
+    <div id="pfxBox">
+        <div class="row">
+            <label for="pfxFile" class="req">PFX 파일</label>
+            <input id="pfxFile" type="file" accept=".pfx,.p12"/>
+        </div>
+        <p class="muted">PFX는 ‘서명 인증서+개인키(+체인)’을 묶은 단일 파일입니다.</p>
+    </div>
+
+    <!-- der/key 업로드 -->
+    <div id="derBox" class="hidden">
+        <div class="grid-2">
+            <div class="row">
+                <label for="signCert" class="req">signCert.der</label>
+                <input id="signCert" type="file" accept=".der"/>
+            </div>
+            <div class="row">
+                <label for="signKey" class="req">signPri.key</label>
+                <input id="signKey" type="file" accept=".key"/>
+            </div>
+            <div class="row">
+                <label for="kmCert" class="req">kmCert.der</label>
+                <input id="kmCert" type="file" accept=".der"/>
+            </div>
+            <div class="row">
+                <label for="kmKey" class="req">kmPri.key</label>
+                <input id="kmKey" type="file" accept=".key"/>
+            </div>
+        </div>
+        <p class="muted">der/key 방식은 위 4개 파일이 세트로 필요합니다. (CaPubs 업로드 불필요)</p>
+    </div>
+
+    <div class="row">
+        <label for="certPassword" class="req">인증서 비밀번호</label>
+        <input id="certPassword" type="password" placeholder="PFX 내보내기/인증서 비밀번호"/>
+    </div>
+
+    <div class="grid-2">
+        <div class="row">
+            <label for="userName">이름</label>
+            <input id="userName" type="text" placeholder="예: 전지훈"/>
+        </div>
+        <div class="row">
+            <label for="identity">주민번호(숫자만)</label>
+            <input id="identity" type="text" inputmode="numeric" placeholder="예: 9001011234567"/>
+        </div>
+    </div>
+
+    <div class="row">
+        <label></label>
+        <button id="btnCreate" class="btn">등록 / 발급 실행</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3>응답</h3>
+    <pre id="out">{}</pre>
+</div>
+
+<!-- ✅ 계약조회 바로가기 섹션 -->
+<div class="card">
+    <h3>계약조회 바로가기</h3>
+    <div class="row">
+        <label for="goOrg">보험사 선택</label>
+        <select id="goOrg">
+            <option value="0108">삼성화재 (0108)</option>
+            <option value="0102">한화손보 (0102)</option>
+            <option value="0109">현대해상 (0109)</option>
+            <option value="0110">KB손보 (0110)</option>
+        </select>
+    </div>
+    <div class="row">
+        <label></label>
+        <button id="btnGo" class="btn">계약조회 페이지로 이동</button>
+    </div>
+    <p class="muted">connectedId / 이름 / 주민번호는 저장된 값으로 자동 입력됩니다.</p>
+</div>
+
+<script>
+    const $ = (id)=>document.getElementById(id);
+
+    // 컨트롤러와 동일 기준
+    const ORGS_REQUIRE_ID = new Set(["0003","0004","0011"]); // IBK, KB, NH
+    const ORG_NAME = {"0003":"IBK기업은행","0004":"KB국민은행","0011":"NH농협은행","0108":"삼성화재"};
+
+    function digitsOnly(s){ return (s||"").replace(/[^0-9]/g, ""); }
+
+    function toggleBoxes(){
+      const t = $("certType").value;
+      $("pfxBox").classList.toggle("hidden", t !== "pfx");
+      $("derBox").classList.toggle("hidden", t === "pfx");
+    }
+
+    // ✅ 은행(BK)+인증서(1)+IBK/KB/NH ⇒ ID/PW 필요
+    function needBankCred(){
+      const org = $("organization").value.trim();
+      const bt  = $("businessType").value;
+      const lt  = $("loginType").value;
+      return bt === "BK" && lt === "1" && ORGS_REQUIRE_ID.has(org);
+    }
+
+    function toggleBankCred(){
+      const on = needBankCred();
+      $("rowBankId").classList.toggle("hidden", !on);
+      $("rowBankPw").classList.toggle("hidden", !on);
+      $("bankIdHelp").classList.toggle("hidden", !on);
+      const org = $("organization").value.trim();
+      const name = ORG_NAME[org] || "해당 은행";
+      if (on) {
+        $("bankId").placeholder = name + " 인터넷뱅킹 아이디";
+        $("bankPw").placeholder = name + " 인터넷뱅킹 비밀번호";
+      }
+    }
+
+    // ✅ 기존 connectedId 사용 토글
+    function toggleConnectedId(){
+      const use = $("useConnectedId").value === "Y";
+      $("rowConnectedId").classList.toggle("hidden", !use);
+      $("connectedIdHelp").classList.toggle("hidden", !use);
+    }
+
+    // 초기 로컬스토리지 복원
+    (function initFromLocal(){
+      const savedCid  = localStorage.getItem('codef.connectedId');
+      const savedName = localStorage.getItem('codef.userName');
+      const savedSsn  = localStorage.getItem('codef.identity');
+      const savedOrg  = localStorage.getItem('codef.organization');
+
+      if (savedCid) {
+        $("useConnectedId").value = "Y";
+        $("connectedId").value = savedCid;
+      }
+      if (savedName) $("userName").value = savedName;
+      if (savedSsn)  $("identity").value = digitsOnly(savedSsn);
+      if (savedOrg)  $("goOrg").value = savedOrg;
+    })();
+
+    $("certType").addEventListener("change", toggleBoxes);
+    ["organization","businessType","loginType"].forEach(id=>{
+      $(id).addEventListener("input", () => { toggleBankCred(); });
+      $(id).addEventListener("change", () => { toggleBankCred(); });
+    });
+    $("useConnectedId").addEventListener("change", toggleConnectedId);
+    $("identity").addEventListener("input", e=> e.target.value = digitsOnly(e.target.value));
+
+    // 초기 상태 토글
+    toggleBoxes();
+    toggleBankCred();
+    toggleConnectedId();
+
+    async function toB64(file){
+      const buf = await file.arrayBuffer();
+      let binary = "";
+      const bytes = new Uint8Array(buf);
+      for (let i=0;i<bytes.length;i++) binary += String.fromCharCode(bytes[i]);
+      return btoa(binary);
+    }
+
+    $("btnCreate").addEventListener("click", async () => {
+      try {
+        $("btnCreate").disabled = true;
+
+        const certType = $("certType").value;
+        const bt = $("businessType").value;
+
+        const body = {
+          organization: $("organization").value.trim(),
+          businessType: bt, // BK or IS
+          clientType:   $("clientType").value.trim(),
+          loginType:    $("loginType").value.trim(),    // 기본 1(인증서)
+          certType,
+          certPassword: $("certPassword").value,
+          userName:     $("userName").value.trim(),
+          identity:     digitsOnly($("identity").value)
+        };
+
+        if (!body.organization) throw new Error("기관 코드(organization)를 입력하세요.");
+        if (!body.certPassword) throw new Error("인증서 비밀번호를 입력하세요.");
+
+        // ▶ 보험(IS)일 때 이름/주민번호 필수 + 주민번호 13자리 검사
+        if (bt === "IS") {
+          if (!body.userName) throw new Error("보험 등록 시 이름을 입력하세요.");
+          if (!body.identity) throw new Error("보험 등록 시 주민번호(숫자 13자리)를 입력하세요.");
+          if (body.identity.length !== 13) throw new Error("주민번호는 숫자 13자리여야 합니다.");
+        }
+
+        // ▶ 기존 connectedId 사용이면 포함
+        if ($("useConnectedId").value === "Y") {
+          const cId = $("connectedId").value.trim();
+          if (!cId) throw new Error("connectedId를 입력하세요.");
+          body.connectedId = cId;
+        }
+
+        // ▶ 은행 3사 ⇒ ID/PW 필수
+        if (needBankCred()) {
+          const idVal = $("bankId").value.trim();
+          const pwVal = $("bankPw").value.trim();
+          if (!idVal) throw new Error("인터넷뱅킹 ID를 입력하세요.");
+          if (!pwVal) throw new Error("인터넷뱅킹 비밀번호를 입력하세요.");
+          body.id = idVal;
+          body.password = pwVal; // 서버에서 RSA 암호화
+        }
+
+        // ▶ 파일 처리
+        if (certType === "pfx") {
+          const f = $("pfxFile").files[0];
+          if (!f) throw new Error("PFX 파일을 선택하세요.");
+          body.pfxFile = await toB64(f);
+        } else {
+          const sCert = $("signCert").files[0];
+          const sKey  = $("signKey").files[0];
+          const kCert = $("kmCert").files[0];
+          const kKey  = $("kmKey").files[0];
+          if (!sCert || !sKey || !kCert || !kKey) {
+            throw new Error("der/key 4개 파일(signCert.der, signPri.key, kmCert.der, kmPri.key)을 모두 선택하세요.");
+          }
+          body.certFile   = await toB64(sCert);
+          body.keyFile    = await toB64(sKey);
+          body.kmCertFile = await toB64(kCert);
+          body.kmKeyFile  = await toB64(kKey);
+        }
+
+        // 서버로 전송 (인증서 방식 엔드포인트)
+        const res = await fetch("/codef/account/create-cert", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify(body)
+        });
+        const text = await res.text();
+
+        // 응답 표시
+        $("out").textContent = text;
+
+        // ▶ 응답에서 connectedId 저장 & UI 반영
+        try {
+          const json = JSON.parse(text);
+          const cidFromResp = json?.data?.connectedId;
+          if (cidFromResp) {
+            localStorage.setItem('codef.connectedId', cidFromResp);
+            $("useConnectedId").value = "Y";
+            $("connectedId").value = cidFromResp;
+            toggleConnectedId();
+          }
+        } catch {}
+
+        // ▶ 이름/주민번호도 저장(다음 화면에서 자동 사용)
+        if (body.userName)  localStorage.setItem('codef.userName', body.userName);
+        if (body.identity)  localStorage.setItem('codef.identity', body.identity);
+
+      } catch (e) {
+        $("out").textContent = JSON.stringify({error: e.message}, null, 2);
+      } finally {
+        $("btnCreate").disabled = false;
+      }
+    });
+
+    // ▶ 계약조회 페이지로 이동
+    $("btnGo").addEventListener("click", () => {
+      const org = $("goOrg").value;
+      // 현재 입력값(connectedId, 이름, 주민번호)도 보존
+      const cId = $("connectedId").value.trim();
+      if ($("useConnectedId").value === "Y" && cId) {
+        localStorage.setItem('codef.connectedId', cId);
+      }
+      const name = $("userName").value.trim();
+      const ssn  = digitsOnly($("identity").value);
+      if (name) localStorage.setItem('codef.userName', name);
+      if (ssn)  localStorage.setItem('codef.identity', ssn);
+
+      localStorage.setItem('codef.organization', org);
+      // 이동
+      window.location.href = "/codef/view/contract-info";
+    });
+</script>
+</body>
+</html>

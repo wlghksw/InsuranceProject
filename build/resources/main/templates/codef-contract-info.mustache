@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <title>CODEF - 계약정보 조회</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <style>
+        :root{
+          --bg:#ffffff; --panel:#f9fafb; --panel-2:#ffffff; --text:#111827; --muted:#6b7280;
+          --primary:#2563eb; --primary-2:#1d4ed8; --stroke:#d1d5db; --shadow:0 4px 12px rgba(0,0,0,.08);
+          --radius-xl:18px; --radius-md:12px; --radius-sm:8px;
+        }
+        *{box-sizing:border-box}
+        body{margin:0;padding:24px;color:var(--text);font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:var(--bg)}
+        .wrap{max-width:980px;margin:0 auto}
+        header{margin-bottom:18px}
+        h1{font-size:22px;margin:0 0 12px}
+        .card{background:var(--panel);border:1px solid var(--stroke);border-radius:var(--radius-xl);padding:18px;box-shadow:var(--shadow);margin-bottom:20px}
+        .card h2,.card h3{margin:0 0 12px;font-size:18px}
+        label{display:block;margin:10px 0 6px}
+        .row{display:grid;grid-template-columns:1fr;gap:14px}
+        @media(min-width:720px){.row.two{grid-template-columns:1fr 1fr}}
+        input,select,button{width:100%;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--stroke);background:var(--panel-2);color:var(--text);min-height:40px}
+        input::placeholder{color:#9ca3af}
+        input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+        .muted{color:var(--muted);font-size:12px}
+        .actions{display:flex;gap:12px;align-items:flex-end;margin-top:12px}
+        .btn{background:var(--primary);color:#fff;border:none;cursor:pointer;font-weight:700;border-radius:var(--radius-sm);padding:10px 12px}
+        .btn:hover{background:var(--primary-2)}
+        pre{background:#f3f4f6;border:1px solid var(--stroke);color:#111;padding:14px;border-radius:var(--radius-md);overflow:auto;max-height:480px}
+        a{color:var(--primary);text-decoration:none;font-size:14px}
+        a:hover{text-decoration:underline}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <h1>계약정보 조회</h1>
+    </header>
+
+    <section class="card">
+        <h2>요청 구성</h2>
+        <div class="row two">
+            <div>
+                <label for="org">보험사 코드</label>
+                <select id="org">
+                    <optgroup label="손해보험">
+                        <option value="0101">메리츠화재 (0101)</option>
+                        <option value="0102">한화손보 (0102)</option>
+                        <option value="0103">롯데손보 (0103)</option>
+                        <option value="0104">MG손보 (0104)</option>
+                        <option value="0105">흥국화재 (0105)</option>
+                        <option value="0108" selected>삼성화재 (0108)</option>
+                        <option value="0109">현대해상 (0109)</option>
+                        <option value="0110">KB손보 (0110)</option>
+                        <option value="0111">DB손보 (0111)</option>
+                        <option value="0112">AXA손보 (0112)</option>
+                        <option value="0151">AIG손보 (0151)</option>
+                        <option value="0152">하나손보(구 더케이) (0152)</option>
+                        <option value="0171">NH농협손해보험 (0171)</option>
+                        <option value="0193">BNP파리바카디프손보 (0193)</option>
+                        <option value="0194">Chubb손보(구 ACE손보) (0194)</option>
+                    </optgroup>
+                    <optgroup label="생명보험/기타">
+                        <option value="0201">한화생명 (0201)</option>
+                        <option value="0202">알리안츠생명 (0202)</option>
+                        <option value="0203">삼성생명 (0203)</option>
+                        <option value="0204">흥국생명 (0204)</option>
+                        <option value="0205">교보생명 (0205)</option>
+                        <option value="0211">신한라이프 (0211)</option>
+                        <option value="0217">푸본현대생명 (0217)</option>
+                        <option value="0218">KB라이프 (0218)</option>
+                        <option value="0231">DGB생명 (0231)</option>
+                        <option value="0233">KDB생명 (0233)</option>
+                        <option value="0234">미래에셋생명 (0234)</option>
+                        <option value="0242">농협생명 (0242)</option>
+                        <option value="0251">라이나생명 (0251)</option>
+                        <option value="0252">AIA생명 (0252)</option>
+                        <option value="0263">하나생명 (0263)</option>
+                        <option value="0271">DB생명 (0271)</option>
+                        <option value="0272">메트라이프생명 (0272)</option>
+                        <option value="0274">동양생명 (0274)</option>
+                        <option value="0277">쳐브라이프(구 ACE생명) (0277)</option>
+                        <option value="0278">BNP파리바카디프생명 (0278)</option>
+                        <option value="0291">IBK연금보험 (0291)</option>
+                        <option value="0501">우체국보험 (0501)</option>
+                        <option value="0502">MG새마을금고 (0502)</option>
+                        <option value="0503">신협 (0503)</option>
+                        <option value="0504">수협 (0504)</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div>
+                <label for="connectedId">connectedId</label>
+                <input id="connectedId" placeholder="create-cert에서 받은 값"/>
+            </div>
+        </div>
+        <div class="row two">
+            <div>
+                <label for="userName">이름 (선택)</label>
+                <input id="userName" placeholder="예: 홍길동"/>
+            </div>
+            <div>
+                <label for="identity">주민등록번호</label>
+                <input id="identity" placeholder="예: 010727-3XXXXXX"/>
+                <div class="muted">주민번호는 서버에서 RSA로 암호화되어 전송됩니다.</div>
+            </div>
+        </div>
+        <div class="row two">
+            <div>
+                <label for="type">type (계약상태)</label>
+                <select id="type">
+                    <option value="0">0: 전체</option>
+                    <option value="1">1: 유지</option>
+                </select>
+            </div>
+            <div>
+                <label for="transeType">transeType (보장내용 처리 여부)</label>
+                <select id="transeType">
+                    <option value="1">1: 처리</option>
+                    <option value="0">0: 미처리</option>
+                </select>
+            </div>
+        </div>
+        <div class="actions">
+            <button id="btnCall" class="btn">계약조회 호출</button>
+            <a href="/codef/view/create-cert">← 인증서 등록으로 돌아가기</a>
+        </div>
+    </section>
+
+    <section class="card">
+        <h3>응답</h3>
+        <pre id="out">{}</pre>
+    </section>
+</div>
+
+<script>
+    const $ = s=>document.querySelector(s);
+    // Autofill if available
+    (function(){
+      const cid = localStorage.getItem('codef.connectedId');
+      const org = localStorage.getItem('codef.organization');
+      const name = localStorage.getItem('codef.userName');
+      const ssn = localStorage.getItem('codef.identity');
+      if(cid) $('#connectedId').value = cid;
+      if(org) $('#org').value = org;
+      if(name) $('#userName').value = name;
+      if(ssn) $('#identity').value = ssn;
+    })();
+
+    $('#btnCall').addEventListener('click', async ()=>{
+      const payload = {
+        organization: $('#org').value.trim(),
+        connectedId: $('#connectedId').value.trim(),
+        userName: $('#userName').value.trim(),
+        identity: $('#identity').value.trim(),
+        type: $('#type').value,
+        transeType: $('#transeType').value
+      };
+      if(!payload.organization||!payload.connectedId||!payload.userName||!payload.identity){
+        alert('입력 칸 모두 필수입니다.');
+        return;
+      }
+      try{
+        $('#out').textContent = '요청 중...';
+        const resp = await fetch('/codef/contract-info', {
+          method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)
+        });
+        const text = await resp.text();
+        let json; try{ json = JSON.parse(text); }catch{ json = { raw:text }; }
+        $('#out').textContent = JSON.stringify(json,null,2);
+      }catch(e){
+        $('#out').textContent = 'ERROR: '+e;
+      }
+    });
+</script>
+</body>
+</html>
