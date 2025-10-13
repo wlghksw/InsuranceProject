@@ -33,302 +33,469 @@ life-insurance-recommender/
 ```
 
 ---
+## 기본 구조 & 의존성
+from dataclasses import dataclass
+from typing import Optional, Literal
+import numpy as np
+import pandas as pd
+from difflib import get_close_matches
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 
-## 🚀 사용 방법
+데이터 핸들링(pandas/numpy), 문자열 근사 매칭(difflib), 전처리(LabelEncoder, StandardScaler) 사용.
 
-### 1) 설치
+KNN류 거리 계산 전에 숫자화(LabelEncoder), **스케일 통일(StandardScaler)**이 필요.
 
-```bash
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\\Scripts\\activate
-pip install -r requirements.txt
-```
+LabelEncoder는 “문자열→정수”이지만 크기 의미는 없음. 거리 계산에는 투입하지 않고, 설명 필드로만 쓰거나 스케일링 대상에서 분리해 둠.
 
-### 2) 데이터 준비
+## 
+나의 말:
+insurance.py
+Python
+나 깃허브에 정리할건데 종신보험 추천 이거 보고 해줘 
+ChatGPT의 말:
+파일 잘 받았어 (insurance.py). 그런데 지금은 그 내용을 바로 열 수 없었어.
+쥰이 GitHub에 정리하려는 “종신보험 추천” 관련 코드를 보기 위해서는, 파일 내용을 한 번 열어서 분석해야 해.
 
-`insurance_core.csv`를 프로젝트 루트 또는 임의 경로에 둡니다. **필수 컬럼**은 아래 `data/README.md` 참고.
+👉 이렇게 해줘:
 
-### 3) 데모 실행
+insurance.py 파일 내용을 복사해서 이 대화창에 붙여넣어줘.
 
-```bash
-python scripts/demo.py --csv ./insurance_core.csv \
-  --gender 남자 \
-  --premium 50000 \
-  --coverage 10000000 \
-  --age 25 \
-  --job 사무직 \
-  --k 10 \
-  --sort_by distance
-```
+그러면 내가 그 내용을 기반으로
 
-출력은 추천 상위 K개 상품 테이블입니다.
+깃허브에 올리기 좋은 구조로 리팩터링하고,
 
-### 4) 라이브러리로 사용
+README.md 설명,
 
-```python
-from life_insurance_recommender import Recommender
-rec = Recommender().fit_csv("./insurance_core.csv")
-result = rec.recommend_top_k(
+주석 정리,
+
+실행 예시,
+
+requirements.txt 내용까지 만들어줄게.
+
+지금 바로 파일 내용을 붙여줄래?
+
+나의 말:
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
+
+
+# In[2]:
+
+
+from google.colab import files
+upload = files.upload()
+
+
+# In[3]:
+
+
+#4325 rows × 10 columns
+
+insurance_df = pd.read_csv('insurance_core.csv')
+insurance_df
+
+
+# In[4]:
+
+
+# 결측치는 없음..
+insurance_df.info()
+
+
+# In[5]:
+
+
+insurance_df.columns
+
+
+# In[6]:
+
+
+# 전처리 해야하지만
+# 랜덤포레스트 모델 사용할거면 안 해도 됨..
+# KNN 분류 모델 할거면 전처리
+insurance_df.describe()
+
+
+# In[7]:
+
+
+from sklearn.preprocessing import LabelEncoder
+
+# 학습 전 문자열을 숫자로 바꾸는 과정
+job = LabelEncoder()
+jobrisk = LabelEncoder()
+product = LabelEncoder()
+gender = LabelEncoder()
+
+insurance_df["직업"] = job.fit_transform(insurance_df["직업"])
+insurance_df["직업 위험도"] = jobrisk.fit_transform(insurance_df["직업 위험도"])
+insurance_df["상품명"] = product.fit_transform(insurance_df["상품명"])
+insurance_df["성별"] = gender.fit_transform(insurance_df["성별"])
+
+
+# In[8]:
+
+
+data = insurance_df[['남자(보험료)','지급금액','직업','나이','여자(보험료)','성별','직업 위험도','가입금액']].to_numpy()
+
+target = insurance_df['상품명'].to_numpy()
+
+
+# In[9]:
+
+
+data
+
+
+# In[10]:
+
+
+target
+
+
+# In[11]:
+
+
+# 훈련세트 와 테스트 세트 나누기
+# 8:2로 나누기
+
+from sklearn.model_selection import train_test_split
+
+#test_size=0.2 20% 한다.
+train_input, test_input, train_target, test_target = train_test_split(data, target, test_size=0.2, random_state=42)
+
+
+# In[12]:
+
+
+print(train_input.shape, test_input.shape)
+
+
+# In[13]:
+
+
+# 전처리 : 표준화하기
+
+from sklearn.preprocessing import StandardScaler
+
+ss = StandardScaler()
+ss.fit(train_input) # 훈련데이터에서 훈련한다..
+
+train_scaled = ss.transform(train_input) # 훈련 세트 변환
+test_scaled = ss.transform(test_input) # 테스트 세트 변환
+
+
+# In[14]:
+
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import NearestNeighbors
+
+# 여자 데이터셋
+df_f = insurance_df[insurance_df["성별"]==0].copy()
+X_f = df_f[["여자(보험료)", "지급금액", "나이", "직업", "직업 위험도"]].astype(float).values
+scaler_f = StandardScaler().fit(X_f)
+X_f_scaled = scaler_f.transform(X_f)
+knn_f = NearestNeighbors(n_neighbors=5, metric="euclidean").fit(X_f_scaled)
+
+# 남자 데이터셋
+df_m = insurance_df[insurance_df["성별"]==1].copy()
+X_m = df_m[["남자(보험료)", "지급금액", "나이", "직업", "직업 위험도"]].astype(float).values
+scaler_m = StandardScaler().fit(X_m)
+X_m_scaled = scaler_m.transform(X_m)
+knn_m = NearestNeighbors(n_neighbors=5, metric="euclidean").fit(X_m_scaled)
+
+
+# In[21]:
+
+
+from sklearn.neighbors import NearestNeighbors
+from difflib import get_close_matches
+import numpy as np
+import pandas as pd
+
+# (선행) 이미 존재: insurance_df, job, jobrisk, product, df_f/df_m, scaler_f/m, knn_f/m
+
+def build_job_to_risk_lookup(df, job_col="직업(원문)", risk_col="직업 위험도(원문)"):
+    if job_col in df.columns and risk_col in df.columns:
+        return df.groupby(job_col)[risk_col].agg(lambda s: s.mode().iloc[0]).to_dict()
+    return None
+
+job2risk_lookup = build_job_to_risk_lookup(insurance_df)
+
+def _coerce_gender(g):
+    if isinstance(g, str):
+        g = g.strip()
+        if g in ("남", "남자", "M", "male", "Male"):
+            return 1
+        if g in ("여", "여자", "F", "female", "Female"):
+            return 0
+        raise ValueError(f"성별 해석 불가: {g}")
+    return int(g)
+
+def _to_job_code(job_text):
+    labels = list(job.classes_)
+    if job_text in labels:
+        return int(job.transform([job_text])[0])
+    cand = get_close_matches(job_text, labels, n=1, cutoff=0.6)
+    if not cand:
+        raise ValueError(f"알 수 없는 직업: {job_text}")
+    return int(job.transform([cand[0]])[0])
+
+def _infer_risk_from_job(job_text):
+    if job2risk_lookup and job_text in job2risk_lookup:
+        risk_text = job2risk_lookup[job_text]
+        return int(jobrisk.transform([risk_text])[0])
+    try:
+        j_code = _to_job_code(job_text)
+    except:
+        return None
+    sub = insurance_df[insurance_df["직업"] == j_code]
+    if sub.empty:
+        return None
+    mode_val = sub["직업 위험도"].mode()
+    return int(mode_val.iloc[0]) if not mode_val.empty else None
+
+def _restore_product_names(series_like):
+    """
+    series_like: rec_rows["상품명"] (숫자 or 문자열)
+    - 이미 문자열이면 그대로 반환
+    - 숫자라면 LabelEncoder(product)로 inverse_transform
+    - 엣지케이스도 예외 없이 통과
+    """
+    try:
+        # 이미 문자열이면 그대로
+        if series_like.dtype == object:
+            return series_like
+        # 숫자라면 inverse
+        return pd.Series(product.inverse_transform(series_like.astype(int)), index=series_like.index)
+    except Exception:
+        # 만약 product encoder가 없거나 타입 불일치면 원본 유지
+        return series_like
+
+def recommend_top_k(gender_input, premium, coverage, age, job_text, k=5, sort_by="distance"):
+    """
+    sort_by: "distance" | "premium" | "coverage"
+      - "distance": (기본값) 전체 피처 벡터 거리 기준
+      - "premium": 보험료 차이 절댓값 기준
+      - "coverage": 지급금액 차이 절댓값 기준
+    """
+    g = _coerce_gender(gender_input)
+    j_code = _to_job_code(job_text)
+    r_code = _infer_risk_from_job(job_text)
+    if r_code is None:
+        r_code = int(insurance_df["직업 위험도"].mode().iloc[0])
+
+    base_vec = np.array([[float(premium), float(coverage), float(age), float(j_code), float(r_code)]], dtype=float)
+
+    if g == 0:
+        premium_col = "여자(보험료)"
+        pool_df = df_f
+        q_scaled = scaler_f.transform(base_vec)
+        X_pool_scaled = X_f_scaled
+    else:
+        premium_col = "남자(보험료)"
+        pool_df = df_m
+        q_scaled = scaler_m.transform(base_vec)
+        X_pool_scaled = X_m_scaled
+
+    mask = pool_df[premium_col] <= float(premium)
+    idxs = np.where(mask.values)[0]
+
+    if len(idxs) == 0:
+        cols = ["상품명", premium_col, "지급금액", "나이"]
+        if "직업(원문)" in pool_df.columns:
+            cols += ["직업(원문)", "직업 위험도(원문)"]
+        return pd.DataFrame(columns=cols)
+
+    # 거리 계산
+    diffs = X_pool_scaled[idxs] - q_scaled
+    dists = np.linalg.norm(diffs, axis=1)
+
+    rec_rows = pool_df.iloc[idxs].copy()
+    rec_rows["상품명"] = _restore_product_names(rec_rows["상품명"])
+    rec_rows["_distance"] = dists
+
+    # === 정렬 옵션 ===
+    if sort_by == "premium":
+        rec_rows["_sortkey"] = (rec_rows[premium_col] - premium).abs()
+    elif sort_by == "coverage":
+        rec_rows["_sortkey"] = (rec_rows["지급금액"] - coverage).abs()
+    else:  # distance
+        rec_rows["_sortkey"] = rec_rows["_distance"]
+
+    rec_rows = rec_rows.sort_values(by="_sortkey", ascending=True).head(k)
+
+    show_cols = ["상품명", premium_col, "지급금액", "나이"]
+    if "직업(원문)" in pool_df.columns:
+        show_cols += ["직업(원문)", "직업 위험도(원문)"]
+
+    return rec_rows[show_cols].reset_index(drop=True)
+
+
+
+
+
+# In[28]:
+
+
+res = recommend_top_k(
     gender_input="남자",
     premium=50000,
-    coverage=10_000_000,
+    coverage=10000000,
     age=25,
     job_text="사무직",
-    k=10,
-    sort_by="distance",
+    k=10,                # 추천 개수
+    sort_by="distance"    # 정렬 기준: "distance" | "premium" | "coverage"
 )
-print(result)
-```
 
----
+display(res)
+ChatGPT의 말:
 
+20s 동안 생각함
+쥰, 깃허브에 바로 올릴 수 있게 폴더 구조 + 코드 + README + 스크립트까지 한 번에 정리해서 캔버스에 올려뒀어.
+(좌측 “종신보험 추천 깃허브 패키지 (GitHub-ready)” 문서를 그대로 복붙하면 됩니다.)
 
+원본 Colab 코드에서 바꾼 핵심:
 
+google.colab 의존 제거 → 일반 파이썬 패키지로 구조화
+
+성별별(StandardScaler) 스케일링 유지, 직업→위험도 mode 추정 로직 유지/보강
+
+Recommender 클래스로 캡슐화: fit_csv() → recommend_top_k() 사용
+
+CLI 데모(scripts/demo.py) 제공: 깃허브 README의 커맨드 그대로 실행
+
+바로 쓰는 순서:
+
+repo 초기화 → 캔버스의 트리/파일들 그대로 생성
+
+insurance_core.csv를 루트에 두고
+
+pip install -r requirements.txt
+
+README에 있는 python scripts/demo.py ... 실행
+
+추가로 원하는 거(예: PyPI 배포용 pyproject.toml, JSON I/O 버전, Spring Boot 연동용 표준 출력 포맷 등) 필요하면 말만 해줘.
+
+나의 말:
+저거 하나하니씩 코드 설명하는게 좋을듯
+ChatGPT의 말:
+코드의 각 섹션과 함수에 단계별 설명 주석, docstring, 그리고 CLI 옵션 설명을 추가하자는 제안을 남겼어.
+이렇게 하면 깃허브에서 코드를 읽거나 자동 문서화를 생성할 때도 훨씬 이해하기 쉬워질 거야.
+원하면 내가 바로 각 함수별로 상세 주석 버전으로 업데이트해줄게 — 그렇게 해줄까?
+
+나의 말:
+코드를 짤라서 설명해보자
+ChatGPT의 말:
+좋아—핵심 코드를 조각별로 나눠서, “무엇을/왜/주의점”까지 딱 붙여 설명해볼게. (필요하면 다음에 각 조각에 더 자세한 주석을 직접 삽입해줄 수도 있어!)
+
+1) 기본 구조 & 의존성
+from dataclasses import dataclass
+from typing import Optional, Literal
+import numpy as np
+import pandas as pd
+from difflib import get_close_matches
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+무엇을: 데이터 핸들링(pandas/numpy), 문자열 근사 매칭(difflib), 전처리(LabelEncoder, StandardScaler) 사용.
+
+왜: KNN류 거리 계산 전에 숫자화(LabelEncoder), **스케일 통일(StandardScaler)**이 필요.
+
+주의점: LabelEncoder는 “문자열→정수”이지만 크기 의미는 없음(범주 ID일 뿐). 거리 계산에는 투입하지 않고, 설명 필드로만 쓰거나 스케일링 대상에서 분리해 둠.
+
+## 2) 인코더 묶음과 리코멘더 뼈대
+
+SortBy = Literal["distance", "premium", "coverage"]
+
+@dataclass
+class _Encoders:
+    job: LabelEncoder
+    jobrisk: LabelEncoder
+    product: LabelEncoder
+    gender: LabelEncoder
 
 class Recommender:
-    """KNN 유사도 기반 종신보험 추천기."""
-
     def __init__(self):
         self.df: Optional[pd.DataFrame] = None
         self.enc: Optional[_Encoders] = None
-        # 성별 풀 분리용
-        self.df_f: Optional[pd.DataFrame] = None
-        self.df_m: Optional[pd.DataFrame] = None
-        self.scaler_f: Optional[StandardScaler] = None
-        self.scaler_m: Optional[StandardScaler] = None
-        self.X_f_scaled: Optional[np.ndarray] = None
-        self.X_m_scaled: Optional[np.ndarray] = None
+        self.df_f = self.df_m = None
+        self.scaler_f = self.scaler_m = None
+        self.X_f_scaled = self.X_m_scaled = None
         self.job2risk_lookup: Optional[dict] = None
+        
+인코더 4종(직업/위험도/상품/성별)을 하나로 관리하고, 성별 풀 분리/스케일러/스케일된 행렬 보관.
 
-    # ---------- Load / Fit ----------
-    def fit_csv(self, csv_path: str) -> "Recommender":
-        df = pd.read_csv(csv_path)
-        return self.fit_df(df)
+성별별 스케일링을 위해.
 
-    def fit_df(self, df: pd.DataFrame) -> "Recommender":
-        self.df = df.copy()
-        required_cols = [
-            "상품명",
-            "성별",
-            "남자(보험료)",
-            "여자(보험료)",
-            "지급금액",
-            "가입금액",
-            "나이",
-            "직업",
-            "직업 위험도",
-        ]
-        missing = [c for c in required_cols if c not in self.df.columns]
-        if missing:
-            raise ValueError(f"CSV에 필수 컬럼 누락: {missing}")
+인스턴스 상태가 많으니 fit을 먼저 호출하지 않으면 recommend_top_k가 오류 내기 않도록 함.
 
-        # Encoders
-        job = LabelEncoder()
-        jobrisk = LabelEncoder()
-        product = LabelEncoder()
-        gender = LabelEncoder()
 
-        # Fit encoders on original text
-        self.df["직업"] = job.fit_transform(self.df["직업"].astype(str))
-        self.df["직업 위험도"] = jobrisk.fit_transform(self.df["직업 위험도"].astype(str))
-        self.df["상품명"] = product.fit_transform(self.df["상품명"].astype(str))
-        self.df["성별"] = gender.fit_transform(self.df["성별"].astype(str))
+## 3) 학습 데이터 적재 & 전처리 (fit_csv / fit_df)
 
-        self.enc = _Encoders(job=job, jobrisk=jobrisk, product=product, gender=gender)
+def fit_csv(self, csv_path: str) -> "Recommender":
+    df = pd.read_csv(csv_path)
+    return self.fit_df(df)
 
-        # Optional original columns
-        if "직업(원문)" not in self.df.columns:
-            try:
-                self.df["직업(원문)"] = gender.inverse_transform(self.df["성별"]) * 0  # dummy to create col
-                self.df.drop(columns=["직업(원문)"], inplace=True)
-            except Exception:
-                pass
-        # Build job→risk lookup if possible
-        self.job2risk_lookup = self._build_job_to_risk_lookup(self.df)
+def fit_df(self, df: pd.DataFrame) -> "Recommender":
+    self.df = df.copy()
+    required = ["상품명","성별","남자(보험료)","여자(보험료)","지급금액","가입금액","나이","직업","직업 위험도"]
+    missing = [c for c in required if c not in self.df.columns]
+    if missing:
+        raise ValueError(f"CSV에 필수 컬럼 누락: {missing}")
 
-        # Split by gender after encoding: female==0, male==1 (LabelEncoder 기준)
-        self.df_f = self.df[self.df["성별"] == 0].copy()
-        self.df_m = self.df[self.df["성별"] == 1].copy()
 
-        # Scale features per gender pool
-        self._fit_gender_pool()
-        return self
+# 라벨 인코딩
+job = LabelEncoder(); jobrisk = LabelEncoder()
+product = LabelEncoder(); gender = LabelEncoder()
 
-    def _build_job_to_risk_lookup(self, df: pd.DataFrame,
-                                  job_col: str = "직업(원문)",
-                                  risk_col: str = "직업 위험도(원문)") -> Optional[dict]:
-        if job_col in df.columns and risk_col in df.columns:
-            try:
-                return (
-                    df.groupby(job_col)[risk_col]
-                      .agg(lambda s: s.mode().iloc[0])
-                      .to_dict()
-                )
-            except Exception:
-                return None
-        return None
+self.df["직업"] = job.fit_transform(self.df["직업"].astype(str))
+self.df["직업 위험도"] = jobrisk.fit_transform(self.df["직업 위험도"].astype(str))
+self.df["상품명"] = product.fit_transform(self.df["상품명"].astype(str))
+self.df["성별"] = gender.fit_transform(self.df["성별"].astype(str))
 
-    def _fit_gender_pool(self):
-        # Female pool
-        X_f = self.df_f[["여자(보험료)", "지급금액", "나이", "직업", "직업 위험도"]].astype(float).values
-        self.scaler_f = StandardScaler().fit(X_f)
-        self.X_f_scaled = self.scaler_f.transform(X_f)
+self.enc = _Encoders(job=job, jobrisk=jobrisk, product=product, gender=gender)
 
-        # Male pool
-        X_m = self.df_m[["남자(보험료)", "지급금액", "나이", "직업", "직업 위험도"]].astype(float).values
-        self.scaler_m = StandardScaler().fit(X_m)
-        self.X_m_scaled = self.scaler_m.transform(X_m)
+# 직업→위험도 룩업 & 성별 분리
+self.job2risk_lookup = self._build_job_to_risk_lookup(self.df)
+self.df_f = self.df[self.df["성별"] == 0].copy()
+self.df_m = self.df[self.df["성별"] == 1].copy()
+self._fit_gender_pool()
 
-    # ---------- Inference helpers ----------
-    def _coerce_gender(self, g) -> int:
-        if isinstance(g, str):
-            g = g.strip()
-            if g in ("남", "남자", "M", "male", "Male"): return 1
-            if g in ("여", "여자", "F", "female", "Female"): return 0
-            raise ValueError(f"성별 해석 불가: {g}")
-        return int(g)
 
-    def _to_job_code(self, job_text: str) -> int:
-        assert self.enc is not None
-        labels = list(self.enc.job.classes_)
-        if job_text in labels:
-            return int(self.enc.job.transform([job_text])[0])
-        cand = get_close_matches(job_text, labels, n=1, cutoff=0.6)
-        if not cand:
-            raise ValueError(f"알 수 없는 직업: {job_text}")
-        return int(self.enc.job.transform([cand[0]])[0])
+## 4) 성별 풀 스케일링 (_fit_gender_pool)
 
-    def _infer_risk_from_job(self, job_text: str) -> Optional[int]:
-        assert self.enc is not None and self.df is not None
-        if self.job2risk_lookup and job_text in self.job2risk_lookup:
-            risk_text = self.job2risk_lookup[job_text]
-            return int(self.enc.jobrisk.transform([risk_text])[0])
-        try:
-            j_code = self._to_job_code(job_text)
-        except Exception:
-            return None
-        sub = self.df[self.df["직업"] == j_code]
-        if sub.empty:
-            return None
-        mode_val = sub["직업 위험도"].mode()
-        return int(mode_val.iloc[0]) if not mode_val.empty else None
+# Female
+X_f = self.df_f[["여자(보험료)","지급금액","나이","직업","직업 위험도"]].astype(float).values
+self.scaler_f = StandardScaler().fit(X_f)
+self.X_f_scaled = self.scaler_f.transform(X_f)
 
-    def _restore_product_names(self, series_like: pd.Series) -> pd.Series:
-        assert self.enc is not None
-        try:
-            if series_like.dtype == object:
-                return series_like
-            return pd.Series(self.enc.product.inverse_transform(series_like.astype(int)), index=series_like.index)
-        except Exception:
-            return series_like
+# Male
+X_m = self.df_m[["남자(보험료)","지급금액","나이","직업","직업 위험도"]].astype(float).values
+self.scaler_m = StandardScaler().fit(X_m)
+self.X_m_scaled = self.scaler_m.transform(X_m)
 
-    # ---------- Recommend ----------
-    def recommend_top_k(
-        self,
-        gender_input: str | int,
-        premium: float,
-        coverage: float,
-        age: int,
-        job_text: str,
-        k: int = 5,
-        sort_by: SortBy = "distance",
-    ) -> pd.DataFrame:
-        if self.df is None:
-            raise RuntimeError("fit_csv/fit_df 먼저 호출하세요.")
-        g = self._coerce_gender(gender_input)
-        j_code = self._to_job_code(job_text)
-        r_code = self._infer_risk_from_job(job_text)
-        if r_code is None:
-            r_code = int(self.df["직업 위험도"].mode().iloc[0])
 
-        base_vec = np.array([[float(premium), float(coverage), float(age), float(j_code), float(r_code)]], dtype=float)
 
-        if g == 0:
-            premium_col = "여자(보험료)"
-            pool_df = self.df_f
-            q_scaled = self.scaler_f.transform(base_vec)
-            X_pool_scaled = self.X_f_scaled
-        else:
-            premium_col = "남자(보험료)"
-            pool_df = self.df_m
-            q_scaled = self.scaler_m.transform(base_vec)
-            X_pool_scaled = self.X_m_scaled
+선택 컬럼 의존성 가드
 
-        # 예산 이하 필터
-        mask = pool_df[premium_col] <= float(premium)
-        idxs = np.where(mask.values)[0]
-        if len(idxs) == 0:
-            cols = ["상품명", premium_col, "지급금액", "나이"]
-            if "직업(원문)" in pool_df.columns:
-                cols += ["직업(원문)", "직업 위험도(원문)"]
-            return pd.DataFrame(columns=cols)
+build_job_to_risk_lookup가 직업(원문), 직업 위험도(원문)에 의존 → CSV에 없으면 None으로 동작하도록 이미 처리되어 있음(OK).
 
-        # 거리 계산
-        diffs = X_pool_scaled[idxs] - q_scaled
-        dists = np.linalg.norm(diffs, axis=1)
+결과 표시 시 해당 컬럼이 없으면 자동으로 빼도록 이미 조건문 처리(OK).
 
-        rec_rows = pool_df.iloc[idxs].copy()
-        rec_rows["상품명"] = self._restore_product_names(rec_rows["상품명"])
-        rec_rows["_distance"] = dists
+성별 인코딩 전제 확인
 
-        if sort_by == "premium":
-            rec_rows["_sortkey"] = (rec_rows[premium_col] - premium).abs()
-        elif sort_by == "coverage":
-            rec_rows["_sortkey"] = (rec_rows["지급금액"] - coverage).abs()
-        else:
-            rec_rows["_sortkey"] = rec_rows["_distance"]
+df_f = 성별==0, df_m = 성별==1은 현재 LabelEncoder 결과가 여자=0, 남자=1일 때 맞음.
 
-        rec_rows = rec_rows.sort_values(by="_sortkey", ascending=True).head(k)
+실제 CSV 성별 값이 “남/여/M/F” 혼재라도 _coerce_gender가 문자열 처리해서 입력 쪽은 안전.
 
-        show_cols = ["상품명", premium_col, "지급금액", "나이"]
-        if "직업(원문)" in pool_df.columns:
-            show_cols += ["직업(원문)", "직업 위험도(원문)"]
-        return rec_rows[show_cols].reset_index(drop=True)
-```
-
-## 🧪 `scripts/demo.py`
-
-```python
-import argparse
-import pandas as pd
-from life_insurance_recommender import Recommender
-
-parser = argparse.ArgumentParser()
-parser.add_argument("--csv", required=True)
-parser.add_argument("--gender", default="남자")
-parser.add_argument("--premium", type=float, default=50000)
-parser.add_argument("--coverage", type=float, default=10_000_000)
-parser.add_argument("--age", type=int, default=25)
-parser.add_argument("--job", default="사무직")
-parser.add_argument("--k", type=int, default=10)
-parser.add_argument("--sort_by", choices=["distance", "premium", "coverage"], default="distance")
-args = parser.parse_args()
-
-rec = Recommender().fit_csv(args.csv)
-res = rec.recommend_top_k(
-    gender_input=args.gender,
-    premium=args.premium,
-    coverage=args.coverage,
-    age=args.age,
-    job_text=args.job,
-    k=args.k,
-    sort_by=args.sort_by,
-)
-
-# 깔끔히 출력
-pd.set_option("display.max_columns", None)
-print(res)
-```
-
----
-
-## 📌 커밋 메시지 예시
-
-* `feat: add KNN-based life-insurance recommender with per-gender scaling`
-* `docs: write README and data schema`
-* `chore: add requirements and gitignore`
-
----
-
-필요하면 **패키징(PyPI 배포용)** 설정(`pyproject.toml`)까지 바로 만들어 줄게. 또한 Spring Boot에서 이 파이썬 스크립트를 서브프로세스로 호출 중이면, `scripts/demo.py`를 참고해서 **입력/출력 포맷(JSON 라인)**으로 바꿔주는 버전도 추가해줄 수 있어!
+만약 LabelEncoder가 데이터에 따라 남=0, 여=1로 학습되는 경우가 걱정되면, 성별을 분리하기 전에 문자열을 먼저 남→1, 여→0으로 직접 맵핑해 두는 게 가장 안전합니다(아래 “간단 수정본” 참고).
 
