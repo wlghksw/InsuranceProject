@@ -1,4 +1,4 @@
-종신 보험 맞춤 추천 (Life Insurance Recommender)
+## 종신 보험 맞춤 추천 (Life Insurance Recommender)
 
 KNN 기반의 종신보험 추천 시스템
 CSV 데이터를 기반으로 사용자 입력값(성별, 희망 보험료, 지급금액, 나이, 직업)에 따라
