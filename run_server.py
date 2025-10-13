@@ -12,8 +12,8 @@ project_root = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, project_root)
 
 if __name__ == "__main__":
-    print("🚀 암보험 상품 추천 API 서버를 시작합니다...")
-    print("📊 데이터를 로딩 중입니다...")
+    print("암보험 상품 추천 API 서버를 시작합니다...")
+    print("데이터를 로딩 중입니다...")
     
     # app 디렉토리로 이동
     import os
