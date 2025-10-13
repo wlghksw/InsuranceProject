@@ -385,19 +385,6 @@ pip install -r requirements.txt
 
 README에 있는 python scripts/demo.py ... 실행
 
-추가로 원하는 거(예: PyPI 배포용 pyproject.toml, JSON I/O 버전, Spring Boot 연동용 표준 출력 포맷 등) 필요하면 말만 해줘.
-
-나의 말:
-저거 하나하니씩 코드 설명하는게 좋을듯
-ChatGPT의 말:
-코드의 각 섹션과 함수에 단계별 설명 주석, docstring, 그리고 CLI 옵션 설명을 추가하자는 제안을 남겼어.
-이렇게 하면 깃허브에서 코드를 읽거나 자동 문서화를 생성할 때도 훨씬 이해하기 쉬워질 거야.
-원하면 내가 바로 각 함수별로 상세 주석 버전으로 업데이트해줄게 — 그렇게 해줄까?
-
-나의 말:
-코드를 짤라서 설명해보자
-ChatGPT의 말:
-좋아—핵심 코드를 조각별로 나눠서, “무엇을/왜/주의점”까지 딱 붙여 설명해볼게. (필요하면 다음에 각 조각에 더 자세한 주석을 직접 삽입해줄 수도 있어!)
 
 1) 기본 구조 & 의존성
 from dataclasses import dataclass
