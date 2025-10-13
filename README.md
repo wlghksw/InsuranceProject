@@ -2,9 +2,9 @@
 
 KNN 기반의 종신보험 추천 시스템
 CSV 데이터를 기반으로 사용자 입력값(성별, 희망 보험료, 지급금액, 나이, 직업)에 따라
-가장 유사한 보험 상품 Top-K를 추천합니다.
+가장 유사한 보험 상품 Top-K를 추천.
 
-📌 주요 특징
+주요 특징
 
 성별 분리 스케일링
 남/녀 풀을 각각 분리하여 StandardScaler로 정규화
@@ -26,7 +26,7 @@ coverage : 지급금액 차이 절댓값
 내부적으로 라벨 인코딩을 수행하지만,
 출력 시 원래 상품명으로 복원되어 표시됩니다.
 
-📁 Repository 구조
+Repository 구조
 life-insurance-recommender/
 ├─ README.md
 ├─ requirements.txt
@@ -40,14 +40,13 @@ life-insurance-recommender/
 └─ scripts/
    └─ demo.py
 
-⚙️ 실행 방법
+실행 방법
 1️⃣ 의존성 설치
 pip install -r requirements.txt
 
 2️⃣ CSV 파일 준비
 
 insurance_core.csv 파일을 프로젝트 루트 또는 data/ 폴더에 둡니다.
-(컬럼 구조는 아래 데이터 스키마 참고)
 
 3️⃣ 데모 실행
 python scripts/demo.py \
@@ -75,7 +74,7 @@ result = rec.recommend_top_k(
 )
 print(result)
 
-📊 데이터 스키마
+데이터 스키마
 컬럼명	설명
 상품명	보험 상품 이름
 성별	남자 / 여자 / M / F
@@ -86,7 +85,9 @@ print(result)
 나이	가입자 나이
 직업	직업명
 직업 위험도	낮음 / 중간 / 높음 등 위험 수준
-🧠 추천 로직
+
+
+추천 로직
 1️⃣ 라벨 인코딩 (LabelEncoder)
 
 문자열 데이터를 숫자 코드로 변환
@@ -114,11 +115,13 @@ sort_by 옵션에 따라 거리, 보험료 차, 지급금액 차 기준으로 �
 인코딩된 상품명을 inverse_transform()으로 복원
 → 최종 표에는 원래 상품명 + 핵심 속성 출력
 
-🧾 예시 결과
+예시 결과
 상품명	남자(보험료)	지급금액	나이	직업(원문)	직업 위험도(원문)
 ○○생명 종신보장형	45,000	10,000,000	25	사무직	낮음
 △△생명 플러스형	48,000	9,500,000	26	사무직	낮음
-⚡ 주요 매개변수
+
+
+주요 매개변수
 매개변수	설명
 gender_input	"남자", "여자", "M", "F" 등 입력 가능
 premium	희망 월 보험료
@@ -127,3 +130,6 @@ age	나이
 job_text	직업명
 k	추천 개수
 sort_by	정렬 기준 (distance, premium, coverage)
+
+
+
