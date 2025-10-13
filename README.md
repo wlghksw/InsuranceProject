@@ -47,39 +47,6 @@ KNN류 거리 계산 전에 숫자화(LabelEncoder), **스케일 통일(Standard
 
 LabelEncoder는 “문자열→정수”이지만 크기 의미는 없음. 거리 계산에는 투입하지 않고, 설명 필드로만 쓰거나 스케일링 대상에서 분리해 둠.
 
-## 
-나의 말:
-insurance.py
-Python
-나 깃허브에 정리할건데 종신보험 추천 이거 보고 해줘 
-ChatGPT의 말:
-파일 잘 받았어 (insurance.py). 그런데 지금은 그 내용을 바로 열 수 없었어.
-쥰이 GitHub에 정리하려는 “종신보험 추천” 관련 코드를 보기 위해서는, 파일 내용을 한 번 열어서 분석해야 해.
-
-👉 이렇게 해줘:
-
-insurance.py 파일 내용을 복사해서 이 대화창에 붙여넣어줘.
-
-그러면 내가 그 내용을 기반으로
-
-깃허브에 올리기 좋은 구조로 리팩터링하고,
-
-README.md 설명,
-
-주석 정리,
-
-실행 예시,
-
-requirements.txt 내용까지 만들어줄게.
-
-지금 바로 파일 내용을 붙여줄래?
-
-나의 말:
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
 
 import numpy as np
 import pandas as pd
@@ -89,13 +56,11 @@ import os
 
 # In[2]:
 
-
 from google.colab import files
 upload = files.upload()
 
 
 # In[3]:
-
 
 #4325 rows × 10 columns
 
@@ -105,19 +70,16 @@ insurance_df
 
 # In[4]:
 
-
 # 결측치는 없음..
 insurance_df.info()
 
 
 # In[5]:
 
-
 insurance_df.columns
 
 
 # In[6]:
-
 
 # 전처리 해야하지만
 # 랜덤포레스트 모델 사용할거면 안 해도 됨..
@@ -126,7 +88,6 @@ insurance_df.describe()
 
 
 # In[7]:
-
 
 from sklearn.preprocessing import LabelEncoder
 
@@ -144,7 +105,6 @@ insurance_df["성별"] = gender.fit_transform(insurance_df["성별"])
 
 # In[8]:
 
-
 data = insurance_df[['남자(보험료)','지급금액','직업','나이','여자(보험료)','성별','직업 위험도','가입금액']].to_numpy()
 
 target = insurance_df['상품명'].to_numpy()
@@ -152,35 +112,24 @@ target = insurance_df['상품명'].to_numpy()
 
 # In[9]:
 
-
 data
 
 
 # In[10]:
-
 
 target
 
 
 # In[11]:
 
-
 # 훈련세트 와 테스트 세트 나누기
+
 # 8:2로 나누기
 
 from sklearn.model_selection import train_test_split
 
 #test_size=0.2 20% 한다.
 train_input, test_input, train_target, test_target = train_test_split(data, target, test_size=0.2, random_state=42)
-
-
-# In[12]:
-
-
-print(train_input.shape, test_input.shape)
-
-
-# In[13]:
 
 
 # 전처리 : 표준화하기
@@ -192,9 +141,6 @@ ss.fit(train_input) # 훈련데이터에서 훈련한다..
 
 train_scaled = ss.transform(train_input) # 훈련 세트 변환
 test_scaled = ss.transform(test_input) # 테스트 세트 변환
-
-
-# In[14]:
 
 
 from sklearn.preprocessing import StandardScaler
@@ -213,9 +159,6 @@ X_m = df_m[["남자(보험료)", "지급금액", "나이", "직업", "직업 위
 scaler_m = StandardScaler().fit(X_m)
 X_m_scaled = scaler_m.transform(X_m)
 knn_m = NearestNeighbors(n_neighbors=5, metric="euclidean").fit(X_m_scaled)
-
-
-# In[21]:
 
 
 from sklearn.neighbors import NearestNeighbors
@@ -342,9 +285,6 @@ def recommend_top_k(gender_input, premium, coverage, age, job_text, k=5, sort_by
     return rec_rows[show_cols].reset_index(drop=True)
 
 
-
-
-
 # In[28]:
 
 
@@ -359,21 +299,15 @@ res = recommend_top_k(
 )
 
 display(res)
-ChatGPT의 말:
 
-20s 동안 생각함
-쥰, 깃허브에 바로 올릴 수 있게 폴더 구조 + 코드 + README + 스크립트까지 한 번에 정리해서 캔버스에 올려뒀어.
-(좌측 “종신보험 추천 깃허브 패키지 (GitHub-ready)” 문서를 그대로 복붙하면 됩니다.)
-
-원본 Colab 코드에서 바꾼 핵심:
 
 google.colab 의존 제거 → 일반 파이썬 패키지로 구조화
 
 성별별(StandardScaler) 스케일링 유지, 직업→위험도 mode 추정 로직 유지/보강
 
-Recommender 클래스로 캡슐화: fit_csv() → recommend_top_k() 사용
+Recommender 클래스로 캡슐화: fit_csv() → recommend_top_k() 사용.
 
-CLI 데모(scripts/demo.py) 제공: 깃허브 README의 커맨드 그대로 실행
+CLI 데모(scripts/demo.py) 제공: 깃허브 README의 커맨드 그대로 실행.
 
 바로 쓰는 순서:
 
@@ -423,7 +357,7 @@ class Recommender:
 
 성별별 스케일링을 위해.
 
-인스턴스 상태가 많으니 fit을 먼저 호출하지 않으면 recommend_top_k가 오류 내기 않도록 함.
+인스턴스 상태가 많으니 fit을 먼저 호출하지 않으면 recommend_top_k가 오류 내지 않도록 함.
 
 
 ## 3) 학습 데이터 적재 & 전처리 (fit_csv / fit_df)
@@ -435,9 +369,6 @@ def fit_csv(self, csv_path: str) -> "Recommender":
 def fit_df(self, df: pd.DataFrame) -> "Recommender":
     self.df = df.copy()
     required = ["상품명","성별","남자(보험료)","여자(보험료)","지급금액","가입금액","나이","직업","직업 위험도"]
-    missing = [c for c in required if c not in self.df.columns]
-    if missing:
-        raise ValueError(f"CSV에 필수 컬럼 누락: {missing}")
 
 
 # 라벨 인코딩
@@ -471,7 +402,6 @@ self.scaler_m = StandardScaler().fit(X_m)
 self.X_m_scaled = self.scaler_m.transform(X_m)
 
 
-
 선택 컬럼 의존성 가드
 
 build_job_to_risk_lookup가 직업(원문), 직업 위험도(원문)에 의존 → CSV에 없으면 None으로 동작하도록 이미 처리되어 있음(OK).
@@ -484,5 +414,5 @@ df_f = 성별==0, df_m = 성별==1은 현재 LabelEncoder 결과가 여자=0, �
 
 실제 CSV 성별 값이 “남/여/M/F” 혼재라도 _coerce_gender가 문자열 처리해서 입력 쪽은 안전.
 
-만약 LabelEncoder가 데이터에 따라 남=0, 여=1로 학습되는 경우가 걱정되면, 성별을 분리하기 전에 문자열을 먼저 남→1, 여→0으로 직접 맵핑해 두는 게 가장 안전합니다(아래 “간단 수정본” 참고).
+만약 LabelEncoder가 데이터에 따라 남=0, 여=1로 학습되는 경우가 걱정되면, 성별을 분리하기 전에 문자열을 먼저 남→1, 여→0으로 직접 맵핑함.
 
