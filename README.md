@@ -155,12 +155,14 @@ get_close_matches	직업명 오타/근사 대응
 ○○생명 종신보장형	45,000	10,000,000	25	사무직	낮음
 △△생명 플러스형	48,000	9,500,000	26	사무직	낮음
 
+------------------
+
 ## 카카오 로그인 API 사용
 
 # Kakao Login (Spring Boot OAuth2) — Setup & Guide
 
 이 저장소는 **카카오 로그인 API**를 Spring Boot OAuth2 클라이언트로 연동하는 방법을 정리합니다.
-아래 가이드만 따라하면 바로 로컬에서 로그인 테스트까지 가능합니다.
+아래 가이드만 따라하면 바로 로컬에서 로그인 테스트까지 가능!
 
 ```
 kakao/HELP.md
@@ -188,8 +190,6 @@ kakao/src/main/java/com/example/kakao/controller/HomeController.java
 4) **동의 항목**에서 필요한 프로필 항목(이름, 성별, 생년 등)을 **선택 동의/필수 동의**로 설정  
 5) **REST API 키** 확인
 
-> ⚠️ REST API 키/클라이언트 시크릿은 절대 깃에 올리지 마세요. 이 저장소는 `application.yml.template`를 제공하니 복사해 사용하세요.
-
 ---
 
 ## 2. Spring Boot 의존성
@@ -200,7 +200,6 @@ dependencies {{
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    // (선택) 템플릿 엔진 사용 시
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }}
 ```
@@ -239,9 +238,9 @@ spring:
 ```
 
 - **`{{baseUrl}}`**: 로컬은 보통 `http://localhost:8080`
-- **scope**는 Kakao Developers **동의 항목**과 일치해야 합니다.
+- **scope**는 Kakao Developers **동의 항목**과 일치해야 함.
 
-> 🔐 `application.yml`은 비공개로 관리하세요. 이 저장소에는 업로드 금지되도록 `.gitignore`가 포함되어 있습니다.
+> `application.yml`은 비공개로 관리하세요. 이 저장소에는 업로드 금지되도록 `.gitignore`가 포함
 
 ---
 
@@ -334,8 +333,8 @@ public class MainController {{
 </html>
 ```
 
-> 🔁기본 성공 URL은 `/login/oauth2/code/kakao` → Spring Security가 내부 처리 후 기본 페이지로 리다이렉트합니다.  
-> 커스텀 성공 URL을 원하면 `oauth2Login().defaultSuccessUrl("/login/success", true)`로 지정하세요.
+> 기본 성공 URL은 `/login/oauth2/code/kakao` → Spring Security가 내부 처리 후 기본 페이지로 리다이렉트 
+> 커스텀 성공 URL을 원하면 `oauth2Login().defaultSuccessUrl("/login/success", true)`
 
 ---
 
