@@ -2,10 +2,6 @@ from pydantic import BaseModel, Field
 from typing import Optional, Tuple, Any, List
 from enum import Enum
 
-class RenewalPreference(str, Enum):
-    NON_RENEWAL = "non_renewal"  # 비갱신형 선호
-    RENEWAL = "renewal"          # 갱신형 선호
-    NEUTRAL = "neutral"          # 중립
 
 class RecommendationRequest(BaseModel):
     """암보험 상품 추천 요청 모델"""
@@ -152,15 +148,6 @@ class LifeInsuranceRequest(BaseModel):
     topk: int = Field(5, description="추천 개수", ge=1, le=20)
     sortBy: str = Field("distance", description="정렬 기준 (distance/premium/coverage)")
 
-class LifeInsuranceProduct(BaseModel):
-    """종신보험 상품 정보"""
-    product: str
-    premium: int
-    coverage: int
-    age: int
-    distance: float
-    job: Optional[str] = None
-    risk: Optional[str] = None
 
 class LifeInsuranceResponse(BaseModel):
     """종신보험 추천 응답 모델"""
