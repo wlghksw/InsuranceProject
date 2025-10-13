@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+.gradle/
+build/
+target/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+chatbot.log
+train.log
+
+# Database
+*.db
+*.mv.db
+*.trace.db
+
+# 민감한 설정 파일
+application-local.properties
+application-secret.properties
+.env
+
+# 임시 파일
+/tmp/
+*.tmp
+*.bak
+
+# Node modules (필요시)
+node_modules/
+
+InsuranceWeb/src/main/resources/application.properties

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>보험 상품 등록 - 관리자</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8f9fa;
+            padding-top: 80px;
+        }
+        /* 네비게이션 바 - 메인과 동일 */
+        .custom-navbar {
+            background-color: #1c2f48;
+            border-bottom: 1px solid rgba(0,0,0,.25);
+            padding: 14px 20px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .custom-navbar .navbar-brand {
+            color: #d4b46b !important;
+            font-weight: 900;
+            font-size: 32px;
+        }
+        .custom-navbar .nav-link, .custom-navbar .text-white {
+            color: #d4b46b !important;
+            font-weight: 700;
+        }
+        .custom-navbar .btn-light {
+            background-color: #d4b46b;
+            border-color: #d4b46b;
+            color: #1c2f48;
+            font-weight: 600;
+        }
+        .custom-navbar .btn-light:hover {
+            background-color: #e5c57b;
+            border-color: #e5c57b;
+        }
+        .product-form {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(28,47,72,0.1);
+            margin-bottom: 3rem;
+        }
+        .product-form h4 {
+            color: #1c2f48;
+            font-weight: 700;
+            border-bottom: 3px solid #d4b46b;
+            padding-bottom: 0.5rem;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #1c2f48;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #d4b46b;
+            box-shadow: 0 0 0 0.2rem rgba(212,180,107,0.25);
+        }
+        .btn-primary {
+            background-color: #1c2f48;
+            border-color: #1c2f48;
+            color: #d4b46b;
+            font-weight: 600;
+        }
+        .btn-primary:hover {
+            background-color: #2a4a6f;
+            border-color: #2a4a6f;
+            color: #e5c57b;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+        }
+        .text-danger {
+            color: #d4b46b !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- 상단 네비게이션 바 -->
+    <nav class="navbar navbar-expand-lg custom-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/main" style="color:#d4b46b; font-weight:900;">
+                B
+            </a>
+            <div class="d-flex align-items-center">
+                <a href="/admin/dashboard" class="btn btn-light me-2">
+                    <i class="fas fa-tachometer-alt me-2"></i>대시보드
+                </a>
+                <a href="/admin/products" class="btn btn-light me-3">
+                    <i class="fas fa-list me-2"></i>상품 목록
+                </a>
+                <span class="text-white me-3">관리자: <strong>{{loginAdminName}}</strong></span>
+                <form action="/logout" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-secondary btn-sm">로그아웃</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="product-form">
+            <form action="/admin/products" method="post" id="productForm">
+                <div class="row">
+                    <!-- 기본 정보 -->
+                    <div class="col-12 mb-4">
+                        <h4 class="border-bottom pb-2"><i class="fas fa-info-circle me-2"></i>기본 정보</h4>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="productType" class="form-label">상품 유형 <span class="text-danger">*</span></label>
+                        <select class="form-select" id="productType" name="productType" required onchange="toggleFields()">
+                            <option value="">선택하세요</option>
+                            <option value="암보험">암보험</option>
+                            <option value="상해보험">상해보험</option>
+                            <option value="저축성보험">저축성보험</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="insuranceCompany" class="form-label">보험회사 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="insuranceCompany" name="insuranceCompany" required>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label for="productName" class="form-label">상품명 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="productName" name="productName" required>
+                    </div>
+
+                    <!-- 보험료 정보 -->
+                    <div class="col-12 mb-4 mt-3">
+                        <h4 class="border-bottom pb-2"><i class="fas fa-won-sign me-2"></i>보험료 정보</h4>
+                    </div>
+
+                    <!-- 암보험/상해보험용 필드 -->
+                    <div class="col-md-4 mb-3 cancer-accident-field" style="display: none;">
+                        <label for="coverageAmount" class="form-label">보장금액 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="coverageAmount" name="coverageAmount" 
+                               placeholder="예: 10000000 (1천만원)">
+                    </div>
+
+                    <div class="col-md-4 mb-3 cancer-accident-field" style="display: none;">
+                        <label for="malePremium" class="form-label">남성 보험료 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="malePremium" name="malePremium" 
+                               placeholder="예: 30000">
+                    </div>
+
+                    <div class="col-md-4 mb-3 cancer-accident-field" style="display: none;">
+                        <label for="femalePremium" class="form-label">여성 보험료 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="femalePremium" name="femalePremium" 
+                               placeholder="예: 25000">
+                    </div>
+
+                    <!-- 저축성보험용 필드 -->
+                    <div class="col-md-6 mb-3 savings-field" style="display: none;">
+                        <label for="monthlyPremium" class="form-label">월 납입금 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="monthlyPremium" name="monthlyPremium" 
+                               placeholder="예: 100000">
+                    </div>
+
+                    <div class="col-md-6 mb-3 savings-field" style="display: none;">
+                        <label for="guaranteedRate" class="form-label">최저보증이율 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="guaranteedRate" name="guaranteedRate" 
+                               placeholder="예: 2.5%">
+                    </div>
+
+                    <div class="col-md-6 mb-3 savings-field" style="display: none;">
+                        <label for="currentRate" class="form-label">현재공시이율 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="currentRate" name="currentRate" 
+                               placeholder="예: 3.0%">
+                    </div>
+
+                    <!-- 상품 상세 정보 -->
+                    <div class="col-12 mb-4 mt-3">
+                        <h4 class="border-bottom pb-2"><i class="fas fa-clipboard-list me-2"></i>상품 상세</h4>
+                    </div>
+
+                    <!-- 공통 필드: 갱신주기 (암보험/상해보험) -->
+                    <div class="col-md-6 mb-3 cancer-accident-field" style="display: none;">
+                        <label for="renewalCycle" class="form-label">갱신주기</label>
+                        <select class="form-select" id="renewalCycle" name="renewalCycle">
+                            <option value="비갱신형">비갱신형</option>
+                            <option value="갱신형">갱신형</option>
+                            <option value="10년갱신형">10년갱신형</option>
+                            <option value="20년갱신형">20년갱신형</option>
+                        </select>
+                    </div>
+
+                    <!-- 저축성보험용: 해약환급금 -->
+                    <div class="col-md-6 mb-3 savings-field" style="display: none;">
+                        <label for="surrenderValue" class="form-label">해약환급금</label>
+                        <input type="text" class="form-control" id="surrenderValue" name="surrenderValue" 
+                               placeholder="예: 만기환급, 무해지환급">
+                    </div>
+
+                    <!-- 저축성보험용: 납입방법 -->
+                    <div class="col-md-6 mb-3 savings-field" style="display: none;">
+                        <label for="paymentMethod" class="form-label">납입방법</label>
+                        <select class="form-select" id="paymentMethod" name="paymentMethod">
+                            <option value="월납">월납</option>
+                            <option value="일시납">일시납</option>
+                            <option value="연납">연납</option>
+                        </select>
+                    </div>
+
+                    <!-- 공통: 보험기간 -->
+                    <div class="col-md-6 mb-3">
+                        <label for="term" class="form-label">보험기간</label>
+                        <input type="text" class="form-control" id="term" name="term" 
+                               placeholder="예: 10년, 종신, 20년">
+                    </div>
+
+                    <!-- 공통: 판매채널 -->
+                    <div class="col-md-6 mb-3">
+                        <label for="salesChannel" class="form-label">판매채널</label>
+                        <select class="form-select" id="salesChannel" name="salesChannel">
+                            <option value="대면채널">대면채널</option>
+                            <option value="CM">CM (온라인)</option>
+                            <option value="방카슈랑스">방카슈랑스</option>
+                            <option value="TM">TM (텔레마케팅)</option>
+                        </select>
+                    </div>
+
+                    <!-- 공통: 특이사항 (상해보험에서 중요) -->
+                    <div class="col-12 mb-3">
+                        <label for="specialNotes" class="form-label">특이사항</label>
+                        <textarea class="form-control" id="specialNotes" name="specialNotes" rows="3" 
+                                  placeholder="가입 나이, 가입 한도, 보장 내용 등 특별한 사항을 입력하세요"></textarea>
+                    </div>
+
+                    <!-- 버튼 -->
+                    <div class="col-12 text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-save me-2"></i>상품 등록
+                        </button>
+                        <a href="/admin/products" class="btn btn-secondary btn-lg px-5 ms-3">
+                            <i class="fas fa-list me-2"></i>목록으로
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleFields() {
+            const productType = document.getElementById('productType').value;
+            const cancerAccidentFields = document.querySelectorAll('.cancer-accident-field');
+            const savingsFields = document.querySelectorAll('.savings-field');
+
+            // 모든 필드 숨기기
+            cancerAccidentFields.forEach(field => field.style.display = 'none');
+            savingsFields.forEach(field => field.style.display = 'none');
+
+            if (productType === '암보험' || productType === '상해보험') {
+                // 암보험/상해보험: 보장금액, 보험료(남/여), 갱신주기
+                cancerAccidentFields.forEach(field => field.style.display = 'block');
+            } else if (productType === '저축성보험') {
+                // 저축성보험: 월납입금, 이율, 해약환급금, 납입방법
+                savingsFields.forEach(field => field.style.display = 'block');
+            }
+        }
+
+        // 폼 제출 전 확인
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            const productType = document.getElementById('productType').value;
+            const insuranceCompany = document.getElementById('insuranceCompany').value;
+            const productName = document.getElementById('productName').value;
+
+            if (!productType || !insuranceCompany || !productName) {
+                e.preventDefault();
+                alert('필수 항목을 모두 입력해주세요.');
+                return false;
+            }
+
+            if (!confirm('이 상품을 등록하시겠습니까?')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>
+

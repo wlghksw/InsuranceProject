@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>거북이 보험 - 보험료 계산기</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Noto Sans KR', sans-serif; 
+            padding-top: 80px; 
+            background-color: #f0f2f5; 
+        }
+        .custom-navbar { 
+            background-color: #1c2f48; 
+            border-bottom: 1px solid #e0e0e0; 
+            padding: 8px 20px; 
+            position: fixed; 
+            width: 100%; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+        }
+        .custom-navbar .navbar-brand { 
+            font-weight: 900; 
+            color: #d4b46b; 
+            font-size: 40px; 
+            margin-right: 30px;
+        }
+        .custom-navbar .nav-link { 
+            color: #ffffff; 
+            font-weight: 800; 
+            font-size: 20px;
+            margin-right: 36px; 
+        }
+        .custom-navbar .nav-link:hover { 
+            color: #d4b46b; 
+        }
+        .info-panel { 
+            background: linear-gradient(135deg, #d4b46b, #b8941f); 
+            color: white; 
+            padding: 50px 40px; 
+            border-radius: 0.5rem 0 0 0.5rem; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+        }
+        .info-content { 
+            text-align: left; 
+        }
+        .info-icon { 
+            margin-bottom: 20px; 
+        }
+        .info-title { 
+            font-size: 2.5rem; 
+            font-weight: 700; 
+            line-height: 1.3; 
+        }
+        .info-text { 
+            font-size: 1.1rem; 
+            opacity: 0.9; 
+            margin-top: 15px; 
+        }
+        .calculator-panel { 
+            background: #ffffff; 
+            padding: 50px 40px; 
+            border-radius: 0 0.5rem 0.5rem 0; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+        }
+        .calculator h4 { 
+            font-weight: 700; 
+            color: #333; 
+            text-align: left; 
+            margin-bottom: 1rem; 
+        }
+        .input-group-custom { 
+            margin-bottom: 20px; 
+            text-align: left; 
+        }
+        .input-group-custom label { 
+            margin-bottom: 8px; 
+            color: #555; 
+            font-weight: 500; 
+            font-size: 0.9rem; 
+        }
+        .calculator-panel button { 
+            padding: 12px; 
+            border: none; 
+            background-color: #d4b46b; 
+            color: white; 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            transition: background-color 0.3s; 
+            margin-top: 10px; 
+        }
+        .calculator-panel button:hover { 
+            background-color: #b8941f; 
+        }
+        #result { 
+            margin-top: 30px; 
+            font-size: 1.25rem; 
+            font-weight: bold; 
+            color: #d9534f; 
+            text-align: center; 
+            padding: 15px; 
+            background-color: #f8f9fa; 
+            border-radius: 5px; 
+            min-height: 60px; 
+        }
+        @media (max-width: 991.98px) {
+            .info-panel { 
+                border-radius: 0.5rem 0.5rem 0 0; 
+            }
+            .calculator-panel { 
+                border-radius: 0 0 0.5rem 0.5rem; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/main" style="color:#d4b46b; font-weight:900;">
+            B
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="/main">홈</a></li>
+                <li class="nav-item"><a class="nav-link" href="/service_intro">서비스 소개</a></li>
+                <li class="nav-item"><a class="nav-link" href="/calculator">보험료 계산기</a></li>
+                <li class="nav-item"><a class="nav-link" href="/cancer/recommend">암보험</a></li>
+                <li class="nav-item"><a class="nav-link" href="/accident/recommend">상해보험</a></li>
+                <li class="nav-item"><a class="nav-link" href="/life/recommend">종신보험</a></li>
+                <li class="nav-item"><a class="nav-link" href="/savings-insurance/recommend">저축성보험</a></li>
+                <li class="nav-item"><a class="nav-link" href="/savings/recommend">연금보험</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                {{#name}}
+                    <li class="nav-item"><span class="nav-link text-white">안녕하세요. {{name}}님</span></li>
+                    <li class="nav-item"><a class="nav-link" href="/user/myPage">마이페이지</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/cart">관심 상품</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/user/my_insurance">한눈에보기</a></li>
+                    <li class="nav-item">
+                        <form action="/logout" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-light btn-sm">로그아웃</button>
+                        </form>
+                    </li>
+                {{/name}}
+                {{^name}}{{#user}}
+                    <li class="nav-item"><span class="nav-link text-white">안녕하세요. {{nickname}}님</span></li>
+                    <li class="nav-item"><a class="nav-link" href="/user/myPage">마이페이지</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/cart">관심 상품</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/user/my_insurance">한눈에보기</a></li>
+                    <li class="nav-item">
+                        <form action="/logout" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-light btn-sm">로그아웃</button>
+                        </form>
+                    </li>
+                {{/user}}{{/name}}
+                {{^name}}{{^user}}
+                    <li class="nav-item"><a class="nav-link text-white" href="/user/login">로그인</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/user/register">회원가입</a></li>
+                {{/user}}{{/name}}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <div class="row g-0">
+        <div class="col-lg-5 info-panel">
+            <div class="info-content">
+                <div class="info-icon"><i class="fas fa-shield-alt fa-3x"></i></div>
+                <h1 class="info-title">나에게 꼭 맞는<br>보험료 알아보기</h1>
+                <p class="info-text">몇 가지 간단한 정보만으로<br>주요 보험 상품의 예상 금액을<br>빠르고 쉽게 확인해 보세요.</p>
+                <p class="info-text">예상 보험료는 단순 참고용으로<br>보험 가입시 금액이 상이할 수 있습니다.</p>
+            </div>
+        </div>
+        <div class="col-lg-7 calculator-panel">
+            <div class="calculator">
+                <h4>보험 종류 선택</h4>
+                <div class="input-group-custom">
+                    <select id="insuranceType" class="form-select form-select-lg" onchange="toggleForm()">
+                        <option value="cancer" selected>암보험</option>
+                        <option value="health">실손의료보험</option>
+                        <option value="protection">보장성보험</option>
+                        <option value="car">자동차보험</option>
+                        <option value="travel">여행자보험</option>
+                        <option value="child">어린이/태아보험</option>
+                        <option value="savings">저축성보험</option>
+                        <option value="annuity">연금보험</option>
+                    </select>
+                </div>
+                <hr class="my-4">
+
+                <div id="cancerForm" class="insurance-form">
+                    <div class="input-group-custom">
+                        <label for="cancer-age">나이 입력 (단위 : 세)</label>
+                        <input type="number" id="cancer-age" class="form-control" placeholder="예: 35">
+                    </div>
+                    <div class="input-group-custom">
+                        <label for="cancer-coverage">암 진단비 입력 (단위 : 만원)</label>
+                        <input type="number" id="cancer-coverage" class="form-control" placeholder="(입력 예: 3000)">
+                    </div>
+                </div>
+
+                <div id="healthForm" class="insurance-form" style="display:none;">
+                    <div class="input-group-custom">
+                        <label for="health-age">나이 입력(단위 : 세)</label>
+                        <input type="number" id="health-age" class="form-control" placeholder="예: 40">
+                    </div>
+                    <div class="input-group-custom">
+                        <label for="health-gender">성별 선택</label>
+                        <select id="health-gender" class="form-select">
+                            <option value="male">남성</option>
+                            <option value="female">여성</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="protectionForm" class="insurance-form" style="display:none;">
+                    <div class="input-group-custom">
+                        <label for="protection-age">나이 입력(단위 : 세)</label>
+                        <input type="number" id="protection-age" class="form-control" placeholder="예: 30">
+                    </div>
+                    <div class="input-group-custom">
+                        <label for="protection-death-benefit">사망 보험금 (단위 : 만원)</label>
+                        <input type="number" id="protection-death-benefit" class="form-control" placeholder="(입력 예: 10000)">
+                    </div>
+                </div>
+
+                <div id="carForm" class="insurance-form" style="display:none;">
+                    <div class="input-group-custom">
+                        <label for="car-age">운전자 나이 입력(단위 : 세)</label>
+                        <input type="number" id="car-age" class="form-control" placeholder="예: 30">
+                    </div>
+                    <div class="input-group-custom">
+                        <label for="car-experience">운전 경력 입력 (단위 : 년)</label>
+                        <input type="number" id="car-experience" class="form-control" placeholder="예: 5">
+                    </div>
+                </div>
+
+                <div id="travelForm" class="insurance-form" style="display:none;">
+                    <div class="input-group-custom">
+                        <label for="travel-days">여행 기간 입력(단위 : 일)</label>
+                        <input type="number" id="travel-days" class="form-control" placeholder="(입력 예: 20)">
+                    </div>
+                </div>
+
+                <div id="childForm" class="insurance-form" style="display:none;">
+                    <div class="input-group-custom">
+                        <label for="child-age">자녀 나이 입력(단, 태아는 0으로 입력)(단위 : 세)</label>
+                        <input type="number" id="child-age" class="form-control" placeholder="예: 5">
+                    </div>
+                    <div class="input-group-custom">
+                        <label for="child-plan">플랜 선택</label>
+                        <select id="child-plan" class="form-select">
+                            <option value="basic">기본 플랜</option>
+                            <option value="premium">고급 플랜</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="savingsForm" class="insurance-form" style="display:none;">
+                    <div class="input-group-custom">
+                        <label for="savings-deposit">월 납입액 입력(단위 : 만원)</label>
+                        <input type="number" id="savings-deposit" class="form-control" placeholder="(입력 예: 50)">
+                    </div>
+                    <div class="input-group-custom">
+                        <label for="savings-years">납입 기간 입력 (단위 : 년)</label>
+                        <input type="number" id="savings-years" class="form-control" placeholder="(입력 예: 10)">
+                    </div>
+                </div>
+
+                <div id="annuityForm" class="insurance-form" style="display:none;">
+                    <div class="input-group-custom">
+                        <label for="annuity-deposit">월 납입액 입력(단위 : 만원)</label>
+                        <input type="number" id="annuity-deposit" class="form-control" placeholder="(입력 예: 30)">
+                    </div>
+                    <div class="input-group-custom">
+                        <label for="annuity-years">납입 기간 입력 (단위 : 년)</label>
+                        <input type="number" id="annuity-years" class="form-control" placeholder="(입력 예: 20)">
+                    </div>
+                </div>
+
+                <button class="btn w-100" onclick="calculatePremium()">예상 보험료 확인하기</button>
+                <div id="result"><p>월 예상 보험료(단위 : 원): </p></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-dark text-white text-center py-3">
+    <p class="mb-0">©2025 Turtle Insurance. All Rights Reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function toggleForm() {
+        const selectedType = document.getElementById('insuranceType').value;
+        document.querySelectorAll('.insurance-form').forEach(form => form.style.display = 'none');
+        document.getElementById(selectedType + 'Form').style.display = 'block';
+        const resultLabel = document.querySelector('#result p');
+        if (selectedType === 'annuity' || selectedType === 'savings') {
+            resultLabel.textContent = selectedType === 'annuity' ? '만기 시 예상 연금액: ' : '만기 시 예상 환급금: ';
+        } else {
+            resultLabel.textContent = '월 예상 보험료: ';
+        }
+    }
+
+    async function calculatePremium() {
+        const insuranceType = document.getElementById('insuranceType').value;
+        const resultDiv = document.getElementById('result');
+        let requestDto = { type: insuranceType };
+        let isValid = true;
+
+        if (insuranceType === 'cancer') {
+            const age = document.getElementById('cancer-age').value;
+            const coverage = document.getElementById('cancer-coverage').value;
+            if (!age || !coverage) isValid = false;
+            requestDto.age = parseInt(age);
+            requestDto.coverage = parseInt(coverage);
+        } else if (insuranceType === 'health') {
+            const age = document.getElementById('health-age').value;
+            const gender = document.getElementById('health-gender').value;
+            if (!age) isValid = false;
+            requestDto.age = parseInt(age);
+            requestDto.gender = gender;
+        } else if (insuranceType === 'protection') {
+            const age = document.getElementById('protection-age').value;
+            const benefit = document.getElementById('protection-death-benefit').value;
+            if (!age || !benefit) isValid = false;
+            requestDto.age = parseInt(age);
+            requestDto.deathBenefit = parseInt(benefit);
+        } else if (insuranceType === 'car') {
+            const age = document.getElementById('car-age').value;
+            const experience = document.getElementById('car-experience').value;
+            if (!age || !experience) isValid = false;
+            requestDto.age = parseInt(age);
+            requestDto.experience = parseInt(experience);
+        } else if (insuranceType === 'travel') {
+            const days = document.getElementById('travel-days').value;
+            if (!days) isValid = false;
+            requestDto.days = parseInt(days);
+        } else if (insuranceType === 'child') {
+            const age = document.getElementById('child-age').value;
+            const plan = document.getElementById('child-plan').value;
+            if (age === null || age === '') isValid = false;
+            requestDto.age = parseInt(age);
+            requestDto.plan = plan;
+        } else if (insuranceType === 'savings' || insuranceType === 'annuity') {
+            const formType = insuranceType;
+            const deposit = document.getElementById(formType + '-deposit').value;
+            const years = document.getElementById(formType + '-years').value;
+            if (!deposit || !years) isValid = false;
+            requestDto.deposit = parseInt(deposit) * 10000;
+            requestDto.years = parseInt(years);
+        }
+
+        if (!isValid) {
+            resultDiv.innerHTML = '<p style="color: red;">모든 필수 항목을 입력해주세요.</p>';
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestDto)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                let resultLabelText;
+                if (insuranceType === 'annuity') resultLabelText = '만기 시 예상 연금액: ';
+                else if (insuranceType === 'savings') resultLabelText = '만기 시 예상 환급금: ';
+                else resultLabelText = '월 예상 보험료: ';
+                resultDiv.innerHTML = `<p>${resultLabelText}${data.premium.toLocaleString()}원</p>`;
+            } else {
+                resultDiv.innerHTML = `<p style="color: red;">계산 중 오류가 발생했습니다.</p>`;
+            }
+        } catch (error) {
+            resultDiv.innerHTML = '<p style="color: red;">서버와 통신할 수 없습니다.</p>';
+        }
+    }
+</script>
+</body>
+</html>

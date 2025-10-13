@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <title>보험 비교 랜딩</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* 커스텀 헤더 스타일 */
+        .custom-navbar {
+            background-color: #1c2f48;   /* 네이비 */
+            border-bottom: 1px solid rgba(0,0,0,.25);
+            padding: 14px 20px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        /* 로고 B (골드) */
+        .custom-navbar .navbar-brand {
+            color: #d4b46b !important;  /* 골드 */
+            font-weight: 900;
+            font-size: 40px;
+            margin-right: 30px;
+        }
+        /* 메뉴 링크 (골드) */
+        .custom-navbar .nav-link {
+            color: #d4b46b !important;
+            font-weight: 800;
+            font-size: 20px;
+            margin-right: 36px;
+        }
+        .custom-navbar .nav-link:hover {
+            color: #d4b46b /* 호버 시 밝은 골드 */
+        }
+
+        .chatbot-ui:hover, .to-top-btn:hover {
+            background-color: #1c2f48;  /* 밝은 네이비 */
+            color: #d4b46b;            /* 아이콘은 골드 */
+            transform: scale(1.1);
+        }
+
+        /* 검색창 */
+        .search-wrap {
+            display: flex;
+            align-items: center;
+            height: 40px;
+            width: 400px;
+            border: 1px solid #000;       /* 검은 테두리 */
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        /* 스크롤 섹션 스타일 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+        .scroll-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            padding-top: 80px;
+        }
+        #section1 { background: #ffffff; }
+        #section2 { background: #ffffff; }
+        #section3 { background: #ffffff; }
+        #section4 { background: #ffffff; }
+        #section5 { background: #ffffff; }
+
+        /* 수직 내비게이션 점 스타일 */
+        .side-nav {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .side-nav li a {
+            display: block;
+            width: 12px;
+            height: 12px;
+            background-color: #ccc;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+            text-indent: -9999px;
+        }
+        .side-nav li a.active {
+            background-color: #d4b46b;
+        }
+
+        /* 챗봇 UI 및 상단 이동 버튼 스타일 */
+        .fixed-bottom-right {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        .chatbot-ui, .to-top-btn {
+            width: 60px; height: 60px; background-color: #1c2f48; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none; color: white;
+            opacity: 0; visibility: hidden;
+            cursor: pointer;
+        }
+        .chatbot-ui:hover, .to-top-btn:hover {
+            transform: scale(1.1);
+        }
+        .chatbot-ui i, .to-top-btn i {
+            font-size: 2rem;
+        }
+        .to-top-btn.visible, .chatbot-ui.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 플로팅 챗봇 창 스타일 */
+        .chatbot-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 380px;
+            height: 550px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            display: none;
+            flex-direction: column;
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        .chatbot-window.open {
+            display: flex;
+        }
+
+        .chatbot-window-header {
+            background: linear-gradient(135deg, #1c2f48 0%, #2a4a6f 100%);
+            color: #d4b46b;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-window-header h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .chatbot-close-btn {
+            background: none;
+            border: none;
+            color: #d4b46b;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .chatbot-close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        .chatbot-window-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background: #f8f9fa;
+        }
+
+        .chatbot-message {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .chatbot-message.user {
+            justify-content: flex-end;
+        }
+
+        .chatbot-message-bubble {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 15px;
+            word-wrap: break-word;
+        }
+
+        .chatbot-message.bot .chatbot-message-bubble {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            color: #333;
+        }
+
+        .chatbot-message.user .chatbot-message-bubble {
+            background-color: #1c2f48;
+            color: #d4b46b;
+        }
+
+        .chatbot-message-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            flex-shrink: 0;
+        }
+
+        .chatbot-message.bot .chatbot-message-icon {
+            background-color: #1c2f48;
+            color: #d4b46b;
+        }
+
+        .chatbot-message.user .chatbot-message-icon {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .chatbot-window-input {
+            padding: 1.5rem;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chatbot-window-input .input-group input {
+            border-radius: 25px 0 0 25px;
+            border: 2px solid #e9ecef;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .chatbot-window-input .input-group input:focus {
+            border-color: #1c2f48;
+            box-shadow: none;
+        }
+
+        .chatbot-window-input .input-group button {
+            border-radius: 0 25px 25px 0;
+            background-color: #1c2f48;
+            border-color: #1c2f48;
+            color: #d4b46b;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+        }
+
+        .chatbot-window-input .input-group button:hover {
+            background-color: #2a4a6f;
+            border-color: #2a4a6f;
+        }
+
+        /* [추가된 스타일] 보험 바로가기 배너 스타일 */
+        .insurance-banner {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem; /* 아래 h3 태그와의 간격 */
+        }
+        .insurance-item {
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+            display: block;
+        }
+        .insurance-item:hover {
+            transform: translateY(-5px); /* 살짝 위로 올라가는 효과 */
+            color: #d4b46b; /* 호버 시 텍스트 색상 변경 */
+        }
+
+
+        .insurance-item i {
+            color: #17ec42; /* 아이콘 기본 색상 */
+            margin-bottom: 10px;
+        }
+        .insurance-item p {
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+        /* 박스 스타일 */
+        .section-box {
+            background-color: #fff;
+            border: 1px solid #1c2f48;   /* 네이비 테두리 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+        }
+
+        /* 큰 제목 */
+        .section-box .main-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        /* 강조된 파란색 단어 */
+        .section-box .main-title .highlight {
+            color: #0056ff; /* 블루 포인트 */
+        }
+
+        /* 부제 텍스트 */
+        .section-box .sub-title {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* 버튼 */
+        .section-box .btn-learn-more {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 1px solid #000;
+            font-weight: 600;
+            color: #000;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .section-box .btn-learn-more:hover {
+            background-color: #1c2f48;
+            color: #fff;
+        }
+
+        .btn-gold-outline {
+            color: #d4b46b;
+            border: 2px solid #d4b46b;
+            background: transparent;
+        }
+        .btn-gold-outline:hover {
+            background: #d4b46b;
+            color: #fff;
+        }
+        .btn-gold-outline {
+            color: #1c2f48;
+            border: 2px solid #1c2f48;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .btn-gold-outline:hover {
+            background-color:#1c2f48;
+            color: #d4b46b;
+        }
+        .btn-gold-outline {
+            color: #d4b46b;
+            border: 2px solid #d4b46b;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .btn-gold-outline:hover {
+            background-color: #d4b46b;
+            color: #fff;
+        }
+
+
+
+
+
+    </style>
+</head>
+<body>
+
+        <ul class="side-nav">
+            <li><a href="#section1"></a></li>
+            <li><a href="#section2"></a></li>
+            <li><a href="#section3"></a></li>
+            <li><a href="#section4"></a></li>
+            <li><a href="#section5"></a></li>
+        </ul>
+
+<nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/main" style="color:#d4b46b; font-weight:900;">
+            B
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/service_intro">서비스 소개</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/calculator">보험료 계산기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/my_insurance">내 보험찾기</a>
+                </li>
+                <!-- 로그인 상태 (일반 또는 카카오) -->
+                {{#name}}
+                <li class="nav-item">
+                    <a class="nav-link" href="/cart">
+                        관심 상품
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/myPage">
+                        한눈에보기
+                    </a>
+                </li>
+                {{/name}}
+                {{^name}}
+                {{#user}}
+                <li class="nav-item">
+                    <a class="nav-link" href="/cart">
+                        관심 상품
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/myPage">
+                        한눈에보기
+                    </a>
+                </li>
+                {{/user}}
+                {{/name}}
+            </ul>
+
+                <ul class="navbar-nav">
+                <!-- 로그인 상태: name (카카오/일반) 또는 user (일반) -->
+                {{#name}}
+                    <li class="nav-item">
+                        <span class="nav-link text-dark">{{name}}님</span>
+                    </li>
+
+                    <li class="nav-item">
+                        <form action="/logout" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-gold-outline">로그아웃</button>
+                        </form>
+                    </li>
+                {{/name}}
+                {{^name}}
+                    {{#user}}
+                        <!-- 일반 로그인 (name이 없는 경우) -->
+                        <li class="nav-item">
+                            <span class="nav-link text-dark">{{nickname}}님</span>
+                        </li>
+
+                        <li class="nav-item">
+                            <form action="/logout" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-gold-outline">로그아웃</button>
+                            </form>
+                        </li>
+                    {{/user}}
+                    {{^user}}
+                        <!-- 비로그인 상태 -->
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/user/login">로그인</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/user/register">회원가입</a>
+                        </li>
+                    {{/user}}
+                {{/name}}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <section id="section1" class="scroll-section" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+        <div class="container">
+            <div class="row w-100">
+                <div class="col-md-6 d-flex align-items-center justify-content-center">
+                    <!-- 메인 히어로 이미지/아이콘 영역 -->
+                    <div style="background: linear-gradient(135deg, #1c2f48 0%, #2a4a6f 100%); border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,.15); width:90%; padding:40px; height:450px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white;">
+                        <i class="fas fa-shield-alt fa-5x mb-4" style="color:#d4b46b;"></i>
+                        <h2 class="text-center mb-3" style="color:#d4b46b; font-weight:bold;">스마트 보험 비교</h2>
+                        <p class="text-center mb-4" style="font-size:1.1rem; line-height:1.6;">사용자 맞춤형 보험 추천으로<br>최적의 보험을 찾아보세요</p>
+                        <div class="row text-center w-100">
+                            <div class="col-4">
+                                <div class="d-flex flex-column align-items-center">
+                                    <i class="fas fa-chart-line fa-2x mb-2" style="color:#d4b46b;"></i>
+                                    <small>실시간 비교</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="d-flex flex-column align-items-center">
+                                    <i class="fas fa-user-check fa-2x mb-2" style="color:#d4b46b;"></i>
+                                    <small>맞춤 추천</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="d-flex flex-column align-items-center">
+                                    <i class="fas fa-lock fa-2x mb-2" style="color:#d4b46b;"></i>
+                                    <small>안전한 정보</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex flex-column align-items-start justify-content-center text-start">
+                    <h1 style="color:#1c2f48; font-size:3.5rem; font-weight:bold; margin-bottom:20px;">
+                        보험 비교를<br><span style="color:#d4b46b;">빠르고 쉽게!</span>
+                    </h1>
+                    <p style="color:#666; font-size:1.2rem; margin-bottom:30px; line-height:1.6;">
+                        복잡한 보험 상품을 간편하게<br>나에게 딱 맞는 보험을 추천해드립니다
+                    </p>
+                    
+                    <!-- 보험 카테고리 선택 -->
+                    <div class="insurance-banner w-100"
+                         style="border:2px solid #1c2f48; border-radius:15px; background-color:#1c2f48; padding:20px;">
+                        <h4 class="text-center mb-4" style="color:#d4b46b;">보험 종류별 추천</h4>
+                        <div class="row text-center">
+                            <div class="col-6 col-md-3 mb-3 mb-md-0">
+                                <a href="#section2" class="insurance-item" style="color:#d4b46b; text-decoration:none;">
+                                    <i class="fas fa-shield-alt fa-2x mb-2" style="color:#d4b46b;"></i>
+                                    <p style="color:#d4b46b; font-weight:600;">상해보험</p>
+                                    <small style="color:#d4b46b; opacity:0.8;">사고 보장</small>
+                                </a>
+                            </div>
+
+                            <div class="col-6 col-md-3 mb-3 mb-md-0">
+                                <a href="#section3" class="insurance-item" style="color:#d4b46b; text-decoration:none;">
+                                    <i class="fas fa-heartbeat fa-2x mb-2" style="color:#d4b46b;"></i>
+                                    <p style="color:#d4b46b; font-weight:600;">종신보험</p>
+                                    <small style="color:#d4b46b; opacity:0.8;">평생 보장</small>
+                                </a>
+                            </div>
+
+                            <div class="col-6 col-md-3">
+                                <a href="#section4" class="insurance-item" style="color:#d4b46b; text-decoration:none;">
+                                    <i class="fas fa-lungs fa-2x mb-2" style="color:#d4b46b;"></i>
+                                    <p style="color:#d4b46b; font-weight:600;">암보험</p>
+                                    <small style="color:#d4b46b; opacity:0.8;">질병 보장</small>
+                                </a>
+                            </div>
+
+                            <div class="col-6 col-md-3">
+                                <a href="#section5" class="insurance-item" style="color:#d4b46b; text-decoration:none;">
+                                    <i class="fas fa-piggy-bank fa-2x mb-2" style="color:#d4b46b;"></i>
+                                    <p style="color:#d4b46b; font-weight:600;">연금보험</p>
+                                    <small style="color:#d4b46b; opacity:0.8;">노후 준비</small>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="section2" class="scroll-section" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);">
+        <div class="container">
+            <div class="row align-items-center h-100">
+                <div class="col-md-6">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-shield-alt fa-4x mb-3" style="color:#1c2f48;"></i>
+                        <h2 class="main-title" style="color:#1c2f48; font-size:2.5rem; font-weight:bold;">
+                            예상치 못한 사고,<br>
+                            상해보험으로 <span class="highlight" style="color:#d4b46b;">보호받으세요</span>
+                        </h2>
+                        <p class="sub-title" style="color:#666; font-size:1.2rem; margin:20px 0;">
+                            다양한 상해사고에 대한 든든한 보장
+                        </p>
+                    </div>
+                    
+                    <!-- 상해보험 특징 카드들 -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-car-crash fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">교통사고</h6>
+                                    <p class="card-text small" style="color:#666;">자동차 사고로 인한 상해 보장</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-running fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">일상사고</h6>
+                                    <p class="card-text small" style="color:#666;">일상생활 중 발생하는 상해</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-briefcase fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">직장사고</h6>
+                                    <p class="card-text small" style="color:#666;">업무 중 발생하는 상해 보장</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-gamepad fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">레저사고</h6>
+                                    <p class="card-text small" style="color:#666;">스포츠, 여행 중 상해 보장</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="text-center">
+                        <div style="background: linear-gradient(135deg, #1c2f48 0%, #2a4a6f 100%); border-radius:20px; padding:40px; color:white; box-shadow:0 10px 30px rgba(0,0,0,.15);">
+                            <h4 class="mb-4" style="color:#d4b46b;">상해보험 추천</h4>
+                            <p class="mb-4" style="font-size:1.1rem; line-height:1.6;">
+                                나이, 성별을 바탕으로<br>
+                                최적의 상해보험을 추천해드립니다
+                            </p>
+                            <a href="/accident/recommend" class="btn btn-lg px-5 py-3" style="background:#d4b46b; color:#1c2f48; border:none; border-radius:25px; font-weight:bold; text-decoration:none;">
+                                <i class="fas fa-search me-2"></i>상해보험 추천받기
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="section3" class="scroll-section" style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);">
+        <div class="container">
+            <div class="row align-items-center h-100">
+                <div class="col-md-6">
+                    <div class="text-center">
+                        <div style="background: linear-gradient(135deg, #1c2f48 0%, #2a4a6f 100%); border-radius:20px; padding:40px; color:white; box-shadow:0 10px 30px rgba(0,0,0,.15);">
+                            <h4 class="mb-4" style="color:#d4b46b;">종신보험 추천</h4>
+                            <p class="mb-4" style="font-size:1.1rem; line-height:1.6;">
+                                평생 보장의 안정감으로<br>
+                                가족을 위한 든든한 보험을 찾아보세요
+                            </p>
+                            <a href="/life/recommend" class="btn btn-lg px-5 py-3" style="background:#d4b46b; color:#1c2f48; border:none; border-radius:25px; font-weight:bold; text-decoration:none;">
+                                <i class="fas fa-heartbeat me-2"></i>종신보험 추천받기
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-heartbeat fa-4x mb-3" style="color:#1c2f48;"></i>
+                        <h2 class="main-title" style="color:#1c2f48; font-size:2.5rem; font-weight:bold;">
+                            평생 보장의 안정감,<br>
+                            종신보험으로 <span class="highlight" style="color:#d4b46b;">지켜주세요</span>
+                        </h2>
+                        <p class="sub-title" style="color:#666; font-size:1.2rem; margin:20px 0;">
+                            가족을 위한 평생 보장
+                        </p>
+                    </div>
+                    
+                    <!-- 종신보험 특징 카드들 -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-infinity fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">평생 보장</h6>
+                                    <p class="card-text small" style="color:#666;">사망 시까지 지속되는 보장</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-home fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">가족 보호</h6>
+                                    <p class="card-text small" style="color:#666;">가족의 미래를 위한 보장</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-chart-line fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">자산 형성</h6>
+                                    <p class="card-text small" style="color:#666;">보험료 납입과 동시에 자산 형성</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-shield-alt fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">안정성</h6>
+                                    <p class="card-text small" style="color:#666;">확실한 보장과 안정성</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section id="section4" class="scroll-section" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);">
+        <div class="container">
+            <div class="row align-items-center h-100">
+                <div class="col-md-6">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-lungs fa-4x mb-3" style="color:#1c2f48;"></i>
+                        <h2 class="main-title" style="color:#1c2f48; font-size:2.5rem; font-weight:bold;">
+                            걱정되는 암 진단,<br>
+                            암보험으로 <span class="highlight" style="color:#d4b46b;">안심하세요</span>
+                        </h2>
+                        <p class="sub-title" style="color:#666; font-size:1.2rem; margin:20px 0;">
+                            치료비 부담을 덜어주는 든든한 암보험
+                        </p>
+                    </div>
+                    
+                    <!-- 암보험 특징 카드들 -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-hospital fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">진단비</h6>
+                                    <p class="card-text small" style="color:#666;">암 진단 시 즉시 지급</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-pills fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">치료비</h6>
+                                    <p class="card-text small" style="color:#666;">수술, 항암치료비 보장</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-user-md fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">재발보장</h6>
+                                    <p class="card-text small" style="color:#666;">재발 시에도 계속 보장</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-heart fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">생존보장</h6>
+                                    <p class="card-text small" style="color:#666;">5년 생존 시 추가 지급</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="text-center">
+                        <div style="background: linear-gradient(135deg, #1c2f48 0%, #2a4a6f 100%); border-radius:20px; padding:40px; color:white; box-shadow:0 10px 30px rgba(0,0,0,.15);">
+                            <h4 class="mb-4" style="color:#d4b46b;">암보험 추천</h4>
+                            <p class="mb-4" style="font-size:1.1rem; line-height:1.6;">
+                                사용자 맞춤형 개인 정보를 바탕으로<br>
+                                최적의 암보험을 추천해드립니다
+                            </p>
+                            <div class="d-flex flex-column gap-3">
+                                <a href="/cancer/recommend" class="btn btn-lg px-4 py-3" style="background:#d4b46b; color:#1c2f48; border:none; border-radius:25px; font-weight:bold; text-decoration:none;">
+                                    <i class="fas fa-search me-2"></i>보장금액 추천
+                                </a>
+                                <a href="/cancer/profile-recommend" class="btn btn-lg px-4 py-3" style="background:transparent; color:#d4b46b; border:2px solid #d4b46b; border-radius:25px; font-weight:bold; text-decoration:none;">
+                                    <i class="fas fa-user-edit me-2"></i>맞춤형 추천
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="section5" class="scroll-section" style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);">
+        <div class="container">
+            <div class="row align-items-center h-100">
+                <div class="col-md-6">
+                    <div class="text-center">
+                        <div style="background: linear-gradient(135deg, #1c2f48 0%, #2a4a6f 100%); border-radius:20px; padding:40px; color:white; box-shadow:0 10px 30px rgba(0,0,0,.15);">
+                            <h4 class="mb-4" style="color:#d4b46b;">연금보험 추천</h4>
+                            <p class="mb-4" style="font-size:1.1rem; line-height:1.6;">
+                                미래를 위한 안전한 저축으로<br>
+                                더 나은 노후를 준비하세요
+                            </p>
+                            <div class="d-flex flex-column gap-3">
+                                <a href="/savings/recommend" class="btn btn-lg px-4 py-3" style="background:#d4b46b; color:#1c2f48; border:none; border-radius:25px; font-weight:bold; text-decoration:none;">
+                                    <i class="fas fa-search me-2"></i>연금보험 추천
+                                </a>
+                                <a href="/savings-insurance/recommend" class="btn btn-lg px-4 py-3" style="background:transparent; color:#d4b46b; border:2px solid #d4b46b; border-radius:25px; font-weight:bold; text-decoration:none;">
+                                    <i class="fas fa-piggy-bank me-2"></i>저축성보험 추천
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-piggy-bank fa-4x mb-3" style="color:#1c2f48;"></i>
+                        <h2 class="main-title" style="color:#1c2f48; font-size:2.5rem; font-weight:bold;">
+                            미래를 위한 저축,<br>
+                            연금보험으로 <span class="highlight" style="color:#d4b46b;">안전하게</span>
+                        </h2>
+                        <p class="sub-title" style="color:#666; font-size:1.2rem; margin:20px 0;">
+                            연금보험으로 더 나은 미래를 준비하세요
+                        </p>
+                    </div>
+                    
+                    <!-- 연금보험 특징 카드들 -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-calendar-alt fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">정기 납입</h6>
+                                    <p class="card-text small" style="color:#666;">매월 안정적인 저축</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-chart-line fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">자산 증식</h6>
+                                    <p class="card-text small" style="color:#666;">장기간 안정적인 수익</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-umbrella fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">노후 보장</h6>
+                                    <p class="card-text small" style="color:#666;">은퇴 후 안정적인 수입</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="background:white; border-radius:15px;">
+                                <div class="card-body text-center p-3">
+                                    <i class="fas fa-shield-alt fa-2x mb-2" style="color:#1c2f48;"></i>
+                                    <h6 class="card-title" style="color:#1c2f48; font-weight:bold;">안전성</h6>
+                                    <p class="card-text small" style="color:#666;">확실한 보장과 안전성</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+</main>
+
+
+<div class="fixed-bottom-right">
+    <a href="#section1" class="to-top-btn" id="to-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+    <div class="chatbot-ui" id="chatbot-ui">
+        <i class="fas fa-robot"></i>
+    </div>
+</div>
+
+<!-- 플로팅 챗봇 창 -->
+<div class="chatbot-window" id="chatbot-window">
+    <div class="chatbot-window-header">
+        <h4><i class="fas fa-robot me-2"></i>보험 AI 상담사</h4>
+        <button class="chatbot-close-btn" id="chatbot-close-btn">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="chatbot-window-messages" id="chatbot-window-messages">
+        <div class="chatbot-message bot">
+            <div class="chatbot-message-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="chatbot-message-bubble">
+                안녕하세요! 보험 AI 상담사입니다. 😊<br>
+                보험료, 보험금, 특약, 갱신 등 보험과 관련된 궁금한 점을 물어보세요!
+            </div>
+        </div>
+    </div>
+    <div class="chatbot-window-input">
+        <form id="chatbot-form">
+            <div class="input-group">
+                <input type="text" class="form-control" id="chatbot-input" placeholder="질문을 입력하세요..." required>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane me-2"></i>전송
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<footer style="background-color:#1c2f48; color:#d4b46b;" class="text-center py-3">
+    <p class="mb-0">©2025 Turtle Insurance. All Rights Reserved.</p>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sections = document.querySelectorAll('.scroll-section');
+        const navLinks = document.querySelectorAll('.side-nav a');
+        const toTopBtn = document.getElementById('to-top-btn');
+        const chatbotUi = document.getElementById('chatbot-ui');
+
+        function updateActiveState() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - (window.innerHeight / 2)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+
+            // "맨 위로" 버튼 가시성 제어
+            if (window.scrollY > 300) {
+                toTopBtn.classList.add('visible');
+            } else {
+                toTopBtn.classList.remove('visible');
+            }
+
+            // 챗봇 버튼은 항상 보이도록 설정
+            chatbotUi.classList.add('visible');
+        }
+
+        // 스크롤 이벤트에 스로틀링 적용
+        let throttleTimer = false;
+        window.addEventListener('scroll', () => {
+            if (throttleTimer) return;
+            throttleTimer = true;
+            setTimeout(() => {
+                updateActiveState();
+                throttleTimer = false;
+            }, 100);
+        });
+
+        // 페이지 로드 시 초기 상태 업데이트
+        updateActiveState();
+    });
+
+    // 챗봇 기능
+    const chatbotUi = document.getElementById('chatbot-ui');
+    const chatbotWindow = document.getElementById('chatbot-window');
+    const chatbotCloseBtn = document.getElementById('chatbot-close-btn');
+    const chatbotForm = document.getElementById('chatbot-form');
+    const chatbotInput = document.getElementById('chatbot-input');
+    const chatbotMessages = document.getElementById('chatbot-window-messages');
+
+    // 챗봇 창 열기/닫기
+    chatbotUi.addEventListener('click', (e) => {
+        e.preventDefault();
+        chatbotWindow.classList.toggle('open');
+    });
+
+    chatbotCloseBtn.addEventListener('click', () => {
+        chatbotWindow.classList.remove('open');
+    });
+
+    // 메시지 추가 함수
+    function addChatMessage(message, isUser) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chatbot-message ${isUser ? 'user' : 'bot'}`;
+
+        if (isUser) {
+            messageDiv.innerHTML = `
+                <div class="chatbot-message-bubble">${message}</div>
+                <div class="chatbot-message-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+            `;
+        } else {
+            messageDiv.innerHTML = `
+                <div class="chatbot-message-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="chatbot-message-bubble">${message}</div>
+            `;
+        }
+
+        chatbotMessages.appendChild(messageDiv);
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+
+    // 챗봇 폼 제출
+    chatbotForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const question = chatbotInput.value.trim();
+        if (!question) return;
+
+        // 사용자 메시지 추가
+        addChatMessage(question, true);
+        chatbotInput.value = '';
+
+        try {
+            const response = await fetch('/chatbot/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: question })
+            });
+
+            const data = await response.json();
+
+            if (data.answer) {
+                addChatMessage(data.answer, false);
+            } else {
+                addChatMessage('죄송합니다. 답변을 가져올 수 없습니다.', false);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            addChatMessage('오류가 발생했습니다. 잠시 후 다시 시도해주세요.', false);
+        }
+    });
+</script>
+</body>
+</html>

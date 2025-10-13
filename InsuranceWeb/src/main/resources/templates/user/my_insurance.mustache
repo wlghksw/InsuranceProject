@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>거북이 보험 - 내 보험 찾기</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* 커스텀 헤더 스타일 */
+        .custom-navbar {
+            background-color: #1c2f48;   /* 네이비 */
+            border-bottom: 1px solid rgba(0,0,0,.25);
+            padding: 14px 20px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        /* 로고 B (골드) */
+        .custom-navbar .navbar-brand {
+            color: #d4b46b !important;  /* 골드 */
+            font-weight: 900;
+            font-size: 40px;
+            margin-right: 30px;
+        }
+        /* 메뉴 링크 (골드) */
+        .custom-navbar .nav-link {
+            color: #d4b46b !important;
+            font-weight: 800;
+            font-size: 20px;
+            margin-right: 36px;
+        }
+        .custom-navbar .nav-link:hover {
+            color: #d4b46b /* 호버 시 밝은 골드 */
+        }
+
+        .chatbot-ui:hover, .to-top-btn:hover {
+            background-color: #1c2f48;  /* 밝은 네이비 */
+            color: #d4b46b;            /* 아이콘은 골드 */
+            transform: scale(1.1);
+        }
+
+        /* 검색창 */
+        .search-wrap {
+            display: flex;
+            align-items: center;
+            height: 40px;
+            width: 400px;
+            border: 1px solid #000;       /* 검은 테두리 */
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        /* 스크롤 섹션 스타일 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+        .scroll-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            padding-top: 80px;
+        }
+        #section1 { background: #ffffff; }
+        #section2 { background: #ffffff; }
+        #section3 { background: #ffffff; }
+        #section4 { background: #ffffff; }
+        #section5 { background: #ffffff; }
+        #section6 { background: #ffffff; }
+
+        /* 수직 내비게이션 점 스타일 */
+        .side-nav {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .side-nav li a {
+            display: block;
+            width: 12px;
+            height: 12px;
+            background-color: #ccc;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+            text-indent: -9999px;
+        }
+        .side-nav li a.active {
+            background-color: #d4b46b;
+        }
+
+        /* 챗봇 UI 및 상단 이동 버튼 스타일 */
+        .fixed-bottom-right {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        .chatbot-ui, .to-top-btn {
+            width: 60px; height: 60px; background-color: #1c2f48; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none; color: white;
+            opacity: 0; visibility: hidden;
+        }
+        .chatbot-ui:hover, .to-top-btn:hover {
+            transform: scale(1.1);
+        }
+        .chatbot-ui i, .to-top-btn i {
+            font-size: 2rem;
+        }
+        .to-top-btn.visible, .chatbot-ui.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* [추가된 스타일] 보험 바로가기 배너 스타일 */
+        .insurance-banner {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem; /* 아래 h3 태그와의 간격 */
+        }
+        .insurance-item {
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+            display: block;
+        }
+        .insurance-item:hover {
+            transform: translateY(-5px); /* 살짝 위로 올라가는 효과 */
+            color: #d4b46b; /* 호버 시 텍스트 색상 변경 */
+        }
+
+
+        .insurance-item i {
+            color: #17ec42; /* 아이콘 기본 색상 */
+            margin-bottom: 10px;
+        }
+        .insurance-item p {
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+        /* 박스 스타일 */
+        .section-box {
+            background-color: #fff;
+            border: 1px solid #1c2f48;   /* 네이비 테두리 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+        }
+
+        /* 큰 제목 */
+        .section-box .main-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        /* 강조된 파란색 단어 */
+        .section-box .main-title .highlight {
+            color: #0056ff; /* 블루 포인트 */
+        }
+
+        /* 부제 텍스트 */
+        .section-box .sub-title {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* 버튼 */
+        .section-box .btn-learn-more {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 1px solid #000;
+            font-weight: 600;
+            color: #000;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .section-box .btn-learn-more:hover {
+            background-color: #1c2f48;
+            color: #fff;
+        }
+
+   .btn-gold-outline {
+    color: #1c2f48;
+    border: 2px solid #1c2f48;
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
+
+        .btn-gold-outline:hover {
+            background-color:#1c2f48;
+            color: #d4b46b;
+        }
+
+        /* 카드 호버 효과 */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+
+        .card {
+            transition: all 0.3s ease;
+        }
+
+body {
+  padding-top: 70px;
+}
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/main" style="color:#d4b46b; font-weight:900;">
+            B
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/service_intro">서비스 소개</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/my_insurance">내 보험찾기</a>
+                </li>
+
+            </ul>
+            <ul class="navbar-nav">
+                {{#user}}
+                    <li class="nav-item">
+                        <span class="nav-link text-dark">안녕하세요. {{nickname}}님</span>
+                    </li>
+                    <li class="nav-item">
+                        <form action="/logout" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-gold-outline">로그아웃</button>
+                        </form>
+
+                    </li>
+                {{/user}}
+                {{^user}}
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/user/login">로그인</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/user/register">회원가입</a>
+                    </li>
+                {{/user}}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5 pt-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h2 class="mb-4 text-center">내 보험 찾기</h2>
+
+            {{#errorMessage}}
+                <div class="alert alert-danger text-center" role="alert">
+                    {{errorMessage}}
+                </div>
+            {{/errorMessage}}
+
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <form action="/user/my_insurance/find" method="post" id="findInsuranceForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label"><strong>이름</strong></label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="가입자 성명을 입력하세요"
+                                   value="{{#user}}{{realName}}{{/user}}" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="userSsn1" class="form-label"><strong>주민등록번호</strong></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="userSsn1" name="userSsn1" placeholder="앞 6자리" maxlength="6" pattern="\d{6}"
+                                       value="{{#user}}{{ssnFront}}{{/user}}" required>
+                                <span class="input-group-text">-</span>
+                                <input type="password" class="form-control" id="userSsn2" name="userSsn2" placeholder="뒤 7자리" maxlength="7" pattern="\d{7}"
+                                       value="{{#user}}{{ssnBack}}{{/user}}" required>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="terms-section mt-4">
+                            <h5 class="mb-3">서비스 이용 약관</h5>
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <p class="card-text text-muted">
+                                        개인정보(이름, 주민등록번호) 수집 및 이용에 대한 동의가 필요합니다. 수집된 정보는 보험 조회 목적으로만 사용되며, 관련 법령에 따라 안전하게 보관 및 파기됩니다.
+                                        <a data-bs-toggle="collapse" href="#collapseTerms" role="button" aria-expanded="false" aria-controls="collapseTerms">
+                                            자세히 보기
+                                        </a>
+                                    </p>
+                                    <div class="collapse mt-3" id="collapseTerms">
+                                        <div class="p-3 border rounded" style="font-size: 0.9em; background-color: #ffffff;">
+                                            <strong>제 1조 (개인정보의 수집 및 이용 목적)</strong><br>
+                                            회사는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보 보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.<br><br>
+                                            <strong>제 2조 (처리하는 개인정보의 항목)</strong><br>
+                                            - 필수항목: 성명, 주민등록번호<br><br>
+                                            <strong>제 3조 (개인정보의 처리 및 보유 기간)</strong><br>
+                                            - 보유 근거: 정보통신망 이용촉진 및 정보보호 등에 관한 법률<br>
+                                            - 보유 기간: 조회 후 즉시 파기
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-check mt-3">
+                                <input class="form-check-input" type="checkbox" value="true" id="agreementCheck" name="확인">
+                                <label class="form-check-label" for="agreementCheck">
+                                    (필수) 위 약관 내용에 모두 동의합니다.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <div class="text-center mt-4">
+                                <div class="d-grid mt-4">
+                                    <button type="submit" class="btn btn-gold-outline btn-learn-more">
+                                        내 보험 조회하기
+                                    </button>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer style="background-color:#1c2f48; color:#d4b46b;" class="text-center py-3">
+    <p class="mb-0">©2025 Turtle Insurance. All Rights Reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('findInsuranceForm').addEventListener('submit', function(event) {
+        const checkbox = document.getElementById('agreementCheck');
+        if (!checkbox.checked) {
+            alert('조회하려면 고객님의 동의가 필요합니다.');
+            event.preventDefault(); // 폼 제출을 막음
+        }
+    });
+</script>
+
+</body>
+</html>
