@@ -926,6 +926,9 @@ python data_generator.py
 
 ### 3. 서버 실행
 
+**파이썬 설치**
+
+
 **터미널 1 - Spring Boot (Port 8080)**
 
 ```bash
