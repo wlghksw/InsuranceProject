@@ -912,6 +912,13 @@ spring.datasource.password=your_password
 
 ### 2. Python 의존성 설치
 
+python3 -m venv venv 
+
+source venv/bin/activate
+
+pip install -r requirements.txt
+
+
 ```bash
 # FastAPI 의존성
 pip install -r requirements.txt
